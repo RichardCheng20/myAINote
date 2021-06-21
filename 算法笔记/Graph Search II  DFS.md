@@ -196,7 +196,7 @@ public class CombinationsOfCoins {
 
 >
 >
->Given a string with no duplicate characters, return a list with all permutations of the characters.
+>Given a string with <u>no duplicate</u> characters, return a list with all permutations of the characters.
 >
 >Assume that input string is not null.
 >
@@ -208,7 +208,55 @@ public class CombinationsOfCoins {
 
 
 
-5211
+1. 3 层，每层代表一个位置
+2. 和硬币一样，最多叉出三个叉，每个位置表示放a/b/c（还有哪些字母没有用可以放入）
 
-![image-20210620142612420](Graph Search II  DFS.assets/image-20210620142612420.png)
+Inplace 来做
+
+![image-20210620181519641](Graph Search II  DFS.assets/image-20210620181519641.png)
+
+蓝色是上一层已经搞好的，红色就是这一层换过来的
+
+i一定要从index开始循环，[0, index)为已经交换好的，[index, array.length - 1]处的元素正在发生交换
+
+3！时间复杂度= O（n!*n）
+
+```java
+public class AllPermutationsI {
+    public static void main(String[] args) {
+        String input = "abc";
+        AllPermutationsI sol = new AllPermutationsI();
+        System.out.println(sol.permutations(input));
+
+    }
+
+    public List<String> permutations(String input) {
+        List<String> result = new ArrayList<String>();
+        if (input == null) {
+            return result;
+        }
+        char[] array = input.toCharArray();
+        helper(array, 0, result);
+        return result;
+    }
+
+    private void helper(char[] array, int index, List<String> result) {
+        if (index == array.length) {//所有位置都已经选过了base case
+            result.add(new String(array));
+            return;
+        }
+        for (int i = index; i < array.length; i++) { //包括index在内的之后是需要交换的
+            swap(array, index, i);
+            helper(array, index + 1, result);
+            swap(array, index, i);
+        }
+    }
+
+    private void swap(char[] array, int left, int right) {
+        char tmp = array[left];
+        array[left] = array[right];
+        array[right] = tmp;
+    }
+}
+```
 
