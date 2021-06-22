@@ -2,6 +2,9 @@
 https://juejin.cn/post/6844904088618942478
 
 `DFS`深度优先，解题必须画出recursion tree
+
+递归回去一定回去到==断点==的下一行,beaking point先回到头，一直回头，然后到了base case才return到调用者此时breaking point的下一行。
+
 **解决基本问题：**
 
 1. 一共多少层？   决定basecase
@@ -25,7 +28,7 @@ https://juejin.cn/post/6844904088618942478
 1 + 2 + 4…+ 2^n（倒数第二层）+ 2^n *n(最后一层) = (2^n)*n
 每一层都是组合节点(2^n个node)   最后(2^n个node)节点,每个node花费O(n)
 每一个node是O（1），直上直下空间是O(n). 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210620094551667.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3JpY2hhcmQyMDE4MDM=,size_16,color_FFFFFF,t_70#pic_center)
+![image-20210621081724666](https://i.loli.net/2021/06/21/ToInVrPgSKsdtGU.png)
 
 
 ```java
@@ -46,7 +49,7 @@ public class Solution {
       return;
     }
     sb.append(set[index]); //一直吃到底 粉色路径123
-    helper(sb, set, index + 1, result); // 递归触底 加入abc
+    helper(sb, set, index + 1, result); // 递归触底 加入abc beaking point
     sb.deleteCharAt(sb.length() - 1); // 粉色路径4 吐出
     helper(sb, set, index + 1, result); //粉色路径5 
    
@@ -70,10 +73,13 @@ public class Solution {
 1.  N = 3  6个位置 树有6层，每一层代表一个位置 
 2. 每个node加左或者右边括号 
 **限制条件：**每次加右括号的时候，确保左括号的数量一定要大于右括号
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210620112615159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3JpY2hhcmQyMDE4MDM=,size_16,color_FFFFFF,t_70#pic_center)
-每个node岔出来两个岔，2^(2n), 2n层.
+![image-20210621081748805](Graph Search II  DFS.assets/image-20210621081748805.png)
+每个node岔出来两个岔，2^(2n), 2n层. 1 + 2 + 4 + 8 + --- + $2^{2n}$
 Time = O(2 ^ (2n) *n) Space = O(n)
 先是一吃到底然后吐完右边括号接着吐左边括号
+
+走到第6步之后，11行代码返回到37行，37 breaking point 行就是之前的调用者，会执行38行delete, 然后37行，然后38行。
+
 ```java
 public class Solution {
     public static void main(String[] args) {
@@ -143,7 +149,8 @@ public class Solution {
 1. 4 层 每一层一种币种
 2. 每个node顶多叉出99个叉 
 3. 叉数是dynamic变化的情况，写一个for循环遍历
-4. 
+
+![image-20210621081821040](https://i.loli.net/2021/06/21/8WyNf9iYgwuoFUO.png)
 
 ```java
 public class CombinationsOfCoins {
@@ -183,7 +190,7 @@ public class CombinationsOfCoins {
         int max = target / coins[index];//算出来的分叉数量
         for (int i = 0; i <= max; i++) { // i表示取几个10 cents， 比如i = 1, 表示取一个10 cents
             cur.add(i);
-            //remember to modify the remaining cents for the next level
+            //rememb er to modify the remaining cents for the next level
             helper(target - i*coins[index], coins, index + 1, cur, result);
             cur.remove(cur.size() - 1); //需要再往上跳一步，因为base case提前了，图中的第5步
         }
@@ -213,7 +220,7 @@ public class CombinationsOfCoins {
 
 Inplace 来做
 
-![image-20210620181519641](Graph Search II  DFS.assets/image-20210620181519641.png)
+![image-20210620181519641](https://i.loli.net/2021/06/21/MI7F8mwWfhS2N9D.png)
 
 蓝色是上一层已经搞好的，红色就是这一层换过来的
 
@@ -246,9 +253,9 @@ public class AllPermutationsI {
             return;
         }
         for (int i = index; i < array.length; i++) { //包括index在内的之后是需要交换的
-            swap(array, index, i);
-            helper(array, index + 1, result);
-            swap(array, index, i);
+            swap(array, index, i); //吃
+            helper(array, index + 1, result);//breaking point. 
+            swap(array, index, i); //吐
         }
     }
 
@@ -259,4 +266,8 @@ public class AllPermutationsI {
     }
 }
 ```
+
+25行代码一直往下吃，然后吃到abc之后，22行代码==返回==到breaking point即26行代码，然后继续执行27行，27行执行完一次swap，然后接着再一次进入循环，25行执行swap。
+
+
 
