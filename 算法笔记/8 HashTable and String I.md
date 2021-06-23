@@ -301,11 +301,11 @@ b _ _ _ d
 
 ​            f
 
-b _ _ _ d               
+b _ `d `_ d               
 
-​      s             
+​          s             
 
-​            f
+​                f
 
 Post-processing: 
 
