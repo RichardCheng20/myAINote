@@ -295,15 +295,15 @@ case3: ignore: a[fast] = '  ' && (fast == 0 || a[fast - 1] = ' ')
 
 Termination: fast == a.length()
 
-a b c _ _ d                 e _ _ d e _ 
+a b `d `_ _ d               
 
-​         s             
+   s             
 
-​                    f
+​       f
 
 Post-processing: 
 
-if slow > 0 && a[slow - 1] == '  ' {slow--};
+if(slow > 0 && a[slow - 1] == '  ') {slow--};
 
 ```java
 public class Solution {
@@ -319,7 +319,7 @@ public class Solution {
             }
             array[slow++] = array[fast];
         }
-        
+        if (slow > 0 && array[slow - 1])
         return new String(array, 0, slow);
     }
 }
