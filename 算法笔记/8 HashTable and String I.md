@@ -325,7 +325,63 @@ public class Solution {
             }
             array[slow++] = array[fast];
         }
-        if (slow > 0 && array[slow - 1] ==)
+        if (slow > 0 && array[slow - 1] == ' ')
+        return new String(array, 0, slow);
+    }
+}
+```
+
+
+
+## [Remove Adjacent Repeated Characters I](https://app.laicode.io/app/problem/79?plan=3)
+
+>Remove adjacent, repeated characters in a given string, leaving only one character for each group of such characters.
+>
+>**Assumptions**
+>
+>- Try to do it in place.
+>
+>**Examples**
+>
+>- “aaaabbbc” is transferred to “abc”
+>
+>**Corner Cases**
+>
+>- If the given string is null, returning null or an empty string are both valid.
+
+**fast的左边不包含fast的位置**，是那些已经处理过的，fast的右边不包含j的位置是还没有处理的，fast指向的那个元素就是正在被处理的。
+
+**slow的物理意义**：（要和fast对应着说）fast到什么地方，slow到什么地方？
+
+所有在slow左边的不包含slow的字母，都是已经被处理过的并且应该要保留下来的。 
+
+aabbbbc
+
+  s
+
+  f
+
+Initialize: slow = 1, fast = 1
+
+For each step: 
+
+case1: a[fast] != a[fast - 1], a[slow++] = array[fast]
+
+case2: ignore 
+
+```java
+public class Solution {
+    public String deDup(String input) {
+        if (input == null) {
+            return input;
+        }
+        char[] array = input.toCharArray();
+        int slow = 0;
+        for (int fast = 0; fast < array.length; i++) {
+            if (fast == 0 || array[fast] != array[slow - 1]) {
+                array[slow++] = array[fast];
+            }
+        }
         return new String(array, 0, slow);
     }
 }
@@ -335,19 +391,38 @@ public class Solution {
 
 
 
-
-
-## [Remove Adjacent Repeated Characters I](https://app.laicode.io/app/problem/79?plan=3)
-
----
-
-
-
-
-
-
-
 ## [Remove Adjacent Repeated Characters IV](https://app.laicode.io/app/problem/82?plan=3)
+
+>消消乐
+>
+>Repeatedly remove all adjacent, repeated characters in a given string from left to right.
+>
+>No adjacent characters should be identified in the final string.
+>
+>**Examples**
+>
+>- "abbbaaccz" → "aaaccz" → "ccz" → "z"
+>- "aabccdc" → "bccdc" → "bdc"
+
+**fast的左边不包含fast的位置**，是那些已经处理过的，fast的右边不包含j的位置是还没有处理的，fast指向的那个元素就是正在被处理的。
+
+**slow的物理意义**：（要和fast对应着说）fast到什么地方，slow到什么地方？
+
+所有在slow左边的不包含slow的字母，都是已经被处理过的并且应该要保留下来的。 
+
+a b b b b a z w
+
+f
+
+s
+
+Initialize: fast = 1, slow = 1
+
+For each step: 
+
+
+
+
 
 
 
