@@ -325,7 +325,7 @@ public class Solution {
             }
             array[slow++] = array[fast];
         }
-        if (slow > 0 && array[slow - 1])
+        if (slow > 0 && array[slow - 1] ==)
         return new String(array, 0, slow);
     }
 }
