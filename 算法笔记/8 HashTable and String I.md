@@ -295,11 +295,17 @@ case3: ignore: a[fast] = '  ' && (fast == 0 || a[fast - 1] = ' ')
 
 Termination: fast == a.length()
 
-a b `d `_ _ d               
+b _ _ _ d               
 
-   s             
+​      s             
 
-​       f
+​            f
+
+b _ _ _ d               
+
+​      s             
+
+​            f
 
 Post-processing: 
 
