@@ -1,4 +1,4 @@
-# Graph Search II : DFS
+# 7 Graph Search II : DFS
 https://juejin.cn/post/6844904088618942478
 
 `DFS`深度优先，解题必须画出recursion tree
@@ -20,6 +20,7 @@ https://juejin.cn/post/6844904088618942478
 > Set = "abc", all the subsets are [“”, “a”, “ab”, “abc”, “ac”, “b”,
 > “bc”, “c”] Set = "", all the subsets are [""] Set = null, all the
 > subsets are []
+>
 >  1. 一共2层   决定basecase
 2. 每层叉出2node 加a不加a
 **Basecase:** 就是走到最后一层了，记得要return。
