@@ -365,7 +365,7 @@ Initialize: slow = 1, fast = 1
 
 For each step: 
 
-case1: a[fast] != a[fast - 1], a[slow++] = array[fast]
+case1: a[fast] != a[slow- 1], a[slow++] = array[fast]
 
 case2: ignore 
 
@@ -406,27 +406,98 @@ public class Solution {
 
 **fast的左边不包含fast的位置**，是那些已经处理过的，fast的右边不包含j的位置是还没有处理的，fast指向的那个元素就是正在被处理的。
 
-**slow的物理意义**：（要和fast对应着说）fast到什么地方，slow到什么地方？
-
-所有在slow左边的不包含slow的字母，都是已经被处理过的并且应该要保留下来的。 
+**slow的物理意义**：所有在slow左边的不包含slow的字母，都是已经被处理过的并且应该要保留下来的。 
 
 a b b b b a z w
 
-f
+   f
 
 s
 
-Initialize: fast = 1, slow = 1
+   aa 输入aa输出为空
+
+s
+
+​         f
+
+Initialize: fast = 1, slow = 0
 
 For each step: 
 
+case 1: a[fast] != a[slow], then a[slow] = a[fast], slow++, fast循环增加
 
+case2:  a[fast] == a[slow]相同，slow--, while array[fast] == array[fast + 1]，keep fast++, until a[fast] != a[slow] 
 
-
-
-
+```java
+public class Solution {
+    public String deDup(String input) {
+        if (input.length() <= 1) {
+            return input;
+        }
+        char[] array = input.toCharArray();
+        int slow = 0;
+        for (int fast = 1; fast < array.length; fast++) {
+            if (slow == -1 || array[fast] != array[slow]) { //slow = -1表示stack为空,后面需要归位
+                slow++;//不相同的时候slow大胆往后走一步，然后将a[fast]赋值给a[slow]
+                array[slow] = array[fast];
+            } else { //相同就需要减掉slow--
+                slow--;
+                while(fast < array.length - 1 && array[fast] == array[fast + 1]) {//fast < array.length - 1最多遍历到倒数第二个元素
+                    fast++;
+                }
+            }
+        }
+        return new String(array, 0, slow + 1);
+    }
+}
+```
 
 
 
 ## [Determine If One String Is Another's Substring](https://app.laicode.io/app/problem/85?plan=3)
+
+>Determine if a small string is a substring of another large string.
+>
+>Return the index of the first occurrence of the small string in the large string.
+>
+>Return -1 if the small string is not a substring of the large string.
+>
+>**Assumptions**
+>
+>- Both large and small are not null
+>- If small is empty string, return 0
+>
+>**Examples**
+>
+>- “ab” is a substring of “bcabc”, return 2
+>- “bcd” is not a substring of “bcabc”, return -1
+>- "" is substring of "abc", return 0
+
+思路： 滑动窗口解决 Time = O(n^2)
+
+
+
+```java
+public class Solution {
+    public int strstr(String s1, String s2) {
+        if (s1 == null || s2 == null || s1.length() < s2.length()) {
+            return -1;
+        }
+        if (s2.length() == 0) {
+            return 0;
+        }
+        //i s1从0往后走，j作为一个offs
+        for (int i = 0; i <= s1.length() - s2.length(); i++) {
+            int j = 0;
+            while (j < s2.length() && s1.charAt(i + j) == s2.charAt(j)) {
+                j++;
+            }
+            if (j == s2.length()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
 
