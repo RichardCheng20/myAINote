@@ -191,7 +191,7 @@ public class CombinationsOfCoins {
         int max = target / coins[index];//算出来的分叉数量
         for (int i = 0; i <= max; i++) { // i表示取几个10 cents， 比如i = 1, 表示取一个10 cents
             cur.add(i);
-            //rememb er to modify the remaining cents for the next level
+            //remember to modify the remaining cents for the next level
             helper(target - i*coins[index], coins, index + 1, cur, result);
             cur.remove(cur.size() - 1); //需要再往上跳一步，因为base case提前了，图中的第5步
         }

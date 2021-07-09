@@ -14,8 +14,6 @@
 
 `isEmpty()`
 
->
->
 >addLast()
 >
 >getLast()
@@ -111,7 +109,7 @@ Queue<Integer> queue = new LinkedList<>();
 PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
 
 ```java
-  PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
+PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
            @Override
            public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
                return e1.getValue().compareTo(e2.getValue());
@@ -167,8 +165,6 @@ Map.==Entry==<String, Integer> entry
 
 entry.==getKey()== + ":" + entry.==getValue()==
 
-
-
 ```
 for(Map.Entry<String, Integer> entry : scores.entrySet()) {
 	System.out.println(entry.getKey() + ":" + entry.getValue());
@@ -223,4 +219,12 @@ ArrayList, LinkedList, TreeSet, HashSet实现了这个接口
 `iterator()`
 
 set有以上方法
+
+
+
+ int large = (int)Math.`sqrt(c);`
+
+ private final static HashSet<Character> vowels = new HashSet<>(`Arrays.asList`('a', 'e,', 'i', 'o', 'u',
+
+  'A','E', 'I', 'O', 'U'));
 
