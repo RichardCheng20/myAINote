@@ -238,9 +238,35 @@ public int firstBadVersion(int n) {
 >输出：[3,4]
 >```
 
+先定义`findFirst()`用于返回nums中第一个出现target元素的index，需要注意的是如果target元素比较大的时候，超出了nums中的最大元素我们返回的是nums.length。 这样做的原因是当我们找最后出现该元素last位置时候，我们巧妙的利用了`findFirst(nums, target + 1) - 1` 所以我们有可能找到数组外面去。
 
+```java
+class Solution {
+        public int[] searchRange(int[] nums, int target) {
+            // 5,7,7,8,8,10
+            // l          r
+            //       m
+            int first = findFirst(nums, target);
+            int last = findFirst(nums, target + 1) - 1;
+            if (first == nums.length || nums[first] != target) {
+                return new int[] {-1, -1};
+            } else {
+                return new int[] {first, Math.max(first, last)};
+            }
+        }
 
+        private int findFirst(int[] nums, int target) {
+            int left = 0;
+            int right = nums.length;
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (nums[mid] >= target) {
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            return left;
+        }
+    }
 ```
-
-```
-
