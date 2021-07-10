@@ -2,6 +2,28 @@
 
 ## [Spiral Order Traverse I](https://app.laicode.io/app/problem/121?plan=3)
 
+>Traverse an N * N 2D array in spiral order clock-wise starting from the top left corner. Return the list of traversal sequence.
+>
+>**Assumptions**
+>
+>- The 2D array is not null and has size of N * N where N >= 0
+>
+>**Examples**
+>
+>{ {1,  2,  3},
+>
+> {4,  5,  6},
+>
+> {7,  8,  9} }
+>
+>the traversal sequence is [1, 2, 3, 6, 9, 8, 7, 4, 5]
+
+
+
+
+
+## [N Queens](https://app.laicode.io/app/problem/233?plan=3)
+
 >Get all valid ways of putting N Queens on an N * N chessboard so that no two Queens threaten each other.
 >
 >**Assumptions**
@@ -35,17 +57,42 @@
 
 **Time** = O(8^8 * 8) 优化为O(n!) 第一层n个node, 第二层n - 1个node, 一直到最后所以是n! 
 
+![image-20210709231455179](11 Recursion II.assets/image-20210709231455179.png)
+
+```java
+public class NQueens {
+    public List<List<Integer>> nqeens(int n) {
+        List<List<Integer>> result = new ArrayList<>(); //所有结果汇总
+        List<Integer> cur = new ArrayList<>(); //每一次的结果
+        helper(n, cur, result);
+        return result;
+    }
+    private void helper(int n, List<Integer> cur, List<List<Integer>> result) {
+        if (cur.size() == n) { //base case 
+            result.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = 0; i < n; i++) { //i 按照recursion tree里是列的位置，先是i = 0, 第0列一直递归下去
+            if (valid(cur, i)) { //只有valid的时候才进入recursion tree分支
+                cur.add(i);
+                helper(n, cur, result); //cur 会自己增加
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+    private boolean valid(List<Integer> cur, int column) {
+        int row = cur.size(); //得到当前行
+        for (int i = 0; i <  row; i++) { //需要遍历走过的所有行数
+            if (cur.get(i) == column || Math.abs(cur.get(i) - column) == row - i) { //cur.get(i) == column 某一行上的值和column同一列不行， 
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
 
 
-
-
-
-
-
-
-
-
-## [N Queens](https://app.laicode.io/app/problem/233?plan=3)
 
 
 
