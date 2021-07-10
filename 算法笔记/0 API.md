@@ -232,4 +232,12 @@ set有以上方法
 
  int large = (int)Math.`sqrt(c);`
 
-matrix.length指的
+```
+//定义一个整型数组:3行4列
+int a[][] = new int[3][4];
+//获取行数---3行，将每一行的一维数组看作元素
+int lenY = a.length;
+//获取列数---4列，将二维数组的第一行的列数统计出来
+int lenX = a[0].length;
+```
+
