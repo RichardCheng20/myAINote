@@ -61,6 +61,8 @@ public class Solution {
 
 ![image-20210710122312362](11 Recursion II.assets/image-20210710122312362.png)
 
+对于非方阵，需要用到left, right, up, down四个指针。
+
 ```java
 public class SpiralOrderTraverseII {
     public List<Integer> spiral(int[][] matrix) {
@@ -118,12 +120,6 @@ public class SpiralOrderTraverseII {
 }
 
 ```
-
-
-
-
-
-
 
 
 
@@ -199,11 +195,16 @@ public class NQueens {
 
 
 
-
-
-
-
 ## [Reverse Linked List In Pairs](https://app.laicode.io/app/problem/35?plan=3)
+
+>Reverse pairs of elements in a singly-linked list.
+>
+>**Examples**
+>
+>- L = null, after reverse is null
+>- L = 1 -> null, after reverse is 1 -> null
+>- L = 1 -> 2 -> null, after reverse is 2 -> 1 -> null
+>- L = 1 -> 2 -> 3 -> null, after reverse is 2 -> 1 -> 3 -> null
 
 
 
