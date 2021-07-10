@@ -25,7 +25,15 @@
 
 ![image-20210709214456416](Recursion II.assets/image-20210709214456416.png)
 
-用Recursion DFS来做，
+用Recursion DFS来做，分出八层，每层叉出8个叉。每一层决定Qi应该放到哪一行，叉出来的叉表示放到那一列。
+
+所以要用for循环叉出来的叉数调用DFS
+
+**Base case:** The last row is done
+
+**RR:** iff position(i, j) valid, go to the next row 
+
+**Time** = O(8^8 * 8) 优化为O(n!) 第一层n个node, 第二层n - 1个node, 一直到最后所以是n! 
 
 
 
