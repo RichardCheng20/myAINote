@@ -21,9 +21,17 @@
 >
 >[2, 0, 3, 1] --> the Queen on the first row is at y index 2, the Queen on the second row is at y index 0, the Queen on the third row is at y index 3 and the Queen on the fourth row is at y index 1.
 >
->N皇后问题，输出的List<Integer> index表示皇后放的行数，值表示列数。
+>N皇后问题，输出的List<Integer> **index表示皇后放的行数，值表示列数**。
 
 ![image-20210709214456416](Recursion II.assets/image-20210709214456416.png)
+
+
+
+
+
+
+
+
 
 
 
