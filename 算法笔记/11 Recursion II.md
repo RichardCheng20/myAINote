@@ -23,7 +23,7 @@
 >
 >N皇后问题，输出的List<Integer> index表示皇后放的行数，值表示列数。
 
-
+![image-20210709214456416](Recursion II.assets/image-20210709214456416.png)
 
 
 
