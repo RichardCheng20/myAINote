@@ -24,11 +24,46 @@
 
 ```java
 public class Solution {
-	public List<Integer> spiral(int[][] matrix) {
-        
+	public List<Integer> spiralII(int[][] matrix) {
+        // Write your solution here
+        int start = 0;
+        int end = matrix.length - 1;
+        List<Integer> result = new ArrayList<>();
+        while (start < end) {
+            for (int i = start; i <= end; i++) {
+                result.add(matrix[start][i]);
+            }
+            for (int i = start + 1; i <= end - 1; i++) {
+                result.add(matrix[i][end]);
+            }
+            for (int i = end; i >= start; i--) {
+                result.add(matrix[end][i]);
+            }
+            for (int i = end - 1; i >= start + 1; i--) {
+                result.add(matrix[i][start]);
+            }
+            start++;
+            end--;
+        }
+        if (start == end) {
+            result.add(matrix[start][end]);
+        }
+        return result;
     }
 }
 ```
+
+
+
+## [Spiral Order Traverse II](https://app.laicode.io/app/problem/122?plan=3)
+
+>Traverse an M * N 2D array in spiral order clock-wise starting from the top left corner. Return the list of traversal sequence.
+
+
+
+
+
+
 
 
 
@@ -140,7 +175,7 @@ public class NQueens {
 
 
 
-## [Spiral Order Traverse II](https://app.laicode.io/app/problem/122?plan=3)
+## 
 
 
 

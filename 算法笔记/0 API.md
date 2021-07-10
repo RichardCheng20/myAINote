@@ -222,9 +222,14 @@ set有以上方法
 
 
 
- int large = (int)Math.`sqrt(c);`
+
 
  private final static HashSet<Character> vowels = new HashSet<>(`Arrays.asList`('a', 'e,', 'i', 'o', 'u',
 
   'A','E', 'I', 'O', 'U'));
 
+##  矩阵数学
+
+ int large = (int)Math.`sqrt(c);`
+
+matrix.length指的
