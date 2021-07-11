@@ -206,11 +206,11 @@ public class NQueens {
 >- L = 1 -> 2 -> null, after reverse is 2 -> 1 -> null
 >- L = 1 -> 2 -> 3 -> null, after reverse is 2 -> 1 -> 3 -> null
 
-chengzhifunice@icloud.com
+子问题： 后面998个node 
 
-come 
 
-213 577 8987
+
+
 
 ## [String Abbreviation Matching](https://app.laicode.io/app/problem/292?plan=3)
 
