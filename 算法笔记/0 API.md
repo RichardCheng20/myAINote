@@ -241,3 +241,18 @@ int lenY = a.length;
 int lenX = a[0].length;
 ```
 
+字符串转换为数字： 
+
+```
+ //we need to find in total what is the number
+        int count = 0;
+        while (ti < t.length() && t.charAt(ti) >= '0' && t.charAt(ti) <= '9') {
+            count = count * 10 + (t.charAt(ti) - '0');
+            ti++;
+        }
+```
+
+最小值定义： 
+
+ int[] max = new int[]{Integer.MIN_VALUE}; //这样就可以使用interger表示里面的int最小了
+
