@@ -176,6 +176,7 @@ http://localhost:8080/community/alpha/school
 http://localhost:8080/community/alpha/emp
 {"Salary":8000,"name":"张三","age":23}
 sevlet调用这个方法的时候一看加了这个 @ResponseBody 注解， 返回的是Map类型，自动转换成JSON发给浏览器
+
 ```java
     //除了响应html,还能响应JSON数据
     //通常在异步请求当中，比如注册B站，输入昵称，密码，光标切换就会判断昵称是否被占用，但是当前网页没有刷新
@@ -190,7 +191,7 @@ sevlet调用这个方法的时候一看加了这个 @ResponseBody 注解， 返�
         emp.put("age", 23);
         emp.put("Salary", 8000);
         return emp;
-    }在这里插入代码片
+    }
 ```
 ## 异步请求响应JSON 
 有时候返回的不是一个员工是一组员工

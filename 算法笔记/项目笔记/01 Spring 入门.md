@@ -107,3 +107,4 @@ public class AlphaService {
 **什么叫依赖注入？** 
 例如当前的bean要使用alpha dao,没有必要通过容器去getBean获取，只用给声明注入alpha dao就可以了，
 ![在这里插入图片描述](https://gitee.com/RichardCheng_5ecf/cloudimage/raw/master/img/20210521010223886.png)
+
