@@ -146,7 +146,7 @@ public class SpiralOrderTraverseII {
 >
 >N皇后问题，输出的List<Integer> **index表示皇后放的行数，值表示列数**。
 
-![image-20210709214456416](Recursion II.assets/image-20210709214456416.png)
+![image-20210709214456416](11 Recursion II.assets/image-20210709214456416.png)
 
 用Recursion DFS来做，分出八层，每层叉出8个叉。每一层决定Qi应该放到哪一行，叉出来的叉表示放到那一列。
 
