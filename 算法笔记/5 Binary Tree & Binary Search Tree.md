@@ -1023,3 +1023,332 @@ class Solution {
 解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
 ```
 
+需要前序遍历，这样才方便让父节点指向孩子节点，找到对应的路径。
+
+1. base case:
+
+**什么时候算是找到了叶子节点？** 是当 cur不为空，其左右孩子都为空的时候，就找到叶子节点。
+
+```
+if(cur.left == null && cur.right == null) {
+	终止处理逻辑
+}
+```
+
+2. 确定单层递归逻辑
+
+因为是前序遍历，需要先处理中间节点，中间节点就是我们要记录路径上的节点，先放进path中。
+
+```
+ paths.add(root.val);
+```
+
+然后是递归和回溯的过程，上面说过没有判断cur是否为空，那么在这里递归的时候，如果为空就不进行下一层递归了。
+
+所以递归前要加上判断语句，下面要递归的节点是否为空，如下
+
+```
+ if (root.left != null) {
+            helper(root.left, paths, res);
+            paths.remove(paths.size() - 1); //返回上一层回溯
+        }
+        if (root.right != null) {
+            helper(root.right, paths, res);
+            paths.remove(paths.size() - 1);
+        }
+```
+
+**回溯要和递归永远在一起，世界上最遥远的距离是你在花括号里，而我在花括号外！**
+
+```java
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        List<Integer> paths = new ArrayList<>(); //里面放的是integer
+        helper(root, paths, res);
+        return res;
+    }
+    private void helper(TreeNode root, List<Integer> paths, List<String> res) {
+        paths.add(root.val);
+        // 叶子结点
+        if (root.left == null && root.right == null) {
+            // 输出
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < paths.size() - 1; i++) { //paths.size() - 1 是因为最后一个元素不要添加"->"
+                sb.append(paths.get(i)).append("->"); //取出path里面的数据加上箭头
+            }
+            sb.append(paths.get(paths.size() - 1)); //加上最后一个元素
+            res.add(sb.toString());
+            return;
+        }
+        if (root.left != null) {
+            helper(root.left, paths, res);
+            paths.remove(paths.size() - 1); //返回上一层回溯
+        }
+        if (root.right != null) {
+            helper(root.right, paths, res);
+            paths.remove(paths.size() - 1);
+        }
+    }
+}
+```
+
+**方法二：** 常规前序遍历，不用回溯
+
+```JAVA
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> res = new ArrayList<>();
+        helper(root, new StringBuilder(), res);
+        return res;
+    }
+    private void helper(TreeNode root, StringBuilder sb, List<String> res) {
+        if (root == null) { //防止NPE
+        }
+        if (root.left == null && root.right == null) { //控制空节点不入循环
+            sb.append(root.val);
+            res.add(sb.toString());
+            return;
+        }
+        helper(root.left, new StringBuilder(sb).append(root.val + "->"), res);
+        helper(root.right, new StringBuilder(sb).append(root.val + "->"), res);
+    }
+}
+```
+
+#### [404. 左叶子之和](https://leetcode-cn.com/problems/sum-of-left-leaves/)
+
+计算给定二叉树的所有左叶子之和。
+
+1. recursion 
+
+```java
+class Solution {
+        public int sumOfLeftLeaves(TreeNode root) {
+            int sum = 0;
+            helper(root, sum);
+            return sum;
+        }
+        private void helper(TreeNode root, int sum) {
+            if (root == null) {
+                return;
+            }
+            if (root.left == null && root.right == null) {
+                return;
+            }
+            if (root.left.left == null && root.left.right == null) {
+                sum += root.left.val;
+                //return;
+            }
+            helper(root.left, sum);
+            helper(root.right, sum);
+        }
+    }
+```
+
+2. 递归
+
+```java
+ class Solution {
+        public int sumOfLeftLeaves(TreeNode root) {
+            if (root == null) {
+                return 0;
+            }
+            Deque<TreeNode> stack = new ArrayDeque<>();
+            stack.offerFirst(root);
+            int result = 0;
+            while(!stack.isEmpty()) {
+                TreeNode cur = stack.pollFirst();
+                if (cur.right != null) {
+                    stack.offerFirst(cur.right);
+                }
+                if (cur.left != null) {
+                    stack.offerFirst(cur.left);
+                }
+                if (cur.left != null && cur.left.left == null && cur.left.right == null) {
+                    result += cur.left.val;
+                }
+            }
+            return result;
+        }
+    }
+```
+
+#### [513. 找树左下角的值](https://leetcode-cn.com/problems/find-bottom-left-tree-value/)
+
+>给定一个二叉树的 **根节点** `root`，请找出该二叉树的 **最底层 最左边** 节点的值。假设二叉树中至少有一个节点。
+>
+>```
+>输入: root = [2,1,3]
+>输出: 1
+>```
+
+如何判断是最后一行呢，其实就是深度最大的叶子节点一定是最后一行。
+
+1. BFS
+
+```JAVA
+class Solution {
+   public int findBottomLeftValue(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        int res = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = queue.poll();
+                if (i == 0) {
+                    res = cur.val;
+                }
+                if (cur.left != null) {
+                    queue.offer(cur.left);
+                }
+                if (cur.right != null) {
+                    queue.offer(cur.right);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+2. Recursion
+
+```java
+
+```
+
+#### [112. 路径总和](https://leetcode-cn.com/problems/path-sum/)
+
+>给你二叉树的根节点 root 和一个表示目标和的整数 targetSum ，判断该树中是否存在**根节点到叶子节点的路径**，这条路径上所有节点值相加等于目标和 targetSum 。
+>
+>叶子节点 是指没有子节点的节点。
+
+![image-20210813125515708](5 Binary Tree & Binary Search Tree.assets/image-20210813125515708.png) 
+
+**如果需要==搜索整颗二叉树==，那么递归函数就==不要返回值==，**
+
+**如果要搜索其中==一条符合条件==的路径，递归函数就==需要返回值==，因为遇到符合条件的路径了就要及时返回。**
+
+图中可以看出，遍历的路线，并不要遍历整棵树，所以递归函数需要返回值，可以用bool类型表示。
+
+![image-20210813134153023](5 Binary Tree & Binary Search Tree.assets/image-20210813134153023.png)
+
+1. 计数器如何统计这一条路径的和呢？
+
+不要去累加然后判断是否等于目标和，那么代码比较麻烦，可以用递减，让计数器count初始为目标和，然后每次减去遍历路径节点上的数值。如果最后==count == 0==，==同时到了叶子节点的话==，说明找到了目标和。
+
+```java
+class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return false;
+        }
+        return traversal(root, targetSum - root.val);
+    }
+    private boolean traversal(TreeNode cur, int count) {
+        if (cur.left == null && cur.right == null && count == 0) {
+            return true; // base case: 遇到叶子节点，并且计数为0
+        }
+        if (cur.left != null) {
+            count -= cur.left.val;// 递归，处理节点;
+            if (traversal(cur.left, count)) {// 回溯，撤销处理结果
+                return true;
+            }
+            count += cur.left.val;
+        }
+        if (cur.right != null) {
+            count -= cur.right.val;
+            if (traversal(cur.right, count)) {
+                return true;
+            }
+            count += cur.right.val;
+        }
+        return false;
+    }
+}
+```
+
+方法二：前序遍历，两个stack, 一个遍历，一个记录sum
+
+```java
+class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+      if (root == null) {
+          return false;
+      }
+      Deque<TreeNode> stack = new ArrayDeque<>();
+      Deque<Integer> stackNum = new ArrayDeque<>();
+      stack.offerFirst(root);
+      stackNum.offerFirst(root.val);
+      while(!stack.isEmpty()) {
+          TreeNode cur = stack.pollFirst();
+          int sum = stackNum.pollFirst();
+          if (cur.left == null && cur.right == null && sum == targetSum) {
+              return true;
+          }
+          if (cur.right != null) {
+              stack.offerFirst(cur.right);
+              stackNum.offerFirst(sum + cur.right.val);
+          }
+           // 左节点，压进去一个节点的时候，将该节点的路径数值也记录下来
+          if (cur.left != null) {
+              stack.offerFirst(cur.left);
+              stackNum.offerFirst(sum + cur.left.val);
+          }
+      }
+      return false;
+    }
+}
+```
+
+
+
+#### [113. 路径总和 II](https://leetcode-cn.com/problems/path-sum-ii/)
+
+找到所有路径，**所以递归函数不要返回值！**
+
+> 给你二叉树的根节点 `root` 和一个整数目标和 `targetSum` ，找出==所有== **从根节点到叶子节点** 路径总和等于给定目标和的路径。
+
+![image-20210813185321498](5 Binary Tree & Binary Search Tree.assets/image-20210813185321498.png)
+
+```java
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        List<Integer> path = new LinkedList<>();
+        helper(root, targetSum, res, path);
+        return res;
+    }
+    private void helper(TreeNode root, int targetSum, List<List<Integer>> res,  List<Integer> path) {
+        path.add(root.val);
+        //base case: 碰到了叶子节点
+        if (root.left == null && root.right == null) {
+            if (targetSum - root.val == 0) {
+                res.add(new ArrayList<>(path));
+            }
+            return;
+        }
+        if (root.left != null) {
+            helper(root.left, targetSum - root.val, res, path);
+            path.remove(path.size() - 1);
+        }
+        if (root.right != null) {
+            helper(root.right, targetSum - root.val, res, path);
+            path.remove(path.size() - 1);
+        }
+    }
+}
+
+```
+
+19 
+
+1. [二叉树：构造二叉树登场！](https://github.com/RichardCheng20/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
