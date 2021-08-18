@@ -174,7 +174,7 @@ for(Map.Entry<String, Integer> entry : scores.entrySet()) {
 遍历Map.Entry
 
 ```java
-Iterator<Map.Entry<String, Integer>> iter = scores.entrySet();
+Iterator<Map.Entry<String, Integer>> iter = M.entrySet();
 while (iter.hasNext) {
 	Map.Entry<String, Integer> curr = iter.next();
 	System.out.println(curr.getKey() + " " cur.getValue());

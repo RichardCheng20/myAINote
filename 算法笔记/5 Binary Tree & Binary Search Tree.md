@@ -341,10 +341,10 @@ What if the binary tree is null? Return true in this case.
 public class Solution {
   public boolean isBST(TreeNode root) {
     // Write your solution here
-    return isBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    return isBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);//return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
   }
 
-  private boolean isBST(TreeNode root, int min, int max) {
+  private boolean isBST(TreeNode root, int min, int max) {//private boolean validate(TreeNode root, long min, long max)
     if (root == null) {
       return true;
     }
@@ -420,6 +420,25 @@ public class Solution {
 		return cur;
 	}
 }
+
+//////////递归//////////
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == val) {
+            return root;
+        }
+        if (root.val < val) {
+            return searchBST(root.right, val);
+        }
+        if (root.val > val) {
+            return searchBST(root.left, val);
+        }
+        return null;
+    }
+}
 ```
 
 
@@ -490,7 +509,50 @@ public class Solution {
 }
 ```
 
+#### [701. 二叉搜索树中的插入操作](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
+
+递归**有返回值的话，可以利用返回值完成新加入的节点与其父节点的赋值操作**。
+
+1. base case: 
+
+终止条件就是找到遍历的节点为null的时候，就是要插入节点的位置了，并把插入的节点返回。
+
+```java
+if (root == NULL) {
+    TreeNode node = new TreeNode(val);
+    return node;
+}
+```
+
+这里把添加的节点返回给上一层，就完成了父子节点的赋值操作了，详细再往下看。
+
+```java
+class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        return buildTree(root, val);
+    }
+
+    public TreeNode buildTree(TreeNode root, int val){
+        if (root == null) // 如果当前节点为空，也就意味着val找到了合适的位置，此时创建节点直接返回。
+            return new TreeNode(val);
+        if (root.val < val){
+            root.right = buildTree(root.right, val); // 递归创建右子树
+        }else if (root.val > val){
+            root.left = buildTree(root.left, val); // 递归创建左子树
+        }
+        return root;
+    }
+}
+```
+
+
+
+
+
+
+
 ## Delete In Binary Search Tree
+
 Delete the target key K in the given binary search tree if the binary search tree contains K. Return the root of the binary search tree.
 
 Find your own way to delete the node from the binary search tree, after deletion the binary search tree's property should be maintained.
@@ -518,41 +580,42 @@ The smallest larger node is first candidate after deletion
 ```
 
 ```java
-public class Solution {
-	public TreeNode delete(TreeNode root, int key) {
-		if (root == null) {
-			return null;
-		}
-		if (key == root.key) {
-			if (root.left == null) {
-				return root.right; //1 左边为空
-			} else if (root.right == null) {
-				return root.left; // 2 右边为空
-			} else if (root.right.left == null) {// 3 右边的左孩子为空
-				root.right.left = root.left; 
-				return root.right;
-			} else { //右边的左孩子不为空,找root右边树的最小值作为new root，冒泡到上面来作为新的root放到中间位置接上被删的root连接的东西才能满足BST
-				TreeNode newRoot = rightSmallest(root.right);
-				newRoot.left = root.left;
-				newRoot.right = root.right;
-				return newRoot;
-			} 
-			if (key < root.key) {
-				root.left = delete(root.left, key); //注意这里有等号赋值，表示的是root.left即root的左边直接用递归函数返回值接管了
-			} else if (key > root.key) {
-				root.right = delete(root.right, key);
-			}
-			return root;
-		}
-		private TreeNode rightSmallest(TreeNode root) {
-			while (root.left.left != null) {
-				root = root.left;
-			}
-			TreeNode smallest = root.left;
-			root.left = root.left.right;
-			return smallest;
-		}
-	}
+class Solution {
+        public TreeNode deleteNode(TreeNode root, int key) {
+            if (root == null) {
+                return null;
+            }
+            if (key == root.val) {
+                if (root.left == null) {
+                    return root.right; //1 左边为空
+                } else if (root.right == null) {
+                    return root.left; // 2 右边为空
+                } else if (root.right.left == null) {// 3 右边的左孩子为空
+                    root.right.left = root.left;
+                    return root.right;
+                } else { //右边的左孩子不为空,找root右边树的最小值作为new root，冒泡到上面来作为新的root放到中间位置接上被删的root连接的东西才能满足BST
+                    TreeNode newRoot = rightSmallest(root.right);
+                    newRoot.left = root.left;
+                    newRoot.right = root.right;
+                    return newRoot;
+                }
+            }
+            if (key < root.val) {
+                root.left = deleteNode(root.left, key); //注意这里有等号赋值，表示的是root.left即root的左边直接用递归函数返回值接管了
+            } else if (key > root.val) {
+                root.right = deleteNode(root.right, key);
+            }
+            return root;
+        }
+
+        private TreeNode rightSmallest(TreeNode root) {
+            while (root.left.left != null) {
+                root = root.left;
+            }
+            TreeNode smallest = root.left;
+            root.left = root.left.right;
+            return smallest;
+        }
 }
 ```
 
@@ -657,6 +720,7 @@ public class Solution {
 				inorder.add(cur.key);
 				cur = cur.right; //然后就把cur的右边遍历
 			}
+            
 		}
 		return inorder;
 	}
@@ -1349,6 +1413,593 @@ class Solution {
 
 ```
 
-19 
+#### [106. 从中序与后序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
-1. [二叉树：构造二叉树登场！](https://github.com/RichardCheng20/leetcode-master/blob/master/problems/0106.从中序与后序遍历序列构造二叉树.md)
+> 根据一棵树的中序遍历与后序遍历构造二叉树。
+>
+> ```
+> 中序遍历 inorder = [9,3,15,20,7]
+> 后序遍历 postorder = [9,15,7,20,3]
+> 返回如下的二叉树：
+>     3
+>    / \
+>   9  20
+>     /  \
+>    15   7
+> ```
+
+以==后序数组==的最后一个元素为切割点，==先切中序数组==，根据中序数组，反过来在切后序数组。一层一层切下去，每次后序数组最后一个元素就是节点元素。
+
+![image-20210814071521225](5 Binary Tree & Binary Search Tree.assets/image-20210814071521225.png)
+
+说到一层一层切割，就应该想到了递归。
+
+来看一下一共分几步：
+
+- 第一步：如果数组大小为零的话，说明是空节点了。
+- 第二步：如果不为空，那么==取后序数组最后一个元素==作为节点元素。
+- 第三步：找到==后序数组==最后一个元素在==中序数组的位置==，作为切割点
+- 第四步：切割中序数组，切成中序左数组和中序右数组 （顺序别搞反了，一定是先切中序数组）
+- 第五步：切割后序数组，切成后序左数组和后序右数组
+- 第六步：递归处理左区间和右区间
+
+为什么先切割中序数组呢？
+
+切割点在后序数组的最后一个元素，就是用这个元素来切割中序数组的，所以必要==先切割中序数组==。
+
+可以按照下图，将树分为三块来递归，递归函数传入root.left需要满足在中序和后序数组中保持一致。
+
+![image-20210814204150763](5 Binary Tree & Binary Search Tree.assets/image-20210814204150763.png)
+
+```python
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, 0, inorder.length, postorder, 0, postorder.length);
+    }
+    public TreeNode buildTree(int[] inorder, int inLeft, int inRight, int[] postorder, int postLeft, int postRight) {
+        //base case:
+        //没有元素了
+        if (inRight - inLeft < 1) {
+            return null;
+        }
+        // 只有一个元素了
+        if (inRight - inLeft == 1) {
+            return new TreeNode(inorder[inLeft]);
+        }
+        // 后序数组postorder里最后一个即为根结点
+        int rootVal = postorder[postRight - 1];
+        TreeNode root = new TreeNode(rootVal);
+        int rootIndex = 0;
+        // 根据根结点的值找到该值在中序数组inorder里的位置
+        for (int i = inLeft; i < inRight; i++) {
+            if (inorder[i] == rootVal) {
+                rootIndex = i;
+            }
+        }
+        // 根据rootIndex划分左右子树
+        root.left = buildTree(inorder, inLeft, rootIndex,
+                postorder, postLeft, postLeft + (rootIndex - inLeft)); //后序树的root左边（其实就是中序的前半部分）
+        root.right = buildTree(inorder, rootIndex + 1, inRight,
+                postorder, postLeft + (rootIndex - inLeft), postRight - 1);//后序右边 15 7 20
+        return root;
+    }
+}
+```
+
+
+
+#### [105. 从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+
+![image-20210815000955001](5 Binary Tree & Binary Search Tree.assets/image-20210815000955001.png)
+
+```java
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTree(preorder, 0, preorder.length, inorder, 0, inorder.length);
+    }
+    private TreeNode buildTree(int[] preorder, int preLeft, int preRight, int[] inorder, int inLeft, int inRight) {
+        if (inRight - inLeft < 1|| preLeft - preRight > 1) {
+            return null;
+        }
+        if (inRight - inLeft == 1) {
+            return new TreeNode(inorder[inLeft]);
+        }
+        int rootVal = preorder[preLeft];
+        TreeNode root = new TreeNode(rootVal);
+        int rootIndex = 0;
+        for (int i = inLeft; i < inRight; i++) {
+            if (inorder[i] == rootVal) {
+                rootIndex = i;
+            }
+        }
+        //preLeft + 1 表示到前序的9的位置，preLeft + (rootIndex - inLeft) + 1是因为左闭右开，确保9被加入。 rootIndex确实在9的后面
+        root.left = buildTree(preorder, preLeft + 1, preLeft + (rootIndex - inLeft) + 1, inorder, inLeft, rootIndex);
+        root.right = buildTree(preorder, preLeft + (rootIndex - inLeft) + 1,preRight, inorder, rootIndex + 1, inRight);
+        return root;
+    }
+}
+```
+
+​	
+
+#### [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
+
+**base case:** 那么当递归遍历的时候，如果传入的数组大小为1，说明遍历到了==叶子节点了==。
+
+那么应该定义一个新的节点，并把这个数组的数值赋给新的节点，然后返回这个节点。 这表示一个数组大小是1的时候，构造了一个新的节点，并返回。
+
+```java
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return helper(nums, 0, nums.length);
+    }
+    private TreeNode helper(int[] nums, int leftIndex, int rightIndex) {
+      ////////base case/////////////// 
+        if (rightIndex - leftIndex < 1) {// 没有元素了
+            return null;//终止条件，是遇到空节点，也就是数组区间为0，就终止了。
+        }
+        if (rightIndex - leftIndex == 1) {// 只有一个元素
+            return new TreeNode(nums[leftIndex]);
+        }
+        /////////////// 单层递归逻辑///////////////
+        int maxIndex = leftIndex;// 最大值所在位置
+        int maxVal = nums[maxIndex];// 最大值
+        for (int i = leftIndex + 1; i < rightIndex; i++) {
+            if (nums[i] > maxVal) {
+                maxVal = nums[i];
+                maxIndex = i;
+            }
+        }
+        TreeNode root = new TreeNode(maxVal);
+        // 根据maxIndex划分左右子树
+        root.left = helper(nums, leftIndex, maxIndex);
+        root.right = helper(nums, maxIndex + 1, rightIndex);
+        return root;
+    }
+}
+```
+
+#### [617. 合并二叉树](https://leetcode-cn.com/problems/merge-two-binary-trees/)
+
+>给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
+>
+>你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。
+>
+>```
+>输入: 
+>	Tree 1                     Tree 2                  
+>          1                         2                             
+>         / \                       / \                            
+>        3   2                     1   3                        
+>       /                           \   \                      
+>      5                             4   7                  
+>输出: 
+>合并后的树:
+>	     3
+>	    / \
+>	   4   5
+>	  / \   \ 
+>	 5   4   7
+>```
+
+```java
+class Solution {
+        public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+            //base case//////////////////
+            if (root1 == null & root2 == null) {
+                return null; 
+            }
+            if (root1 == null & root2 != null ) {
+                return root2;
+            }
+            if (root2 == null & root1 != null ) {
+                return root1;
+            }
+            //单层递归///////////////////
+            TreeNode newRoot = new TreeNode(root1.val + root2.val);//中
+            newRoot.left = mergeTrees(root1.left, root2.left); //左边
+            newRoot.right = mergeTrees(root1.right, root2.right);//右边
+            return newRoot;
+        }
+}
+```
+
+#### [530. ==二叉搜索树==的最小绝对差](https://leetcode-cn.com/problems/minimum-absolute-difference-in-bst/)
+
+> 给你一棵所有节点为非负值的二叉搜索树，请你计算树中任意两节点的差的绝对值的最小值。
+>
+> ```
+> 输入：
+> 
+>    1
+>     \
+>      3
+>     /
+>    2
+> 
+> 输出：
+> 1
+> 
+> 解释：
+> 最小绝对差为 1，其中 2 和 1 的差的绝对值为 1（或者 2 和 3）。
+> ```
+
+用一个pre节点记录一下cur节点的前一个节点。
+
+![image-20210815232643577](5 Binary Tree & Binary Search Tree.assets/image-20210815232643577.png)
+
+```JAVA
+class Solution {
+        TreeNode pre;// 记录上一个遍历的结点
+        int result = Integer.MAX_VALUE;
+        public int getMinimumDifference(TreeNode root) {
+            if(root==null)return 0;
+            traversal(root);
+            return result;
+        }
+        //中序遍历模板 在中的时候进行操作
+        public void traversal(TreeNode root){
+            if(root==null)return;
+            //左
+            traversal(root.left);
+            //中
+            if(pre!=null){//root.val-pre.val 如果root刚好在根，那么pre就是左孩子
+                //如果root刚好在右孩子，那么pre就是根
+                result = Math.min(result,root.val-pre.val);
+            }
+            pre = root;// 记录前一个
+            //右
+            traversal(root.right);
+        }
+    }
+```
+
+中序遍历迭代法
+
+```java
+class Solution {
+        public int getMinimumDifference(TreeNode root) {
+            int result = Integer.MAX_VALUE;
+            TreeNode pre = null;
+            TreeNode cur = root;
+            Deque<TreeNode> stack = new ArrayDeque<>();
+            while (cur != null || !stack.isEmpty()) {
+                if (cur != null) {
+                    stack.offerFirst(cur);
+                    cur = cur.left;
+                } else {
+                    cur = stack.pollFirst();
+                    if (pre != null) {
+                        result = Math.min(result, cur.val - pre.val);
+                    }
+                    pre = cur;
+                    cur = cur.right;
+                }
+            }
+            return result;
+        }
+    }
+```
+
+#### [501. 二叉搜索树中的众数](https://leetcode-cn.com/problems/find-mode-in-binary-search-tree/)
+
+>给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+>
+>假定 BST 有如下定义：
+>
+>- 结点左子树中所含结点的值**小于等于**当前结点的值
+>- 结点右子树中所含结点的值**大于等于**当前结点的值
+>- 左子树和右子树都是二叉搜索树
+>
+>例如：
+>给定 BST `[1,null,2,2]`,
+>
+>```
+>   1
+>    \
+>     2
+>    /
+>   2
+>```
+
+如果不是二叉搜索树，最直观的方法一定是把这个树都遍历了，用map统计频率，把频率排个序，最后取前面高频的元素的集合。
+
+1. 这个树都遍历了，用map统计频率 
+
+2. 把统计的出来的出现频率（即map中的value）排个序
+3. 取前面高频的元素
+
+**既然是搜索树，它中序遍历就是有序的**。
+
+弄一个指针指向前一个节点，这样每次cur（当前节点）才能和pre（前一个节点）作比较。
+
+而且初始化的时候pre = NULL，这样当pre为NULL时候，我们就知道这是比较的第一个元素
+
+```java
+class Solution {
+    ArrayList<Integer> resList;
+    int maxCount;// 最大频率
+    int count;// 统计频率
+    TreeNode pre;
+    public int[] findMode(TreeNode root) {
+        resList = new ArrayList<>();
+        maxCount = 0;
+        count = 0;
+        pre = null;
+        helper(root);
+        int[] res = new int[resList.size()];
+        for (int i = 0; i < resList.size(); i++) {
+            res[i] = resList.get(i);
+        }
+        return res;
+    }
+    private void helper(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        helper(root.left);
+
+        int rootValue = root.val;
+        //计数
+        if (pre == null || rootValue != pre.val) {// 第一个节点// 与前一个节点数值不同
+            count = 1;
+        } else { // 与前一个节点数值相同
+            count++;
+        }
+        // 更新结果以及maxCount
+        if (count > maxCount) {// 如果计数大于最大值
+            resList.clear(); // 很关键的一步，不要忘记清空result，之前result里的元素都失效了
+            resList.add(rootValue);
+            maxCount = count; // 更新最大频率
+        } else if (count == maxCount) { // 如果和最大值相同，放进result中
+            resList.add(rootValue);
+        }
+        pre = root;
+
+        helper(root.right);
+    }
+}
+```
+
+#### [236. 二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+>给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+>
+>![image-20210817102849392](5 Binary Tree & Binary Search Tree.assets/image-20210817102849392.png)
+
+要是能自底向上查找就好了，这样就可以找到公共祖先了。
+
+回溯啊，二叉树回溯的过程就是==从低到上==。后序遍历就是天然的回溯过程，最先处理的一定是叶子节点。
+
+**如果找到一个节点，发现左子树出现结点p，右子树出现节点q，或者 左子树出现结点q，右子树出现节点p，那么该节点就是节点p和q的最近公共祖先。**
+
+使用后序遍历，回溯的过程，就是从低向上遍历节点，一旦发现如何这个条件的节点，就是最近公共节点了。
+
+1. base case: 如果找到了 节点p或者q，或者遇到空节点，就返回。
+
+```java
+if (root == q || root == p || root == NULL) return root;
+```
+
+**在递归函数有返回值的情况下：如果要搜索一条边，递归函数返回值不为空的时候，立刻返回，如果搜索整个树，直接用一个变量left、right接住返回值，这个left、right后序还有逻辑处理的需要，也就是后序遍历中处理中间节点的逻辑（也是回溯）**。
+
+![image-20210817114115724](5 Binary Tree & Binary Search Tree.assets/image-20210817114115724.png)
+
+```java
+   class Solution {
+        public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+            return helper(root, q, p);
+        }
+        private TreeNode helper(TreeNode root, TreeNode p, TreeNode q) {
+            if (root == null || root == p || root == q) {
+                return root;
+            }
+            TreeNode left = helper(root.left, p, q); //左
+            TreeNode right = helper(root.right, p, q); //右
+            //如果想利用left和right做逻辑处理， 不能立刻返回，而是要等left与right逻辑处理完之后才能返回。
+            //中
+            if (left != null && right != null) {// 如果left 和 right都不为空，说明此时root就是最近公共节点。这个比较好理解
+                return root;
+            }
+            if (left == null && right != null) {//如果left为空，right不为空，就返回right，说明目标节点是通过right返回的
+                return right;
+            } else if (left != null && right == null) {
+                return left;
+            }
+            return null; //那么如果left和right都为空，则返回left或者right都是可以的，也就是返回空。
+        }
+    }
+```
+
+#### [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+>给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+>
+>![image-20210817115439252](5 Binary Tree & Binary Search Tree.assets/image-20210817115439252.png)
+
+只要从上到下遍历的时候，cur节点是数值在[p, q]区间中则说明该节点cur就是最近公共祖先了。
+
+普通二叉树求最近公共祖先需要使用回溯，从底向上来查找，二叉搜索树就不用了，因为搜索树有序（相当于自带方向），那么只要从上向下遍历就可以了。
+
+==采用前序遍历==（其实这里**没有中节点的处理逻辑**，遍历顺序无所谓了）。
+
+![image-20210817120200321](5 Binary Tree & Binary Search Tree.assets/image-20210817120200321.png)
+
+可以找到节点4，为最近公共祖先，而且不需要遍历整棵树，找到结果直接返回！
+
+1. base case:
+
+```java
+if (cur == NULL) return cur;
+```
+
+其实都不需要这个终止条件，因为题目中说了p、q 为不同节点且均存在于给定的二叉搜索树中。也就是说一定会找到公共祖先的，所以并不存在遇到空的情况。
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return helper(root, p, q);
+    }
+    private TreeNode helper(TreeNode cur, TreeNode p, TreeNode q) {
+        if (cur == null) {
+            return cur;
+        }
+        //左边找到了
+        if (cur.val > p.val && cur.val > q.val) {
+            TreeNode left = helper(cur.left, p, q);
+            if (left != null) { //必须不为空
+                return left;
+            }
+        }
+        //右边找到了
+        if (cur.val < p.val && cur.val < q.val) {
+            TreeNode right = helper(cur.right, p, q);
+            if (right != null) {
+                return right;
+            }
+        }
+        return cur;
+    }
+}
+```
+
+#### [669. 修剪二叉搜索树](https://leetcode-cn.com/problems/trim-a-binary-search-tree/)
+
+>给你二叉搜索树的根节点 root ，同时给定最小边界low 和最大边界 high。通过修剪二叉搜索树，使得所有节点的值在[low, high]中。修剪树不应该改变保留在树中的元素的相对结构（即，如果没有被移除，原有的父代子代关系都应当保留）。 可以证明，存在唯一的答案。
+>
+>所以结果应当返回修剪好的二叉搜索树的新的根节点。注意，根节点可能会根据给定的边界发生改变。
+>
+>![image-20210818094805193](5 Binary Tree & Binary Search Tree.assets/image-20210818094805193.png)
+>
+>![image-20210818095857012](5 Binary Tree & Binary Search Tree.assets/image-20210818095857012.png)
+
+
+
+```java
+class Solution {
+    public TreeNode trimBST(TreeNode root, int low, int high) {
+        if (root == null) {
+            return null;
+        }
+        //右边 
+        if (root.val < low) {//相当于把节点0的右孩子（节点2）返回给上一层，
+            TreeNode right = trimBST(root.right, low, high);//区间[low, high]
+            return right;
+        }
+        //左边
+        if (root.val > high) {
+            TreeNode left = trimBST(root.left, low, high);
+            return left;
+        }
+        //中 上面例子直接先进入如下代码，然后判断后进入第七行代码，第七行代码返回节点0的右孩子（节点2）
+        root.left = trimBST(root.left, low, high);//然后如下代码相当于用节点3的左孩子 把下一层返回的 节点0的右孩子（节点2） 接住
+        root.right = trimBST(root.right, low, high);
+        return root;
+    }
+}
+```
+
+#### [108. 将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
+
+>给你一个整数数组 nums ，其中元素已经按 升序 排列，请你将其转换为一棵 高度平衡 二叉搜索树。
+>
+>高度平衡 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
+>
+>![image-20210818122650447](5 Binary Tree & Binary Search Tree.assets/image-20210818122650447.png)
+
+**本质就是寻找分割点，分割点作为当前节点，然后递归左区间和右区间**。
+
+如果数组长度为偶数，中间节点有两个，取哪一个？
+
+例如：输入：[-10,-3,0,5,9]  实际上就是按照0中点切割，然后0的左边是完整递归，右边也是完整递归。
+
+如下两棵树，都是这个数组的平衡二叉搜索树：
+
+![image-20210818123607965](5 Binary Tree & Binary Search Tree.assets/image-20210818123607965.png)
+
+如果要分割的数组长度为偶数的时候，中间元素为两个，是取左边元素 就是树1，取右边元素就是树2。
+
+**这里定义的是左闭右闭区间，在不断分割的过程中，也会坚持左闭右闭的区间**
+
+1. base case: 
+
+```java
+if (left > right) return null; //left > right的时候，就是空节点了。
+```
+
+```java
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return helper(nums, 0, nums.length - 1);
+    }
+    private TreeNode helper(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int mid = left + (right - left) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = helper(nums, left, mid - 1);
+        root.right = helper(nums, mid + 1, right);
+        return root;
+    }
+}
+```
+
+#### [538. 把二叉搜索树转换为累加树](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
+
+>给出==二叉 搜索 树==的根节点，该树的节点值各不相同，请你将其转换为累加树（Greater Sum Tree），使每个节点 node 的新值等于原树中大于或等于 node.val 的值之和。
+>
+>
+>
+>![image-20210818124912594](5 Binary Tree & Binary Search Tree.assets/image-20210818124912594.png)
+
+**换一个角度来看，这就是一个有序数组[2, 5, 13]，求从后到前的累加数组，也就是[20, 18, 13]，是不是感觉这就简单了。**
+
+**从树中可以看出累加的顺序是右中左，所以我们需要反中序遍历这个二叉树，然后顺序累加就可以了**。
+
+这里很明确了，不需要递归函数的返回值做什么操作了，要遍历整棵树。
+
+同时需要定义一个全局变量pre，用来保存cur节点的前一个节点的数值，定义为int型就可以了。
+
+```java
+class Solution {
+    int pre;
+    public TreeNode convertBST(TreeNode root) {
+       pre = 0;
+       helper(root);
+       return root;
+    }
+    private void helper(TreeNode cur) {
+        if (cur == null) {
+            return;
+        }
+        helper(cur.right);
+        cur.val += pre;
+        pre = cur.val;
+        helper(cur.left);
+    }
+}
+```
+
+也可以直接用一个全局sum计算
+
+```java
+class Solution {
+        int sum;
+    public TreeNode convertBST(TreeNode root) {
+        sum = 0;
+        helper(root);
+        return root;
+    }
+    private void helper(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        helper(root.right); //右边
+        sum += root.val;
+        root.val = sum; //中
+        helper(root.left); //左边
+    }
+}
+```
+
