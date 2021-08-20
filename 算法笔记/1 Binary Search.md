@@ -380,3 +380,157 @@ public class Solution {
 }
 ```
 
+# 数组
+
+#### [27. 移除元素](https://leetcode-cn.com/problems/remove-element/)
+
+>给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+>
+>不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
+>
+>元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+
+```java
+//1. 暴力双循环
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int size = nums.length;
+        for (int i = 0; i < size; i++) {
+            if (nums[i] == val) {
+                for (int j = i + 1; j < size; j++) {
+                    nums[j - 1] = nums[j];
+                }
+                size--;
+                i--;
+            }
+        }
+        return size;
+    }
+}
+```
+
+双指针法（快慢指针法）： **通过一个快指针和慢指针在一个for循环下完成两个for循环的工作。**
+
+```java
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int slow = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                nums[slow++] = nums[i];
+            }
+        }
+        return slow;
+    }
+}
+```
+
+#### [977. 有序数组的平方](https://leetcode-cn.com/problems/squares-of-a-sorted-array/)
+
+> 给你一个按 **非递减顺序** 排序的整数数组 `nums`，返回 **每个数字的平方** 组成的新数组，要求也按 **非递减顺序** 排序。
+>
+> ```
+> 输入：nums = [-4,-1,0,3,10]
+> 输出：[0,1,9,16,100]
+> 解释：平方后，数组变为 [16,1,0,9,100]
+> 排序后，数组变为 [0,1,9,16,100]
+> ```
+
+数组其实是有序的， 只不过负数平方之后可能成为最大数了。
+
+那么数组平方的最大值就在数组的两端，不是最左边就是最右边，不可能是中间。
+
+此时可以考虑双指针法了，i指向起始位置，j指向终止位置。
+
+```java
+class Solution {
+    public int[] sortedSquares(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        int[] result = new int[nums.length];
+        int index = result.length - 1;
+        while (left <= right) {
+            if (nums[left] * nums[left] > nums[right] * nums[right]) {
+                result[index--] = nums[left] * nums[left];
+                left++;
+            } else {
+                result[index--] = nums[right] * nums[right];
+                right--;
+            }
+        }
+        return result;
+    }
+}
+```
+
+#### [209. 长度最小的子数组](https://leetcode-cn.com/problems/minimum-size-subarray-sum/)
+
+>给定一个含有 n 个正整数的数组和一个正整数 target 。
+>
+>找出该数组中满足==其和== ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 
+>
+>![image-20210819113300710](1 Binary Search.assets/image-20210819113300710.png)
+
+滑动窗口也可以理解为双指针法的一种！只不过这种解法更像是一个窗口的移动，所以叫做滑动窗口更适合一些。
+
+窗口的起始位置如何移动：如果当前窗口的值大于s了，窗口就要向前移动了（也就是该缩小了）。
+
+窗口的结束位置如何移动：窗口的结束位置就是遍历数组的指针，窗口的起始位置设置为数组的起始位置就可以了。	
+
+```java
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int res = Integer.MAX_VALUE;
+        int left = 0;
+        int sum = 0;
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+            while (sum >= target) {
+                res = Math.min(res, right - left + 1);
+                sum -= nums[left++];
+            }
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}
+```
+
+#### [59. 螺旋矩阵 II](https://leetcode-cn.com/problems/spiral-matrix-ii/)
+
+>给你一个正整数 `n` ，生成一个包含 `1` 到 `n2` 所有元素，且元素按顺时针顺序螺旋排列的 `n x n` 正方形矩阵 `matrix` 。
+>
+>![image-20210819122702213](1 Binary Search.assets/image-20210819122702213.png)
+
+![image-20210819182629787](1 Binary Search.assets/image-20210819182629787.png)
+
+```java
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int[][] res = new int[n][n];
+        int start = 0;
+        int end = res.length - 1;
+        int count = 1;
+        while (start < end) {
+            for (int i = start; i <= end; i++) {
+                res[start][i] = count++;
+            }
+            for (int i = start + 1; i <= end - 1; i++) {
+                res[i][end] = count++;
+            }
+            for (int i = end; i >= start; i--) {
+                res[end][i] = count++;
+            }
+            for (int i = end - 1; i >= start + 1; i--) {
+                res[i][start] = count++;
+            }
+            start++;
+            end--;
+        }
+        if (start == end) {
+            res[start][end] = n * n;
+        }
+        return res;
+    }
+}
+```
+

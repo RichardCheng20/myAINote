@@ -1,4 +1,4 @@
-# 3 Linked List
+# 3 Linked List 8.19
 ## Reverse Linked List (iterative)
 Reverse a singly-linked list iteratively.
 
@@ -109,6 +109,9 @@ Examples
 
 L = null, insert 1, return 1 -> null
 L = 1 -> 3 -> 5 -> null, insert 2, return 1 -> 2 -> 3 -> 5 -> null
+
+​     cur
+
 L = 1 -> 3 -> 5 -> null, insert 3, return 1 -> 3 -> 3 -> 5 -> null
 L = 2 -> 3 -> null, insert 1, return 1 -> 2 -> 3 -> null
 
@@ -134,47 +137,42 @@ public class Solution {
 ```
 
 ## Merge Two Sorted Linked Lists
-Merge two sorted lists into one large sorted list.
-
-Examples
-
-L1 = 1 -> 4 -> 6 -> null, L2 = 2 -> 5 -> null, merge L1 and L2 to 1 -> 2 -> 4 -> 5 -> 6 -> null
-L1 = null, L2 = 1 -> 2 -> null, merge L1 and L2 to 1 -> 2 -> null
-L1 = null, L2 = null, merge L1 and L2 to null## ReOrder Linked List
+>Merge two sorted lists into one large sorted list.
+>
+>Examples
+>
+>L1 = 1 -> 4 -> 6 -> null, L2 = 2 -> 5 -> null, merge L1 and L2 to 1 -> 2 -> 4 -> 5 -> 6 -> null
+>L1 = null, L2 = 1 -> 2 -> null, merge L1 and L2 to 1 -> 2 -> null
+>L1 = null, L2 = null, merge L1 and L2 to null
 
 ```java
 public class Solution {
-	public ListNode merge(ListNode one, ListNode two) {
-		ListNode dummy = new ListNode(0); 
-		ListNode cur = dummy; //假头给我cur
-		ListNode cur1 = one;
-		ListNode cur2 = two;
-		while (cur1 != null && cur2 != null) {
-			if (cur1.value < cur2.value) {
-				cur.next = cur1;
-				cur = cur.next;
-				cur1 = cur1.next;
-			} else {
-				cur.next = cur2;
-				cur = cur.next;
-				cur2 = cur2.next;
-			}
-		}
-		//post processing
-		while(cur1 != null) {
-			cur.next = cur1;
-			cur = cur.next;
-			cur1 = cur1.next;
-		}
-
-		if (cur1 != null) {
-			cur.next = cur1; //直接连接即可
-		}
-		if (cur2 != null) {
+  public ListNode merge(ListNode one, ListNode two) {
+    // Write your solution here
+    ListNode dummy = new ListNode(0);
+    ListNode cur = dummy;
+    ListNode cur1 = one;
+    ListNode cur2 = two;
+    while (cur1 != null && cur2 != null) {
+      if (cur1.value < cur2.value) {
+        cur.next = cur1;
+        cur = cur.next;
+        cur1 = cur1.next;
+      } else {
+        cur.next = cur2;
+        cur = cur.next;
+        cur2 = cur2.next;
+      }
+    }
+    if (cur1 != null) {
+      cur.next = cur1;
+      /cur1 = cur1.next;
+    }
+    if (cur2 != null) {
 			cur.next = cur2;
-		}
-		return dummy.next;
 	}
+    return dummy.next;
+  }
 }
 ```
 ## 41. ReOrder Linked List
@@ -487,3 +485,10 @@ public class Solution {
 	}
 }
 ```
+
+
+
+
+
+
+
