@@ -1,4 +1,4 @@
-# HashTable and String I
+# HashTable and String I 8/23
 
 ![image-20210623094338566](8 HashTable and String I.assets/image-20210623094338566.png)
 
@@ -313,21 +313,24 @@ if(slow > 0 && a[slow - 1] == '  ') {slow--};
 
 ```java
 public class Solution {
-    public String removeSpaces(String input) {
-        if (input == null) {
-            return input;
-        }
-        Char[] array = input.toCharArray();
-        int slow = 0;
-        for (int fast = 0; fast < array.length; fast++) {
-            if (array[fast] = ' ' &&(fast == 0 || array[fast-1]) = ' ') {
-                continue;
-            }
-            array[slow++] = array[fast];
-        }
-        if (slow > 0 && array[slow - 1] == ' ')
-        return new String(array, 0, slow);
+  public String removeSpaces(String input) {
+    // Write your solution here
+    if (input == null) {
+      return input;
     }
+    char[] array = input.toCharArray();
+    int slow = 0;
+    for (int fast = 0; fast < array.length; fast++) {
+      if (array[fast] == ' ' && (fast == 0 || array[fast - 1] == ' ')) {
+        continue;
+      }
+      array[slow++] = array[fast];
+    }
+    if (slow > 0 && array[slow - 1] == ' ') {
+      slow--;
+    }
+    return new String(array, 0, slow);
+  }
 }
 ```
 
@@ -500,4 +503,321 @@ public class Solution {
     }
 }
 ```
+
+# 哈希表
+
+#### [242. 有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/)
+
+> 给定两个字符串 `*s*` 和 `*t*` ，编写一个函数来判断 `*t*` 是否是 `*s*` 的字母异位词。
+
+```java
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int[] record = new int[26];
+        for (char c : s.toCharArray()) {
+            record[c - 'a'] += 1;
+        }
+        for (char c: t.toCharArray()) {
+            record[c - 'a'] -= 1;
+        }
+        for (int i : record) {
+            if (i != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+#### [349. 两个数组的交集](https://leetcode-cn.com/problems/intersection-of-two-arrays/)
+
+>给定两个数组，编写一个函数来计算它们的交集。
+
+```java
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) {
+            return new int[0];
+        }
+        Set<Integer> set1 = new HashSet<>();
+        Set<Integer> resSet = new HashSet<>();
+        //遍历数组1
+        for (int i : nums1) {
+            set1.add(i);
+        }
+        //遍历数组2的过程中判断哈希表中是否存在该元素
+        for (int i : nums2) {
+            if (set1.contains(i)) {
+                resSet.add(i);
+            }
+        }
+        int[] resArr = new int[resSet.size()];
+        int i = 0;
+//       for (int num : resSet) {
+//            resArr[i++] = num;
+//        }
+        Iterator<Integer> iter =  resSet.iterator();
+        while (iter.hasNext()) {
+            Integer p = iter.next();
+            resArr[i++] = p;
+        }
+        return resArr;
+    }
+}
+```
+
+#### [202. 快乐数](https://leetcode-cn.com/problems/happy-number/)
+
+> 编写一个算法来判断一个数 `n` 是不是快乐数。
+>
+> 编写一个算法来判断一个数 n 是不是快乐数。
+>
+> 「快乐数」定义为：
+>
+> 对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
+> 然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。
+> 如果 **可以变为  1，那么这个数就是快乐数。**
+> 如果 n 是快乐数就返回 true ；不是，则返回 false 。
+>
+> ![image-20210822070530246](8 HashTable and String I.assets/image-20210822070530246.png)
+
+判断链表有没有环
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        Set<Integer> record = new HashSet<>();
+        while (n != 1 && !record.contains(n)) {
+            record.add(n);
+            n = getNextNumber(n);
+        }
+        return n == 1;
+    }
+    private int getNextNumber(int n) {
+        int res = 0;
+        while (n > 0) {
+            int temp = n % 10; //个位
+            res += temp * temp;
+            n = n / 10; //十位or理解为去掉个位后的数
+        }
+        return res;
+    }
+}
+```
+
+```java
+class Solution {
+    public boolean isHappy(int n) {
+        int slow = n;
+        int fast = getNextNumber(n);
+        while (fast != 1 && slow != fast) {
+           slow = getNextNumber(slow);
+           fast = getNextNumber(getNextNumber(fast));
+        }
+        return fast == 1;
+    }
+    private int getNextNumber(int n) {
+        int res = 0;
+        while (n > 0) {
+            int temp = n % 10;//个位
+            res += temp * temp;
+            n = n / 10;//十位
+        }
+        return res;
+    }
+}
+```
+
+#### [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
+
+>给定一个整数数组 `nums` 和一个整数目标值 `target`，请你在该数组中找出 **和为目标值** *`target`* 的那 **两个** 整数，并返回它们的数组下标。
+>
+>```
+>输入：nums = [2,7,11,15], target = 9
+>输出：[0,1]
+>解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。
+>```
+
+两数之和这道题目，不仅要判断y是否存在而且还要记录y的下表位置，因为要返回x 和 y的下表。所以set 也不能用。
+
+![image-20210822111241917](8 HashTable and String I.assets/image-20210822111241917.png)
+
+```java
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        if (nums == null || nums.length < 2) {
+            return new int[] {-1, -1};
+        }
+        int[] res = new int[] {-1, -1};
+        HashMap<Integer, Integer> map = new HashMap<>(); //key是数值，value是数组下标
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {//可以 O(1) 地寻找target - nums[i]，找到了就存入
+                res[0] = map.get(target - nums[i]); //根据值取出下标
+                res[1] = i;
+                break;
+            }
+            map.put(nums[i], i);
+        }
+        return res;
+    }
+}
+```
+
+#### [454. 四数相加 II](https://leetcode-cn.com/problems/4sum-ii/)
+
+>给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+>
+>```
+>输入:
+>A = [ 1, 2]
+>B = [-2,-1]
+>C = [-1, 2]
+>D = [ 0, 2]
+>
+>输出:
+>2
+>
+>解释:
+>两个元组如下:
+>1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+>2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+>```
+
+#### [383. 赎金信](https://leetcode-cn.com/problems/ransom-note/)
+
+>给定一个赎金信 (ransom) 字符串和一个杂志(magazine)字符串，判断第一个字符串 ransom 能不能由第二个字符串 magazines 里面的字符构成。如果可以构成，返回 true ；否则返回 false。
+>
+>```
+>输入：ransomNote = "aa", magazine = "ab"
+>输出：false
+>示例 3：
+>
+>输入：ransomNote = "aa", magazine = "aab"
+>输出：true
+>```
+
+```java
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int[] arr = new int[26];
+        int temp;
+        //记录杂志字符串出现的次数
+        for (int i = 0; i < magazine.length(); i++) {
+            temp = magazine.charAt(i) - 'a';
+            arr[temp]++;
+        }
+        for (int i = 0; i < ransomNote.length(); i++) {
+            temp = ransomNote.charAt(i) - 'a';
+            if (arr[temp] > 0) { //满足大于0的时候 一直减小
+                arr[temp]--;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+#### [15. 三数之和](https://leetcode-cn.com/problems/3sum/)
+
+>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且不重复的三元组。
+>
+>```
+>输入：nums = [-1,0,1,2,-1,-4]
+>输出：[[-1,-1,2],[-1,0,1]]
+>```
+
+**这道题目使用双指针法 要比哈希法高效一些**，首先将数组排序，然后有一层for循环，i从下表0的地方开始，同时定一个下表left 定义在i+1的位置上，定义下表right 在数组结尾的位置上。这里相当于  a = nums[i] b = nums[left]  c = nums[right]。如果nums[i] + nums[left] + nums[right] > 0  就说明 此时三数之和大了，因为数组是排序后了，所以right下表就应该向左移动，这样才能让三数之和小一些。如果 nums[i] + nums[left] + nums[right] < 0 说明 此时 三数之和小了，left 就向右移动，才能让三数之和大一些，直到left与right相遇为止。
+
+```java
+ class Solution {
+        public List<List<Integer>> threeSum(int[] nums) {
+            List<List<Integer>> result = new ArrayList<>();
+            if (nums.length == 0) {
+                return result;
+            }
+            Arrays.sort(nums);
+            for (int i = 0; i < nums.length; i++) {
+                if (i > 0 && nums[i] == nums[i - 1]) continue; // 最左边i的去重
+                int target = - nums[i];
+                int j = i + 1; //left pointer
+                int k = nums.length - 1;//right pointer
+                //使用two sum
+                while (j < k) {
+                    if (nums[j] + nums[k] == target) {
+                        List<Integer> cur = new ArrayList<>();
+                        cur.add(nums[i]);
+                        cur.add(nums[j]);
+                        cur.add(nums[k]);
+                        result.add(cur);
+                        j++; k--;
+                        while (j < nums.length && nums[j] == nums[j - 1]) j++; //左指针去重
+                        while (k > j && nums[k] == nums[k + 1]) k--;//右指针去重
+                    } else if (nums[j] + nums[k] > target) {
+                        k--;
+                    } else {
+                        j++;
+                    }
+                }
+            }
+            return result;
+        }
+    }
+```
+
+#### [18. 四数之和](https://leetcode-cn.com/problems/4sum/)
+
+>给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] ：
+>
+>```
+>示例 1：
+>输入：nums = [1,0,-1,0,-2,2], target = 0
+>输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+>```
+
+四数之和的双指针解法是两层for循环nums[k] + nums[i]为确定值，依然是循环内有left和right下表作为双指针，找出nums[k] + nums[i] + nums[left] + nums[right] == target的情况，三数之和的时间复杂度是O(n^2), 四数之和的时间复杂度是O(n^3). 
+
+```java
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums.length == 0) {
+            return res;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
+            }
+            for (int j = i + 1; j < nums.length; j++) {
+                if (j > i + 1 && nums[j - 1] == nums[j]) {
+                    continue;
+                }
+                int left = j + 1;
+                int right = nums.length - 1;
+                while (left < right) {
+                    int sum = nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum > target) {
+                        right--;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        res.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        while (right > left && nums[right] == nums[right - 1]) right--;
+                        while (right > left && nums[left] == nums[left + 1]) left++;
+
+                        left++;
+                        right--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+## 字符串
 

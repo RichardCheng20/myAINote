@@ -10,6 +10,8 @@ L = 1 -> 2 -> 3 -> null, return 3 -> 2 -> 1 -> null
 
 //time = O(n) space = O(1)
 
+首先定义一个cur指针，指向头结点，再定义一个pre指针，初始化为null。
+
 
 ```java
 public class Solution {
@@ -259,6 +261,10 @@ Examples
 
 L = 2 -> 4 -> 3 -> 5 -> 1 -> null, T = 3, is partitioned to 2 -> 1 -> 4 -> 3 -> 5 -> null
 
+curSmall 2 -> 1 
+
+curLarge 4 -> 3 -> 5 
+
 -  根据和target的大小分成两个linkedlist
 
 ```java
@@ -467,6 +473,7 @@ Return: 1 --> 2 --> 3 --> 4 --> 5
 -直接撸一遍,需要dummyhead
 1 --> 2 --> 6 --> 3 --> 4 --> 5 --> 6
 		p		h
+
 ```java
 public class Solution {
 	public ListNode removeElements(ListNode head, int val) {
@@ -488,7 +495,182 @@ public class Solution {
 
 
 
+#### [707. 设计链表](https://leetcode-cn.com/problems/design-linked-list/)
 
+```java
+ //单链表
+class ListNode {
+       int val;
+       ListNode next;
+       ListNode() {}
+       ListNode (int val) {
+           this.val = val;
+       }
+    }
+class MyLinkedList {
 
+    /** Initialize your data structure here. */
+    int size;//size存储链表元素的个数
+    ListNode head; //虚拟头结点
 
+    //初始化链表
+    public MyLinkedList() {
+        size = 0;
+        head = new ListNode(0);
+    }
+    
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    public int get(int index) {
+        if (index < 0 || index >= size) {
+            return -1;
+        }
+        ListNode currentNode = head;
+        //包含一个虚拟头节点，所以查找第 index+1 个节点
+        for (int i = 0; i <= index; i++) {
+            currentNode = currentNode.next;
+        }
+        return currentNode.val;
+    }
+    
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    public void addAtHead(int val) {
+        addAtIndex(0, val);
+    }
+    
+    /** Append a node of value val to the last element of the linked list. */
+    public void addAtTail(int val) {
+        addAtIndex(size, val);
+    }
+    
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    public void addAtIndex(int index, int val) {
+        if (index > size) {
+            return;
+        }
+        if (index < 0) {
+            index = 0;
+        }
+        size++;
+        ListNode pred = head;
+        for (int i = 0; i < index; i++) {
+            pred = pred.next;
+        }
+        ListNode toAdd = new ListNode(val);
+        toAdd.next = pred.next;
+        pred.next = toAdd;
+    }
+    
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    public void deleteAtIndex(int index) {
+        if (index < 0 || index >= size) {
+            return;
+        }
+        size--;
+        ListNode pre = head;
+        for (int i = 0; i < index; i++) {
+            pre = pre.next;
+        }
+        pre.next = pre.next.next;
+    }
+}
+```
 
+#### [24. 两两交换链表中的节点](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+
+>给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。**你不能只是单纯的改变节点内部的值**，而是需要实际的进行节点交换。
+
+![image-20210821135049765](3 Linked List.assets/image-20210821135049765.png)
+
+```
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head; //base case
+        }
+        ListNode next = head.next;
+        ListNode newNode = swapPairs(next.next); //rule 
+        
+        // 这里进行交换
+        next.next = head;
+        head.next = newNode;
+        return next;
+    }
+}
+```
+
+#### [19. 删除链表的倒数第 N 个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+>给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
+>
+>**进阶：**你能尝试使用一趟扫描实现吗？
+>
+>![image-20210821193818616](3 Linked List.assets/image-20210821193818616.png)
+
+让fast先走完n步，然后一样的速度slow再开始走，这样能确保slow和fast之间的距离就是要删掉的倒数距离，直到fast为空，这个时候slow的下个节点就是要被删除的节点。 
+
+```java
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        ListNode slow = dummy;
+        ListNode fast = dummy;
+        dummy.next = head;
+        for (int i = 0; i <= n ; i++) { //fast先跑一段n
+            fast = fast.next;
+        }
+        while (fast != null) { //有了间隔，slow, fast都一起跑
+            slow = slow.next;
+            fast = fast.next;
+        }
+        slow.next = slow.next.next; //删除节点
+        return dummy.next;
+    }
+}
+```
+
+#### [142. 环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+
+>给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 `null`。
+>
+>![image-20210821200047264](3 Linked List.assets/image-20210821200047264.png)
+
+假设从头结点到环形入口节点 的节点数为x。 环形入口节点到 fast指针与slow指针相遇节点 节点数为y。 从相遇节点 再到环形入口节点节点数为 z。 如图所示：
+
+![image-20210821200915023](3 Linked List.assets/image-20210821200915023.png)
+
+相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：` x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针， （y+z）为 一圈内节点的个数A。
+
+ fast指针走过的节点数 = slow指针走过的节点数 * 2：`(x + y) * 2 = x + y + n (y + z)`
+
+要找环形的入口: `x = (n - 1) (y + z) + z`
+
+先拿n为1的情况来举例，意味着fast指针在环形里转了一圈之后，就遇到了 slow指针了。
+
+公式就化解为 `x = z`，这就意味着，**从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点**。
+
+也就是在相遇节点处，定义一个指针index1，在头结点处定一个指针index2。
+
+让index1和index2同时移动，每次移动一个节点， 那么他们相遇的地方就是 环形入口的节点。
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {// 有环
+                ListNode index1 = fast;
+                ListNode index2 = head;
+                while (index1 != index2) {
+                    index1 = index1.next;
+                    index2 = index2.next;
+                }
+                return index1;
+            }
+        }
+        return null;
+    }
+}
+```
