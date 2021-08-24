@@ -821,3 +821,18 @@ class Solution {
 
 ## 字符串
 
+Hi, 
+
+I am Chengzhi Fu and my student ID is 8898807546. I am writing to ask for food support. I appreciate the help of basic needs and it really helped me to get enough food and find food resources especially emergency meals at the dining hall in the past semesters. I enrolled in fall courses. I am interested in food resources for the fall semester. Could you help me again? Thank you so much.
+
+Thank you, 
+
+Chengzhi 
+
+
+
+Hi, 
+
+I am Chengzhi Fu and my student ID is 8898807546.
+
+Looking for food resources 
