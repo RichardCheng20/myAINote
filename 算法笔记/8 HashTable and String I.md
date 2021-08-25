@@ -864,18 +864,32 @@ class Solution {
 
 **当需要固定规律一段一段去处理字符串的时候，要想想在for循环的表达式上做做文章。**
 
+```java
+class Solution {
+    public String reverseStr(String s, int k) {
+        char[] array = s.toCharArray();
+        for (int i = 0; i < array.length; i+= 2 * k) {
+            int start = i;
+            int end = Math.min(array.length - 1, start + k - 1);
+            while (start < end) {
+                char temp = array[start];
+                array[start] = array[end];
+                array[end] = temp;
+                start++;
+                end--;
+            }
+        }
+        return new String(array);
+    }
+}
 ```
 
-```
+#### [剑指 Offer 05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
 
-Hi, 
+> 请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
+>
+> ```
+> 输入：s = "We are happy."
+> 输出："We%20are%20happy."
+> ```
 
-I am Chengzhi Fu and my student ID is 8898807546. I am writing to ask for food support. I appreciate the help of basic needs and it really helped me to get enough food and find food resources especially emergency meals at the dining hall in the past semesters. I enrolled in fall courses. I am interested in food resources for the fall semester. Could you help me again? Thank you so much.
-
-Thank you, 
-
-Chengzhi 
-
-
-
-Looking for food resources
