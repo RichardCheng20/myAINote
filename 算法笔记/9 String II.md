@@ -131,8 +131,6 @@ public class Solution {
 }
 ```
 
-
-
 # [Right Shift By N Characters](https://app.laicode.io/app/problem/397?plan=3)
 
 >Right shift a given string by n characters.

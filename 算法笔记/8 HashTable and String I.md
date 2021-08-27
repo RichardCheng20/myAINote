@@ -893,3 +893,125 @@ class Solution {
 > 输出："We%20are%20happy."
 > ```
 
+**很多数组填充类的问题，都可以先预先给数组扩容带填充后的大小，然后在从后向前进行操作。**
+
+1. 不用申请新数组。
+2. 从后向前填充元素，避免了从前先后填充元素要来的 每次添加元素都要将添加元素之后的所有元素向后移动。
+
+```java
+public static String replaceSpace(StringBuffer str) {
+    if (str == null) {
+        return null;
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < str.length(); i++) {
+        if (" ".equals(String.valueOf(str.charAt(i)))) {
+            sb.append("%20");
+        } else {
+            sb.append(str.charAt(i));
+        }
+    }
+    
+}
+```
+
+#### [151. 翻转字符串里的单词](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
+
+>```
+>示例 3：
+>输入: "a good  example"
+>输出: "example good a"
+>解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+>```
+
+```java
+class Solution {
+    public String reverseWords(String s) {
+       if (s == null || s.length() <= 1) {
+           return s;
+       }
+        s = removeSpace(s);
+        char[] array = s.toCharArray();
+        reverse(array, 0, array.length - 1);
+        int start = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != ' ' && (i == 0 || array[i - 1] == ' ' )) {
+                start = i;
+            }
+            if (array[i] != ' ' && (i == array.length - 1 || array[i + 1] == ' ')) {
+                reverse(array, start, i);
+            }
+        }
+        return new String(array);
+    }
+
+    private void reverse(char[] array, int left, int right) {
+        while (left <= right) {
+            char temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
+        }
+    }
+
+    private String removeSpace(String s) {
+        // System.out.println("ReverseWords.removeSpace() called with: s = [" + s + "]");
+        int start = 0;
+        int end = s.length() - 1;
+        while (s.charAt(start) == ' ') start++;
+        while (s.charAt(end) == ' ') end--;
+        StringBuilder sb = new StringBuilder();
+        while (start <= end) {
+            char c = s.charAt(start);
+            if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {//c != ' '很明显不为空直接加入，然后就是sb.charAt(sb.length() - 1) != ' '确保sb中只添加一个空格
+                sb.append(c);
+            }
+            start++;
+        }
+        // System.out.println("ReverseWords.removeSpace returned: sb = [" + sb + "]");
+        return sb.toString();
+    }
+}
+```
+
+#### [剑指 Offer 58 - II. 左旋转字符串](https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/)
+
+>字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串"abcdefg"和数字2，该函数将返回左旋转两位得到的结果"cdefgab"。
+>
+>```
+>示例 1：
+>输入: s = "abcdefg", k = 2
+>输出: "cdefgab"
+>示例 2：
+>输入: s = "lrloseumgh", k = 6
+>输出: "umghlrlose"
+>```
+
+1. 反转区间为前n的子串
+2. 反转区间为n到末尾的子串
+3. 反转整个字符串
+
+```java
+class Solution {
+    public String reverseLeftWords(String s, int n) {
+        char[] array = s.toCharArray();
+        reverse(array, 0, n - 1);
+        reverse(array, n, array.length - 1);
+        reverse(array, 0, array.length - 1);
+        return new String(array);
+    }
+    private void reverse(char[] array, int left, int right) {
+        while (left <= right) {
+            char temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
+        }
+    }
+}
+```
+
+#### KMP
+
