@@ -17,6 +17,9 @@ No additional memory, time complexity = O(n ^ 2).
 - 关键: 1.1 先将input里的元素倒到buffer里 然后找到里面的curmin,并且记录一个count
 		   1.2 将大于curmin的元素放回到input, 小于的就保存到buffer里
 		   2 将buffer
+
+注意我这里实现用得是Deque然后一直用得offerFirst所以是个左开右闭的stack
+
 ```java
 public class Solution {
 	public void sort(LinkedList<Integer> s1) {
@@ -51,7 +54,7 @@ public class Solution {
 			}
 		}
 		// step 2 将buffer里的值统统放回input 确保升序
-		while (!buufer.isEmpty()) {
+		while (!bufer.isEmpty()) {
 			input.offerFirst(buffer.pollFirst());
 		}
 	}
@@ -59,8 +62,6 @@ public class Solution {
 ```
 ## Queue By Two Stacks
 Java: Implement a queue by using two stacks. The queue should provide size(), isEmpty(), offer(), poll() and peek() operations. When the queue is empty, poll() and peek() should return null.
-
-C++: Implement a queue by using two stacks. The queue should provide size(), isEmpty(), push(), front() and pop() operations. When the queue is empty, front() should return -1.
 
 Assumptions
 
@@ -296,3 +297,77 @@ public class Solution {
 }
 ```
 
+# 理论
+
+队列是先进先出
+
+![image-20210828085947370](4 Queue & Stack.assets/image-20210828085947370.png)
+
+栈是先进后出
+
+![image-20210828090007132](4 Queue & Stack.assets/image-20210828090007132.png)
+
+**Queue** 
+
+`offer()`
+
+`poll()`
+
+`peek()`
+
+`isEmpty()`
+
+`size()`
+
+**Deque**
+
+`offerFirst(),offerLast()`
+
+`pollFirst(),pollLast()`
+
+`peekFirst(),peekLast()`
+
+`isEmpty()`
+
+`size()`
+
+==implementation==: LinkedList, ArrayDeque
+
+Queue<Integer> queue = new LinkedList<>();
+
+**stack**
+
+`pop()`
+
+`peek()`
+
+`push()`
+
+`empty()`
+
+
+
+## PriorityQueue
+
+`offer()`
+
+`poll()`
+
+`peek()`
+
+`isEmpty()`
+
+`size()`
+
+PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
+
+```java
+PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
+           @Override
+           public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
+               return e1.getValue().compareTo(e2.getValue());
+           }
+        });
+```
+
+## Map
