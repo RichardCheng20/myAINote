@@ -146,7 +146,7 @@ public class Solution {
 	
 	public void push(int value) { //对于比较小的元素,minStack里面也要存
 		stack.offerFirst(value);
-		if (minStack.isEmpty() || value <= minStack.peekFirst()) {
+		if (minStack.isEmpty() || value <= minStack.peekFirst()) { //如果值比较小，minStack也要更新
 			minStack.offerFirst(value);
 		}
 	}
@@ -156,7 +156,7 @@ public class Solution {
 			return -1;
 		}
 		Integer result = stack.pollFirst();
-		if (minStack.peekFirst().equals(result)) {
+		if (minStack.peekFirst().equals(result)) { //如果result和minStack里的元素相同minStack也要更新
 			minStack.pollFirst();
 		}
 		return result;
@@ -175,10 +175,6 @@ public class Solution {
 Implement a stack containing integers using queue(s). The stack should provide push(x), pop(), top() and isEmpty() operations.
 
 In java: if the stack is empty, then top() and pop() will return null.
-
-In Python: if the stack is empty, then top() and pop() will return None.
-
-In C++:  if the stack is empty, then top() and pop() will return nullptr.
 
 ```java
 class Solution {
