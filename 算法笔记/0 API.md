@@ -108,13 +108,36 @@ Queue<Integer> queue = new LinkedList<>();
 
 PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
 
+使用匿名类，实现comparator接口，重写compare方法
+
 ```java
 PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
            @Override
-           public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
+           public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) { //Map.Entry<String, Integer>类型 e1 - e2这种按顺序是从小到大, minheap
                return e1.getValue().compareTo(e2.getValue());
            }
         });
+
+/// 注意实现compare方法
+//反序
+PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+//自己实现的话
+class MyInteger {
+    public int value;
+    public MyInteger(int value) {
+        this.value = value;
+    }
+    static class Mycomparator implements Comparator<MyInteger> {
+        @Override
+        public int compare(MyInteger o1, MyInteger o2) {
+            if (o1.value == o2.value) {
+                return 0;
+            }
+            return o1.value > o2.value ? -1 : 1; //大的优先，即maxheap 
+        }
+    }
+}
+
 ```
 
 ## Map
@@ -160,6 +183,8 @@ Map<String, Integer> freqMap = getFreMap(combo);
 ```
 
 - **Map.Entry<Key, Value>**  iterface
+
+**Map都有entrySet()** 
 
 Map.==Entry==<String, Integer> entry
 
@@ -243,7 +268,13 @@ int lenX = a[0].length;
 
 字符串转换为数字： 
 
+```java
+private int stoi(String s) {
+    return Integer.valueOf(s);
+}
 ```
+
+```java
  //we need to find in total what is the number
         int count = 0;
         while (ti < t.length() && t.charAt(ti) >= '0' && t.charAt(ti) <= '9') {
@@ -255,4 +286,55 @@ int lenX = a[0].length;
 最小值定义： 
 
  int[] max = new int[]{Integer.MIN_VALUE}; //这样就可以使用interger表示里面的int最小了
+
+顺时针打印矩阵 这里可以是非方阵。一般切割上下。然后剩下右边左边。
+
+```java
+import java.util.ArrayList;
+public class Solution {
+    public ArrayList<Integer> printMatrix(int [][] matrix) {
+        ArrayList<Integer> res = new ArrayList<>();
+        int rows = matrix.length;//行数
+        int cols = matrix[0].length;//列
+        if (rows == 0) {
+            return res;
+        }
+        int left = 0;
+        int right = cols - 1;
+        int up = 0; 
+        int down = rows - 1;
+        while (left < right && up < down) {
+            for (int i = left; i <= right; i++) {
+                res.add(matrix[up][i]);
+            }
+            for (int i = up + 1; i <= down - 1; i++) {
+                res.add(matrix[i][right]);
+            }
+            for (int i = right; i >= left; i--) {
+                res.add(matrix[down][i]);
+            }
+            for (int i = down - 1; i >= up + 1; i--) {
+                res.add(matrix[i][left]);
+            }
+            left++;
+            right--;
+            up++;
+            down--;
+        }
+        if (left > right || up > down) {
+            return res;
+        }
+        if (left == right) {
+            for (int i = up; i <= down; i++) {
+                res.add(matrix[i][left]);
+            }
+        } else {
+            for (int i = left; i <= right; i++) {
+                res.add(matrix[up][i]);
+            }
+        }
+        return res;
+    }
+}
+```
 

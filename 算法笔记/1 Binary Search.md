@@ -534,3 +534,76 @@ class Solution {
 }
 ```
 
+
+
+# 4. 二维数组中的查找
+
+> 给定一个二维数组，其每一行从左到右递增排序，从上到下也是递增排序。给定一个数，判断这个数是否在该二维数组中。
+>
+> Consider the following matrix:
+> [
+>   [1,   4,  7, 11, 15],
+>   [2,   5,  8, 12, 19],
+>   [3,   6,  9, 16, 22],
+>   [10, 13, 14, 17, 24],
+>   [18, 21, 23, 26, 30]
+> ]
+>
+> Given target = 5, return true.
+> Given target = 20, return false.
+
+要求时间复杂度 O(M + N)，空间复杂度 O(1)。其中 M 为行数，N 为 列数。
+
+从右上角开始查找，小于它的数一定在其左边，大于它的数一定在其下边。
+
+```java
+public class Solution {
+    public boolean Find(int target, int [][] array) {
+        int rows = array.length; 
+        int cols = array[0].length;
+        int row = 0;
+        int col = array[0].length - 1;
+        while (row <= rows - 1 && col >= 0) {
+            if (array[row][col] == target) {
+                return true;
+            } else if (array[row][col] < target) {
+                row++;
+            } else {
+                col--;
+            }
+        }
+        return false;
+    }
+}
+```
+
+# 50. 第一个只出现一次的字符位置
+
+> 在一个字符串中找到第一个只出现一次的字符，并返回它的位置。字符串只包含 ASCII 码字符。
+>
+> ```
+> Input: abacc
+> Output: b
+> ```
+
+最直观的解法是使用 HashMap 对出现次数进行统计：字符做为 key，出现次数作为 value，遍历字符串每次都将 key 对应的 value 加 1。最后再遍历这个 HashMap 就可以找出出现次数为 1 的字符。
+
+考虑到要统计的字符范围有限，也可以使用整型数组代替 HashMap。ASCII 码只有 128 个字符，因此可以使用长度为 128 的整型数组来存储每个字符出现的次数。
+
+```java
+public class Solution {
+    public int FirstNotRepeatingChar(String str) {
+        int[] array = new int[128];
+        for (int i = 0; i < str.length(); i++) {
+            array[str.charAt(i)]++;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (array[str.charAt(i)] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+

@@ -69,16 +69,18 @@ The elements in the queue are all Integers.
 size() should return the number of elements buffered in the queue.
 isEmpty() should return true if there is no element buffered in the queue, false otherwise.
 
+​                  ]  [   
+
 - 一个stack用来push存 一个stack用来poll(当它不为空时) 
 - 关键写出move(),只要out为空就一股脑移动到in里面去
 - time = 0(1) amotized, space = O(n)
 ```java
 public class Solution {
-	private LinkedList<Integer> in;
-	private LinkedList<Integer> out;
+	private Deque<Integer> in;
+	private Deque<Integer> out;
   public Solution() {
-    in = new LinkedList<Integer>();
-    out = new LinkedList<Integer>();
+    in = new ArrayDeque<>();
+    out = new ArrayDeque<>();
   }
   //in 
   //out 
@@ -125,7 +127,7 @@ min() - return the current min value in the stack.
 - 要实现找stack里面的最小值
 - stack1 存放input元素
 - stack2(minStack) 存放stack1里最小值so far , min取它peekFirst
-- 
+- ![image-20210830183346772](4 Queue & Stack.assets/image-20210830183346772.png)
 
 ```java
 public class Solution {
@@ -171,10 +173,12 @@ public class Solution {
 }
 ```
 
-## Stack by Queue(s)
+## Stack by 2 Queue(s)
 Implement a stack containing integers using queue(s). The stack should provide push(x), pop(), top() and isEmpty() operations.
 
 In java: if the stack is empty, then top() and pop() will return null.
+
+使用两个Queue，q1用来一直遍历原始数据，因为要实现stack, 那么pop出来的元素就是最后加入的元素，所以q2临时帮忙存一下非最后元素的所有元素，然后再把q1, q2对调回来。
 
 ```java
 class Solution {
@@ -195,12 +199,12 @@ class Solution {
     public Integer pop() {
         Integer prev = q1.poll();
         Integer cur = q1.poll();
-        while (cur != null) {
+        while (cur != null) { //通过cur来判断是否已经将q1清空,记录下q1最后一个元素就是要pop出来的
           q2.offer(prev);
-          prev = cur;
+          prev = cur; 
           cur = q1.poll();
         }
-        Queue<Integer> tmp = q1;
+        Queue<Integer> tmp = q1; //这个时候的q1其实已经为空，我们要倒一下，让q2变成空，q1变成q2 
         q1 = q2;
         q2 = tmp;
         return prev;
@@ -217,7 +221,7 @@ class Solution {
 
     /** Returns whether the stack is empty. */
     public boolean isEmpty() {
-       return top() == null;
+       return top() == null;//       return q1.isEmpty();
     }
 }
 ```
@@ -225,7 +229,21 @@ class Solution {
 ## Deque By Three Stacks
 Java: Implement a deque by using three stacks. The queue should provide size(), isEmpty(), offerFirst(), offerLast(), pollFirst(), pollLast(), peekFirst() and peekLast() operations. When the queue is empty, pollFirst(), pollLast(), peekFirst() and peek() should return null.
 
-// ipad详解
+input                ][1 2 3 4 5 6 7 
+
+output   1 2 3 ][ 4 5 6 7 
+
+buffer[ 7 6 5 4 
+
+使用三个stack, 刚开始所有的元素都在right stack里， 
+
+step1: 将right stack里的一半元素放入到buffer，
+
+step2: 将right stack剩下的元素放入left stack
+
+step3: 将buffer里的元素放回right stack这个时候相对顺序还是没有变
+
+我们可以发现，right stack里的元素被平均分配到左右stack里面了，这样从左右取元素就会非常方便。
 
 ```java
 public class Solution { 
@@ -239,21 +257,22 @@ public class Solution {
 		buffer = new ArrayDeque<>();
 	}
 
+    //offferFirst加入到左边
 	public void offerFirst(int element) {
 		left.offerFirst(element);
 	}
-
+    //offerLast直接加入右边
 	public void offerLast(int element) {
 		right.offerFirst(element);
 	}
-
+    //取出元素从左边，先运行move
 	public Integer pollFirst() {
-		move(right, left);
+		move(right, left); //right元素移动到left,然后从leftl
 		return left.isEmpty() ? null : left.pollFirst();
 	}
-
+    
 	public Integer pollLast() {
-		move(left, right);
+		move(left, right); //注意这里（left, right） !!! 把left的元素移动到right来
 		return right.isEmpty() ? null : right.pollFirst();
 	}
 
@@ -262,7 +281,7 @@ public class Solution {
 		return left.isEmpty() ? null : left.peekFirst();
 	}
 
-  public Integer peekLast() {
+    public Integer peekLast() {
 		move(left, right);
 		return right.isEmpty() ? null : right.peekFirst();
 	}
@@ -276,16 +295,19 @@ public class Solution {
 	}
   	
 	private void move(Deque<Integer> src, Deque<Integer> dest) {
-		if (!dest.isEmpty()) {
+		if (!dest.isEmpty()) { //不为空的时候就不要再move了
 			return;
 		}
-		int halfSize = src.size() / 2;
+		int halfSize = src.size() / 2; 
+        //step 1 放一半到buffer
 		for (int i = 0; i < halfSize; i++) {
 			buffer.offerFirst(src.pollFirst());
 		}
+        //step 2: 将src剩下的放入到right stack 
 		while (!src.isEmpty()) {
 			dest.offerFirst(src.pollFirst());
 		}
+        //step3: 将buffer所有的元素放入到right stack 
 		while (!buffer.isEmpty()) {
 			src.offerFirst(buffer.pollFirst());
 		}
@@ -303,7 +325,7 @@ public class Solution {
 
 ![image-20210828090007132](4 Queue & Stack.assets/image-20210828090007132.png)
 
-**Queue** 
+### **Queue** 
 
 `offer()`
 
@@ -315,7 +337,7 @@ public class Solution {
 
 `size()`
 
-**Deque**
+### **Deque**
 
 `offerFirst(),offerLast()`
 
@@ -331,7 +353,7 @@ public class Solution {
 
 Queue<Integer> queue = new LinkedList<>();
 
-**stack**
+### **stack**
 
 `pop()`
 
@@ -343,7 +365,7 @@ Queue<Integer> queue = new LinkedList<>();
 
 
 
-## PriorityQueue
+### PriorityQueue
 
 `offer()`
 
@@ -366,4 +388,289 @@ PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new C
         });
 ```
 
-## Map
+#### [20. 有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)
+
+>给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
+>
+>有效字符串需满足：
+>
+>左括号必须用相同类型的右括号闭合。
+>左括号必须以正确的顺序闭合。
+>
+>```
+>示例 1：
+>输入：s = "()"
+>输出：true
+>示例 2：
+>输入：s = "()[]{}"
+>输出：true
+>示例 3：
+>输入：s = "(]"
+>输出：false
+>```
+
+使用stack, stack里面通过判断string中为左括号的时候offerFirst右括号到stack里面。如果是string中字符为右括号,匹配的话就
+
+这里有三种不匹配的情况:
+
+1. 第一种情况，字符串里左方向的括号多余了 ，所以不匹配。 [![括号匹配1](https://camo.githubusercontent.com/110e1ae83f0f024569d70151895a7447abbc73b50fcdcffef8b55b08cd8035b4/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f323032303038303931353530353338372e706e67)](https://camo.githubusercontent.com/110e1ae83f0f024569d70151895a7447abbc73b50fcdcffef8b55b08cd8035b4/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f323032303038303931353530353338372e706e67)
+
+2. 第二种情况，括号没有多余，但是 括号的类型没有匹配上。：遍历字符串匹配的过程中，发现栈里没有要匹配的字符。所以return false [![括号匹配2](https://camo.githubusercontent.com/6a581a245fafe245a2057650b26e8015eabe3b6a73a662e74a21bc16f96f4938/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303830393135353130373339372e706e67)](https://camo.githubusercontent.com/6a581a245fafe245a2057650b26e8015eabe3b6a73a662e74a21bc16f96f4938/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303830393135353130373339372e706e67)
+
+3. 第三种情况，字符串里右方向的括号多余了，所以不匹配。栈不为空 [![括号匹配3](https://camo.githubusercontent.com/d7561bb518bf1c6668e5ff6685b9671ce726a2c618862272b4d8e6a6523a43c6/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303830393135353131353737392e706e67)](https://camo.githubusercontent.com/d7561bb518bf1c6668e5ff6685b9671ce726a2c618862272b4d8e6a6523a43c6/68747470733a2f2f696d672d626c6f672e6373646e696d672e636e2f32303230303830393135353131353737392e706e67)
+
+那么什么时候说明左括号和右括号全都匹配了呢，就是字符串遍历完之后，栈是空的，就说明全都匹配了。
+
+```java
+class Solution {
+    public boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            //碰到左括号，就把相应的右括号入栈
+            if (s.charAt(i) == '(') {
+                stack.offerFirst(')')
+            } else if (s.charAt(i) == '[') {
+                stack.offerFirst(']');
+            } else if (s.charAt(i) == '{') {
+                stack.offerFirst('}');
+            } else if (stack.isEmpty() || s.charAt(i) != stack.peekFirst()) {
+                return false;
+            } else {//如果是右括号判断是否和栈顶元素匹配
+                stack.pollFirst();
+            }
+        }
+        //最后判断栈中元素是否匹配
+        return stack.isEmpty();
+    }
+}
+```
+
+#### [1047. 删除字符串中的所有相邻重复项](https://leetcode-cn.com/problems/remove-all-adjacent-duplicates-in-string/)
+
+>给出由小写字母组成的字符串 S，重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+>
+>在 S 上反复执行重复项删除操作，直到无法继续删除。
+>
+>在完成所有重复项删除操作后返回最终的字符串。答案保证唯一。
+>
+>```
+>示例：
+>输入："abbaca"
+>输出："ca"
+>解释：
+>例如，在 "abbaca" 中，我们可以删除 "bb" 由于两字母相邻且相同，这是此时唯一可以执行删除操作的重复项。之后我们得到字符串 "aaca"，其中又只有 "aa" 可以执行重复项删除操作，所以最后的字符串为 "ca"。
+>```
+
+```
+class Solution {
+    public String removeDuplicates(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (stack.isEmpty() || stack.peekFirst() != s.charAt(i)) {
+                stack.offerFirst(s.charAt(i));
+            } else {
+                stack.pollFirst();
+            }
+        }
+        String str = "";
+        while (!stack.isEmpty()) {
+            str = stack.pollFirst() + str;
+        }
+        return str;
+    }
+}
+```
+
+方法二 stringbuilder作为stack
+
+```java
+class Solution {
+    public String removeDuplicates(String s) {
+        StringBuilder res = new StringBuilder();
+        int top = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (top < 0 || res.charAt(top) != s.charAt(i)) {
+                res.append(s.charAt(i));
+                top++;
+            } else {
+                res.deleteCharAt(top);
+                top--;
+            }
+        }
+        return res.toString();
+    }
+}
+```
+
+双指针
+
+```java
+class Solution {
+    public String removeDuplicates(String s) {
+        char[] ch = s.toCharArray();
+        int fast = 0;
+        int slow = 0;
+        while(fast < s.length()){
+            // 直接用fast指针覆盖slow指针的值
+            ch[slow] = ch[fast];
+            // 遇到前后相同值的，就跳过，即slow指针后退一步，下次循环就可以直接被覆盖掉了
+            if(slow > 0 && ch[slow] == ch[slow - 1]){
+                slow--;
+            }else{
+                slow++;
+            }
+            fast++;
+        }
+        return new String(ch,0,slow);
+    }
+}
+```
+
+#### [150. 逆波兰表达式求值](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+
+>根据[ 逆波兰表示法](https://baike.baidu.com/item/逆波兰式/128437)，求表达式的值。
+>
+>有效的算符包括 `+`、`-`、`*`、`/` 。每个运算对象可以是整数，也可以是另一个逆波兰表达式。
+>
+>```
+>示例 1：
+>
+>输入：tokens = ["2","1","+","3","*"]
+>输出：9
+>解释：该算式转化为常见的中缀算术表达式为：((2 + 1) * 3) = 9
+>示例 2：
+>
+>输入：tokens = ["4","13","5","/","+"]
+>输出：6
+>解释：该算式转化为常见的中缀算术表达式为：(4 + (13 / 5)) = 6
+>示例 3：
+>
+>输入：tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+>输出：22
+>解释：
+>该算式转化为常见的中缀算术表达式为：
+>  ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+>= ((10 * (6 / (12 * -11))) + 17) + 5
+>= ((10 * (6 / -132)) + 17) + 5
+>= ((10 * 0) + 17) + 5
+>= (0 + 17) + 5
+>= 17 + 5
+>= 22
+>```
+
+平常使用的算式则是一种中缀表达式，如 ( 1 + 2 ) * ( 3 + 4 ) 。
+
+该算式的逆波兰表达式写法为 ( ( 1 2 + ) ( 3 4 + ) * ) 。
+
+波兰表达式主要有以下两个优点：
+
+- 去掉括号后表达式无歧义，上式即便写成 1 2 + 3 4 + * 也可以依据次序计算出正确结果。
+
+- 适合用栈操作运算：==遇到数字则入栈==；==遇到算符则取出栈顶两个数字进行计算==，并将结果压入栈中。
+
+  Integer.valueOf(tokens[i])可以==将string转换为integer===， **string之间**的比较一定要==用.equals()!!!!!!==
+
+```java
+    class Solution {
+        public int evalRPN(String[] tokens) {
+            Deque<Integer> stack = new ArrayDeque<>();
+            for (int i = 0; i < tokens.length; i++) {
+                if (tokens[i].equals("+") || tokens[i].equals("-") || tokens[i].equals("*") || tokens[i].equals("/")) {
+                    int nums1 = stack.poll();
+                    int nums2 = stack.poll();
+                    if (tokens[i].equals("+")) stack.offerFirst(nums1 + nums2);
+                    if (tokens[i].equals("-")) stack.offerFirst(nums2 - nums1);
+                    if (tokens[i].equals("*")) stack.offerFirst(nums1 * nums2);
+                    if (tokens[i].equals("/")) stack.offerFirst(nums2 / nums1);
+                } else {
+                    stack.offerFirst(Integer.valueOf(tokens[i]));
+                }
+            }
+            return stack.pollFirst();
+        }
+    }
+```
+
+#### [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/),维护单调queue
+
+>给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+>
+>返回滑动窗口中的最大值。
+>
+>```
+>输入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+>输出：[3,3,5,5,6,7]
+>解释：
+>滑动窗口的位置                最大值
+>---------------               -----
+>[1  3  -1] -3  5  3  6  7       3
+> 1 [3  -1  -3] 5  3  6  7       3
+> 1  3 [-1  -3  5] 3  6  7       5
+> 1  3  -1 [-3  5  3] 6  7       5
+> 1  3  -1  -3 [5  3  6] 7       6
+> 1  3  -1  -3  5 [3  6  7]      7
+>```
+
+**队列没有必要维护窗口里的所有元素，只需要维护有可能成为窗口里最大值的元素就可以了，同时保证队里里的元素数值是由大到小的。**
+
+那么这个维护元素单调递减的队列就叫做**单调队列，即单调递减或单调递增的队列**
+
+```java
+//解法一
+//自定义数组 myQueue保留着k范围内的最大值，它是一个降序的queue,
+// 里面可以是k个元素的降序（当加入的val比较小的时候需要放到里面保持降序），也可以是k个元素里的最大值（新加入的val比之前的元素都大时候）
+class MyQueue {
+    private Deque<Integer> deque = new ArrayDeque<>();
+    //弹出元素时，比较当前要弹出的数值是否等于队列出口的数值，如果相等则弹出
+    //同时判断队列当前是否为空
+    public void poll(int val) {
+        if (!deque.isEmpty() && val == deque.peekFirst()) { //val == deque.peekFirst()这个时候说明移动了窗口需要去除掉myQueue里的最大值
+            deque.pollFirst();
+        }
+    }
+    //添加元素时，如果要添加的元素大于入口处的元素，就将入口元素弹出
+    //保证队列元素单调递减
+    public void add(int val) {
+        while (!deque.isEmpty() && val > deque.peekLast()) {
+            deque.pollLast();
+        }
+        deque.offerLast(val);
+    }
+    //队列队顶元素始终为最大值
+    public int peek() {
+        return deque.peekFirst();
+    }
+}
+
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums.length == 1) {
+            return nums;
+        }
+        int len = nums.length - k + 1;
+        //存放结果元素的数组
+        int[] res = new int[len];
+        int num = 0;
+        //自定义队列
+        MyQueue myQueue = new MyQueue();
+        //先将前k的元素放入队列
+        for (int i = 0; i < k; i++) {
+            myQueue.add(nums[i]);
+        }
+        res[num++] = myQueue.peek();
+        for (int i = k; i < nums.length; i++) {
+            //滑动窗口移除最前面的元素，移除是判断该元素是否放入队列，poll方法如果判断在myQueue里面会将它删掉不参与后面滑动窗口的运算
+            myQueue.poll(nums[i - k]);
+            //滑动窗口加入最后面的元素，当nums[i]比myQueue里的值要大的时候说明这个窗口的最大值就是num[i], 可以去除掉deque里的小值，然后放入val
+            myQueue.add(nums[i]);
+            //记录对应的最大值
+            res[num++] = myQueue.peek();
+        }
+        return res;
+    }
+}
+```
+
+
+
