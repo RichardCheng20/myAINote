@@ -25,5 +25,3 @@ https://github.com/RichardCheng20/myAINote.git
 
 ![image-20210831093823121](/Users/chengzhifu/Library/Application Support/typora-user-images/image-20210831093823121.png)
 
- 123 hhh 
-
