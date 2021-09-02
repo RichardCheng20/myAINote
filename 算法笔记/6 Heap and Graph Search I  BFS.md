@@ -1,4 +1,4 @@
-# Heap and Graph Search I : BFS
+# Heap and Graph Search I : BFS 9/1
 ## K Smallest In Unsorted Array
 Find the K smallest numbers in an unsorted integer array A. The returned numbers should be in ascending order.
 
@@ -34,7 +34,7 @@ public class Solution {
 			if (i < k) { //先加入k个元素
 				maxHeap.offer(array[i]);
 			} else if (array[i] < maxHeap.peek()) {
-				mapHeap.poll();
+				maxHeap.poll();
 				maxHeap.offer(array[i]);
 			}
 		}
@@ -79,7 +79,7 @@ public class Solution {
 		queue.offer(root);
 		while (!queue.isEmpty()) {
 			List<Integer> curLayer = new ArrayList<>();
-			int size = queue.size();
+			int size = queue.size(); //相当于一个墙 只打印上一层的所有节点
 			for (int i = 0; i < size; i++) {
 				TreeNode cur = queue.poll();
 				curLayer.add(cur.key);
