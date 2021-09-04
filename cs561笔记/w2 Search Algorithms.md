@@ -1,26 +1,16 @@
 # Search Algorithms
 
-**How to define a “problem”?**
-
-1.? 
-
-\2. ? 
-
-\3. ? 
-
-\4. ?
-
-**What is a “solution”?**
-
 **What is a “problem space”?**
 
-**What is a “search tree”?**
+action lead you from one state to another, the whole graph. 
+
+**What is a “search tree”?** with intial state 
 
 **How to find a solution?**
 
-Where is your **frontier** in your search?
+Where is your **frontier** in your search? A lot of state that you have visted right now behind these stares you have visited before. One step further is a new state. 
 
-How to manage your “soldiers” during the search?
+How to manage your “soldiers” during the search?  Queuing-Fn 
 
 ## **1 Uninformed Search** 
 
