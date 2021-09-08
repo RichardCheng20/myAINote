@@ -38,7 +38,41 @@ Enqueue expanded (children) nodes to the **back** of the queue
 
 时间复杂度: d层,每个children有b个children 所以是o(b^d), d是深度 
 
+```java
+static private void BFS(Node[][][] array, int[] entrance, int[] exit) {
+    Node entranceNode = array[entrance[0]][entrance[1]][entrance[2]];
+    entranceNode.cost = 0;
+    entranceNode.visited = true;
 
+    // ensure there is a node in exit coordinate
+    if (array[exit[0]][exit[1]][exit[2]] == null) {
+        array[exit[0]][exit[1]][exit[2]] = new Node();
+    }
+
+    Deque<int[]> queue = new LinkedList<>();
+    queue.addFirst(entrance);
+    while (!queue.isEmpty() && !success) {
+        int[] curCoordinate = queue.removeFirst();
+        Node curNode = array[curCoordinate[0]][curCoordinate[1]][curCoordinate[2]];
+        for (int i = 0; i < curNode.action.length; i++) {
+            int[] nextCoordinate = takeAction(curNode.action[i], (int[]) Arrays.copyOf(curCoordinate, 3));
+            if (array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]] != null && array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]].visited == false) {
+                if (arrayIsEqual(nextCoordinate, exit)) {
+                    success = true;
+                }
+                Node nextNode = array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]];
+                nextNode.stepCost = 1;
+                nextNode.cost = curNode.cost + nextNode.stepCost;
+                nextNode.pre = curCoordinate;
+                nextNode.visited = true;
+                queue.addLast(nextCoordinate);
+            }
+        }
+    }
+    createOutput(array, entrance, exit);
+
+}
+```
 
 
 
@@ -60,7 +94,51 @@ g(n) is the path cost to node n
 
 ![image-20210902105723188](w2.assets/image-20210902105723188.png)
 
+```java
+static private void UCS(Node[][][] array, int[] entrance, int[] exit) {
+    Node entranceNode = array[entrance[0]][entrance[1]][entrance[2]];
+    entranceNode.cost = 0;
+    entranceNode.visited = true;
 
+    // ensure there is a node in exit coordinate
+    if (array[exit[0]][exit[1]][exit[2]] == null) {
+        array[exit[0]][exit[1]][exit[2]] = new Node();
+    }
+
+    Comparator<int[]> cmp = new Comparator<int[]>() {
+        public int compare(int[] a, int[] b) {
+            return array[a[0]][a[1]][a[2]].cost - array[b[0]][b[1]][b[2]].cost;
+        }
+    };
+
+    Queue<int[]> queue = new PriorityQueue<>(cmp);
+
+    queue.add(entrance);
+    while (!queue.isEmpty() && !success) {
+        int[] curCoordinate = queue.remove();
+        Node curNode = array[curCoordinate[0]][curCoordinate[1]][curCoordinate[2]];
+        for (int i = 0; i < curNode.action.length; i++) {
+            int[] nextCoordinate = takeAction(curNode.action[i], (int[]) Arrays.copyOf(curCoordinate, 3));
+            if (array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]] != null && array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]].visited == false) {
+                if (arrayIsEqual(nextCoordinate, exit)) {
+                    success = true;
+                }
+                Node nextNode = array[nextCoordinate[0]][nextCoordinate[1]][nextCoordinate[2]];
+                if (curNode.action[i] <= 6) {
+                    nextNode.stepCost = 10;
+                } else {
+                    nextNode.stepCost = 14;
+                }
+                nextNode.cost = curNode.cost + nextNode.stepCost;
+                nextNode.pre = curCoordinate;
+                nextNode.visited = true;
+                queue.add(nextCoordinate);
+            }
+        }
+    }
+    createOutput(array, entrance, exit);
+}
+```
 
 
 

@@ -81,13 +81,13 @@ print(type(password))
 | 函数                   | 说明                                                      |
 | ---------------------- | --------------------------------------------------------- |
 | int(x [,base ])        | 将x转换为⼀一个整数                                       |
-| float(x )              | 将x转换为⼀一个浮点数                                     |
-| complex(real [,imag ]) | 创建⼀一个复数， real为实部， imag为虚部                  |
+| float(x )              | 将x转换为一个浮点数                                       |
+| complex(real [,imag ]) | 创建一个复数， real为实部， imag为虚部                    |
 | str(x )                | 将对象 x 转换为字符串串                                   |
 | repr(x )               | 将对象 x 转换为表达式字符串串                             |
 | eval(str )             | ⽤用来计算在字符串串中的有效Python表达式,并返回⼀一个对象 |
-| tuple(s )              | 将序列列 s 转换为⼀一个元组                               |
-| list(s )               | 将序列列 s 转换为⼀一个列列表                             |
+| tuple(s )              | 将序列列 s 转换为一个元组                                 |
+| list(s )               | 将序列列 s 转换为一个列表                                 |
 
 ```python
 password = input('please input your password:')
@@ -1333,7 +1333,7 @@ f.close()
 
 - readlines
 
-可以按照行的方式把整个文件中的内容进行一次性读取，并且返回的是一个列列表，其中每⼀行的数据为一个元素。  
+可以按照行的方式把整个文件中的内容进行一次性读取，并且返回的是一个列表，其中每⼀行的数据为一个元素。  
 
 ```python
 f = open('test.txt')
@@ -1351,9 +1351,9 @@ f.close()
 ```python
 f = open('test.txt')
 content = f.readline()
-print(f'第⼀一⾏行行： {content}')
+print(f'第一行： {content}')
 content = f.readline()
-print(f'第⼆二⾏行行： {content}')
+print(f'第⼆行： {content}')
 # 关闭⽂文件
 f.close()
 ```
