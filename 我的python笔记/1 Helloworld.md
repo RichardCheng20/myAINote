@@ -1502,6 +1502,48 @@ for i in file_list:
 
 
 # python数据结构
+
+
+
+# 定义node
+
+```java
+public class TreeNodeP {
+    public int key;
+    public TreeNodeP left;
+    public TreeNodeP right;
+    public TreeNodeP parent;
+    public TreeNodeP(int key, TreeNodeP parent) {
+      this.key = key;
+      this.parent = parent;
+    }
+}
+
+  public class TreeNode {
+    public int key;
+    public TreeNode left;
+    public TreeNode right;
+    public TreeNode(int key) {
+      this.key = key;
+    }
+  }
+
+  class ListNode {
+    public int value;
+    public ListNode next;
+    public ListNode(int value) {
+      this.value = value;
+      next = null;
+    }
+  }
+```
+
+
+
+
+
+
+
 ## 队列
 
 | 队列方式            | 特点         |
@@ -1597,6 +1639,38 @@ print(q.get())
 (1, 'ccccc')
 (3, 'aaaaa')
 ```
+
+基于这两方面，把堆看作原生的Python list也没什么奇怪的： `heap[0]` 表示最小的元素，同时 `heap.sort()` 维护了堆的不变性！
+
+要创建一个堆，可以使用list来初始化为 `[]` ，或者你可以通过一个函数 [`heapify()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heapify) ，来把一个list转换成堆。
+
+定义了以下函数：
+
+- `heapq.heappush`(*heap*, *item*)
+
+  将 *item* 的值加入 *heap* 中，保持堆的不变性。
+
+- `heapq.heappop`(*heap*)
+
+  弹出并返回 *heap* 的最小的元素，保持堆的不变性。如果堆为空，抛出 [`IndexError`](https://docs.python.org/zh-cn/3/library/exceptions.html#IndexError) 。使用 `heap[0]` ，可以只访问最小的元素而不弹出它。
+
+- `heapq.heappushpop`(*heap*, *item*)
+
+  将 *item* 放入堆中，然后弹出并返回 *heap* 的最小元素。该组合操作比先调用 [`heappush()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heappush) 再调用 [`heappop()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heappop) 运行起来更有效率。
+
+- `heapq.heapify`(*x*)
+
+  将list *x* 转换成堆，原地，线性时间内。
+
+- `heapq.heapreplace`(*heap*, *item*)
+
+  弹出并返回 *heap* 中最小的一项，同时推入新的 *item*。 堆的大小不变。 如果堆为空则引发 [`IndexError`](https://docs.python.org/zh-cn/3/library/exceptions.html#IndexError)。这个单步骤操作比 [`heappop()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heappop) 加 [`heappush()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heappush) 更高效，并且在使用固定大小的堆时更为适宜。 pop/push 组合总是会从堆中返回一个元素并将其替换为 *item*。返回的值可能会比添加的 *item* 更大。 如果不希望如此，可考虑改用 [`heappushpop()`](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heappushpop)。 它的 push/pop 组合会返回两个值中较小的一个，将较大的值留在堆中。
+
+
+
+
+
+
 
 ### defaultdict
 

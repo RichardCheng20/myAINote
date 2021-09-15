@@ -562,3 +562,5 @@ class Solution:
 ```
 
 ![image-20210906184323138](6 Heap and Graph Search I  BFS.assets/image-20210906184323138.png)
+
+![image-20210910115036193](6 Heap and Graph Search I  BFS.assets/image-20210910115036193.png)
