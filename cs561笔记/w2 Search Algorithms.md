@@ -1,10 +1,16 @@
 # Search Algorithms
 
+False: BFS is optimal if the path cost is a decreasing funtion of the depth of the node
+
+False: An optimal search algorithm is necessarily complete. (Suboptimal 就不complete)
+
+inadmissible heuristic 不改变completeness 但是会改变optimality
+
 **What is a “problem space”?**
 
 action lead you from one state to another, the whole graph. 
 
-**What is a “search tree”?** with intial state 
+**What is a “search tree”?** with intial state v 
 
 **How to find a solution?**
 
@@ -19,11 +25,8 @@ How to manage your “soldiers” during the search?  Queuing-Fn
 **evaluated four criteria:** 
 
 1. **Completeness:** does it always find a solution if one exists?是否能找到答案
-
 2. **Time complexity:** 
-
 3. **Space complexity:** 
-
 4. **Optimality:**  least-cost solution?
 
 **时空复杂度:** (必考)
@@ -92,6 +95,14 @@ uniformed search: you don't have any more information, 只有state and the actio
 
 use an evaluation function for each node; estimate of **“desirability”** expand most desirable unexpanded node.
 
+heuristic function:  estimated cost of the cheapest path from the <u>state at node n to a goal state</u>
+
+Admissible = never over estimate the future,
+
+Consistent = one step can never be worse than two steps. 
+
+consitent then must be admissible 
+
 **QueueingFn** = insert successors in decreasing order of desirability
 
 **Special cases:** 这些都是desirable的选择条件: 
@@ -113,6 +124,8 @@ use an evaluation function for each node; estimate of **“desirability”** exp
 
 ### 3 A* search (sum of past and future cost)
 
+如果heuristic function不admissible也可以找到optimal solution
+
 ![image-20210902175315004](w2.assets/image-20210902175315004.png)
 
 ![image-20210902180037518](w2.assets/image-20210902180037518.png)
@@ -127,7 +140,7 @@ Use heuristics to guide the search
 
 
 
-## 3 Function Optimization (Informed Search)
+## 3 Function Optimization/Local search  (Informed Search)
 
 ### Iterative improvement
 
@@ -137,7 +150,13 @@ vacuum world
 
 n-queens: Here, goal state is initially unknown but is specified by constraints that it must satisfy.
 
-### Hill-climbing (or gradient ascent/descent)
+**Local search alogrithms** 一般不保留path
+
+### 1. Hill-climbing (or gradient ascent/descent)
+
+hill-climbing可能**stuck:** Local maxima, ridges(山脊), Plateaux(平原,平的)
+
+not complete 
 
 ![image-20210902185807808](w2.assets/image-20210902185807808.png)
 
@@ -147,16 +166,28 @@ lowest space complexity, just O(1)
 
 看下面的: 
 
- ###  SimulatedAnnealing 
+ ###  2. Simulated Annealing 
+
+not complete 
+
+爬山从不downhill导致容易卡在local maximum
+
+==simulated annealing==的内层循环和爬山很像, 但它选取的是**random move**而不是best move. 这个算法可以接受some down hill. 
+
+![image-20210918105625242](w2%20Search%20Algorithms.assets/image-20210918105625242.png)
 
 ![image-20210903102038020](w2.assets/image-20210903102038020.png)
 
-### GeneticAlgorithms
+### 3. Genetic Algorithms
 
 parallelize the search problem
 
+crossover operation带来优点
+
+not complete 
+
 例子: horse race
 
-Adv: parallelize, don't undersand underlaying process, space has bumps and loval minima
+Adv: parallelize, don't undersand underlaying process, space has bumps and local minima
 
 Disadvantage: creating generations of samples and breading can be resource intensive. maybe a better solution. 

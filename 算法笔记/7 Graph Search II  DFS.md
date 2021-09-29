@@ -134,7 +134,7 @@ public class Solution {
 > cents, 10 cents, 25 cents), get all the possible ways to pay a target
 > number of cents. coins - an array of positive integers representing
 > the different denominations of coins, there are no duplicate numbers
-> and the numbers are sorted by descending order, eg. {25, 10, 5, 2, 1}
+> and the numbers are **sorted by descending order,** eg. {25, 10, 5, 2, 1}
 > target - a non-negative integer representing the target number of
 > cents, eg. 99
 > **Assumptions** coins is not null and is not empty, all the numbers in coins are positive target >= 0 You have infinite number of coins for
@@ -313,7 +313,7 @@ class Solution {
      public List<List<Integer>> combine(int n, int k) {
         List<List<Integer>> result = new ArrayList<>();
         List<Integer> cur = new ArrayList<>();
-        helper(n, k, 1, cur, result);
+        helper(n, k, 1, cur, result);//注意这里1开始是因为整数范围是1开始的
         return result;
     }
     private void helper(int n, int k, int startIndex,  List<Integer> cur, List<List<Integer>> result) {
@@ -322,7 +322,7 @@ class Solution {
             return;
         }
         for (int i = startIndex; i <= n; i++) { 
-            cur.add(i);
+            cur.add(i);//从断点出来,remove后继续循环到这里,这个时候i的递增了.eg取3 
             helper(n, k, i + 1, cur, result); //传入startIndex = i + 1是告诉下一层的起始位置
             cur.remove(cur.size() - 1);
         }
@@ -518,6 +518,7 @@ class Solution {
 ![image-20210714113409342](7 Graph Search II  DFS.assets/image-20210714113409342.png)
 
 ```java
+used[i - 1] == false是因为used这个boolean数组维护的是直上直下路径使用过的值, 而每一层的每一个结点相当于是不同的boolean数组,所以说used[i- 1]==false的意思是,当前结点祖先没有用它但是我的隔壁结点用了它,我就不能用了.
 class Solution {
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
         List<List<Integer>> result = new ArrayList<>();
