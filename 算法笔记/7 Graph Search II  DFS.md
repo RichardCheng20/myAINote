@@ -403,7 +403,7 @@ class Solution {
 >输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
 >```
 
-下图中输入23，index用来指向[23]的位置以及dfs的深度
+下图中输入23，index用来指向[23]的位置, 记录遍历第几个数字了, 以及dfs的深度
 
 ![image-20210713114701121](7 Graph Search II  DFS.assets/image-20210713114701121.png)
 
