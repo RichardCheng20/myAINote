@@ -12,7 +12,7 @@
 
 
 
-
+cp resource/asnlib/public/myplayer_play/random_player.py work
 
 # General AI
 

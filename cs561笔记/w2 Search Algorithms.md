@@ -191,3 +191,4 @@ not complete
 Adv: parallelize, don't undersand underlaying process, space has bumps and local minima
 
 Disadvantage: creating generations of samples and breading can be resource intensive. maybe a better solution. 
+
