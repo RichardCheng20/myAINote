@@ -71,7 +71,7 @@ print('输出的内容', end="") # 取消换行
 
 ```python
 password = input('请输⼊入您的密码： ')
-print(f'您输⼊入的密码是{password}')
+print(f'您输⼊的密码是{password}')
 # <class 'str'>
 print(type(password))
 ```
@@ -1748,7 +1748,7 @@ class LastUpdatedOrderedDict(OrderedDict):
 #### 2.1 直接创建法
 
 ```python
-test = [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+test = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 ```
 
 简单粗暴，不过太麻烦，一般不用。
