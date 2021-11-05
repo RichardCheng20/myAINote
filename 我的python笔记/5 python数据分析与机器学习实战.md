@@ -18,3 +18,9 @@ F:\JupyterNodebook\2-数据分析处理库pandas
 
 F:\秋招\python学习
 
+## 手写识别
+
+Numpy矩阵操作
+
+
+

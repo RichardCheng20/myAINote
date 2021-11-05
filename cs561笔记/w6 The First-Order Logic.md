@@ -104,15 +104,15 @@ For **every sentence** in First-Order Logic and Propositional Logic, there exist
 
 (ex) x (all) y Cat(y) ^ Loves(x, y) => (ex) a, b, c Cat(a) ^ Cat(b) ^ Cat(c) ^ ~ (a = b = c) ^ Owns(x, a) ^ Owns(x, b) ^ Owns(x, c)
 
-9. There is exactly one cook who assigns work to all other cooks
-
-10. Every student takes at least two courses in each semester.
-
-    `(all) x, z (( Student(x) ^ Semester(z)	)=> (ex)y,t (Course(y)^Takes(x,y,z)^Course(t)^Takes(x,t,z) ^ y = t)	)`
-
-11. 
+9. There is exactly **one cook** who assigns work to all other cooks
 
 ![image-20211027084054169](w6%20The%20First-Order%20Logic.assets/image-20211027084054169.png)
+
+9. Every student takes at least two courses in each semester.
+
+   `(all) x, z (( Student(x) ^ Semester(z)	)=> (ex)y,t (Course(y)^Takes(x,y,z)^Course(t)^Takes(x,t,z) ^ y = t)	)`
+
+10. 
 
 
 
