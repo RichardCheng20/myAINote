@@ -1,4 +1,4 @@
-#### 安装Anaconda
+#### 装Anaconda
 
 ![image-20210827124511824](python数据分析与机器学习实战.assets/image-20210827124511824.png)
 
@@ -18,6 +18,7 @@ F:\JupyterNodebook\2-数据分析处理库pandas
 
 F:\秋招\python学习
 
+<<<<<<< HEAD
 ![image-20211105185627383](5 python数据分析与机器学习实战.assets/image-20211105185627383.png)
 
 ![image-20211105185644506](5 python数据分析与机器学习实战.assets/image-20211105185644506.png)
@@ -102,3 +103,12 @@ test_label = data["test_label"] # size: 10000*1
 Accuracy:9577/10000 (95.77%)
 
 total cost time:18.081511974334717
+=======
+## 手写识别
+
+Numpy矩阵操作
+
+
+
+>>>>>>> 0603e4d25ffbd4cb31b0afe3ff587c6a2da5a167
+
