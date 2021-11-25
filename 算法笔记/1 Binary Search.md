@@ -250,7 +250,7 @@ A = {1, 4, 6, 8}, T = 3, K = 3, return {4, 1, 6}
  - 题目要求查找k个最近的,可以先找离target最近的,找一个`<=`target的, 然后for loop中心开花
  - 需要返回的数组 int[] result = new int[k];  为空没找到的情况 return new int[0];
 if(right >= array.length || left > 0 && target - **array[left]** <= array[right] - target) {
-	//右边越界 || 左边不越界接近
+	//右边越界 || 左边不越界接近， left > 0确保left--不越界
 }
 
 ```java
