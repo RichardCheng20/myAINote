@@ -607,3 +607,48 @@ public class Solution {
 }
 ```
 
+## 精选200
+
+#### [163. 缺失的区间](https://leetcode-cn.com/problems/missing-ranges/)
+
+>给定一个排序的整数数组 nums ，其中元素的范围在 闭区间 [lower, upper] 当中，返回不包含在数组中的缺失区间。
+>
+>示例：
+>
+>输入: nums = [0, 1, 3, 50, 75], lower = 0 和 upper = 99,
+>输出: ["2", "4->49", "51->74", "76->99"]
+
+数组中前后两个数进行比较的话，一共有两种情况：
+
+前一个数和后一个数中间仅仅少了一个数，这样的话直接添加少的那个数就好了。
+前一个数和后一个数中间少了一组数，那么就组成一个 start->end 的字符串。
+需要额外注意的是，需要对开始位置 lower 到 nums[0] 和 nums[n -1] 到 upper 进行检查，看看首尾是不是接上去的。
+
+```java
+class Solution {
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> ans = new ArrayList<>();
+        int n = nums.length;
+        if (n == 0) {
+            ans.add(helper(lower - 1, upper + 1));
+            return ans;
+        }
+        if (lower < nums[0]) ans.add(helper(lower - 1, nums[0]));
+        for (int idx = 0; idx < n - 1; ++idx) {
+            if (nums[idx] + 1 != nums[idx + 1]) ans.add(helper(nums[idx], nums[idx + 1]));
+        }
+        if (upper > nums[n - 1]) ans.add(helper(nums[n - 1], upper + 1));
+        return ans;
+    }
+
+    private String helper(int left, int right) {
+        StringBuilder builder = new StringBuilder();
+        if (left + 2 == right) builder.append(left + 1);
+        else builder.append(left + 1).append("->").append(right - 1);
+        return builder.toString();
+    }
+}
+```
+
+#### 
+

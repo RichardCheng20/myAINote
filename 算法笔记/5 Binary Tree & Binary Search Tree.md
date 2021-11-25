@@ -706,6 +706,9 @@ public class Solution {
 ## In-order Traversal Of Binary Tree (iterative)
 
 ```java
+  		5
+     / \
+    3   8 
 public class Solution {
 	public List<Integer> inOrder(TreeNode root) {
 		List<Integer> inorder = new ArrayList<Integer>();
@@ -713,7 +716,7 @@ public class Solution {
 		TreeNode cur = root;
 		while (cur != null || !stack.isEmpty()) {
 			if (cur != null) { //只要cur不为空,统统把左边的加到stack
-				stack.offerFirst(cur);
+				stack.offerFirst(cur);[5 3
 				cur = cur.left;
 			} else {
 				cur = stack.pollFirst(); //cur 为空后就从stack里面取出来放到inorder里
