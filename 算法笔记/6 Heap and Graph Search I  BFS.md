@@ -564,3 +564,93 @@ class Solution:
 ![image-20210906184323138](6 Heap and Graph Search I  BFS.assets/image-20210906184323138.png)
 
 ![image-20210910115036193](6 Heap and Graph Search I  BFS.assets/image-20210910115036193.png)
+
+#### [1162. 地图分析](https://leetcode-cn.com/problems/as-far-from-land-as-possible/)
+
+![image-20211125151726545](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211125151726545.png)
+
+只要先把所有的陆地都入队，然后从各个陆地同时开始一层一层的向海洋扩散，那 么最后扩散到的海洋就是最远的海洋! 并且这个海洋肯定是被离他最近的陆地给扩散到的!
+
+![image-20211125151917074](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211125151917074.png)
+
+```java
+class Solution {
+        public int maxDistance(int[][] grid) {
+            int[] dx = {0, 0, 1, -1};
+            int[] dy = {1, -1, 0, 0};
+            Queue<int[]> queue = new LinkedList<>();
+            int m = grid.length, n = grid[0].length;
+            // 先把所有的陆地都入队。
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (grid[i][j] == 1) {
+                        queue.offer(new int[] {i, j});
+                    }
+                }
+            }
+            // 从各个陆地开始，一圈一圈的遍历海洋，最后遍历到的海洋就是离陆地最远的海洋。
+            // 取出队列的元素，将其四周的海洋入队。
+            boolean hasOcean = false;
+            int[] point = null;
+            while (!queue.isEmpty()) {
+                point = queue.poll();
+                int x = point[0], y = point[1];
+                for (int i = 0; i < 4; i++) {
+                    int newX = x + dx[i];
+                    int newY = y + dy[i];
+                    if (newX < 0 || newX >= m || newY < 0 || newY >= n || grid[newX][newY] != 0) {
+                        continue;
+                    }
+                    grid[newX][newY] = grid[x][y] + 1;// 这里我直接修改了原数组，因此就不需要额外的数组来标志是否访问
+                    hasOcean = true;
+                    queue.offer(new int[] {newX, newY});
+                }
+            }
+            //没有陆地或者没有海洋，返回-1。
+            if (point == null || !hasOcean) {
+                return -1;
+            }
+            return grid[point[0]][point[1]] - 1;//因为从陆地开始遍历海洋,陆地 的初始值是 1,
+            // 而每次将不为 0 的块的上下左右的海洋赋值为该块值+1,所以该最后找到的 块的值减去陆地的值 1 就是距离,可以看上面绿色那个图理解一下.
+        }
+    }
+```
+
+#### [133. 克隆图](https://leetcode-cn.com/problems/clone-graph/)
+
+![image-20211125163126337](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211125163126337.png)
+
+![image-20211125163109506](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211125163109506.png)
+
+```java
+//HashMap<Node, Node> visited = new HashMap(); //key是原图中的节点,value是克隆图对应节点 然后bfs
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) {
+            return node;
+        }
+        HashMap<Node, Node> visited = new HashMap(); //key是原图中的节点,value是克隆图对应节点
+        // 将题目给定的节点添加到队列
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(node);
+        // 克隆第一个节点并存储到哈希表中
+        visited.put(node, new Node(node.val, new ArrayList<>()));
+        //bfs
+        while (!queue.isEmpty()) {
+            Node n = queue.poll();
+            for(Node neighbor: n.neighbors) {
+                if (!visited.containsKey(neighbor)) {
+                    // 如果没有被访问过，就克隆并存储在哈希表中
+                    visited.put(neighbor, new Node(neighbor.val, new ArrayList<>()));
+                    //将邻居节点加入队列中
+                    queue.offer(neighbor);
+                }
+                // 更新当前节点的邻居列表, 这里副本的neighbor上添加刚刚visited中还没有具体添加子邻居的点
+                visited.get(n).neighbors.add(visited.get(neighbor)); 
+            }
+        }
+        return visited.get(node);
+    }
+}
+```
+
