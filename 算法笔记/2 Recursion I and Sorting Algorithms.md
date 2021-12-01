@@ -63,7 +63,7 @@ What if the given array is null? In this case, we do not need to do anything.
 What if the given array is of length zero? In this case, we do not need to do anything.
 //space O(1) time = O(N^2)
 N 个元素做n 轮,选出剩余没有排序的最小值
-i作为遍历数组的起始位置,i之前都是排好序的
+i作为**遍历数组**的起始位置,i之前都是排好序的
 min用于和i交换,是最小元素的index
 j用来遍历还没有参与比较的元素
 -1 -3 7 4 
@@ -113,7 +113,8 @@ What if the given array is of length zero? In this case, we do not need to do an
 
 //space = O(n) = O(logn) stack+ O(n) heap 	time = O(nlogn) = O(n) + O(nlogn) 
 
-- 数组分两半,然后sort, 然后merge
+- 数组分两半,然后sort, 然后merge 根据递归,先一直leftResult到底,然后分割到只有一个元素返回,然后调用Rightresult, 最后两个merge. 
+- ![image-20211111171059537](2%20Recursion%20I%20and%20Sorting%20Algorithms.assets/image-20211111171059537.png)
 
 ```java
 public class Solution {

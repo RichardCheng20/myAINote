@@ -674,3 +674,213 @@ class Solution {
 
 
 
+#### [716. 最大栈](https://leetcode-cn.com/problems/max-stack/)
+
+>设计一个最大栈数据结构，既支持栈操作，又支持查找栈中最大元素。
+>
+>实现 MaxStack 类：
+>
+>MaxStack() 初始化栈对象
+>void push(int x) 将元素 x 压入栈中。
+>int pop() 移除栈顶元素并返回这个元素。
+>int top() 返回栈顶元素，无需移除。
+>int peekMax() 检索并返回栈中最大元素，无需移除。
+>int popMax() 检索并返回栈中最大元素，并将其移除。如果有多个最大元素，只要移除 最靠近栈顶 的那个。
+
+```java
+class MaxStack {
+    Stack<Integer> stack;
+    Stack<Integer> maxStack;
+
+    public MaxStack() {
+        stack = new Stack();
+        maxStack = new Stack();
+    }
+    
+    public void push(int x) {
+        int max = maxStack.isEmpty() ? x : maxStack.peek();
+        maxStack.push(max > x ? max : x);
+        stack.push(x);
+    }
+    
+    public int pop() {
+        maxStack.pop();
+        return stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int peekMax() {
+        return maxStack.peek();
+    }
+    
+    //1 2 5 3 
+    public int popMax() {
+        // stack      = [1 2 3 
+        // maxStack  =  [1 2 5 5  
+        //max = 5 
+        // buffer = 
+        int max = peekMax(); //现在找到的是max 
+        Stack<Integer> buffer = new Stack(); //临时存非Max元素
+        while (top() != max) {
+            buffer.push(pop()); 
+        }
+        pop(); //将Max弹出
+        while (!buffer.isEmpty()) { //将buffer中的元素放回
+            push(buffer.pop());
+        }
+        return max; //弹出Max
+    }
+}
+```
+
+
+
+#### [42. 接雨水](https://leetcode-cn.com/problems/trapping-rain-water/)
+
+>给定 `n` 个非负整数表示每个宽度为 `1` 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+>
+>![image-20211117091801466](4%20Queue%20&%20Stack.assets/image-20211117091801466.png)
+
+求每一列的水，我们**只需要关注当前列**，以及**左边最高的墙**，**右边最高的墙**就够了。
+
+装水的多少，当然根据木桶效应，我们只需要看**左边最高的墙和右边最高**的墙中**较矮**的一个就够了。
+
+所以，根据**较矮的那个墙**和**当前列的墙的高度**可以分为三种情况。
+
+1. <img src="4%20Queue%20&%20Stack.assets/image-20211117092038547.png" alt="image-20211117092038547" style="zoom:50%;" />
+
+在想象一下，往两边最高的墙之间注水。正在求的列会有多少水？
+
+很明显，较矮的一边，也就是左边的墙的高度，减去当前列的高度就可以了，也就是 2 - 1 = 1，可以存一个单位的水。
+
+2. <img src="4%20Queue%20&%20Stack.assets/image-20211117092221547.png" alt="image-20211117092221547" style="zoom:50%;" />
+
+正在求的列会有多少水？
+
+正在求的列不会有水，因为它大于了两边较矮的墙。
+
+3. 较矮的墙的高度等于当前列的墙的高度。
+
+   和上一种情况是一样的，不会有水。
+
+<img src="4%20Queue%20&%20Stack.assets/image-20211117092720663.png" alt="image-20211117092720663" style="zoom:50%;" />
+
+遍历每一列，然后分别求出这一列两边最高的墙。找出较矮的一端，和当前列的高度比较，结果就是上边的三种情况。
+
+```java
+public int trap(int[] height) {
+    int sum = 0;
+    //最两端的列不用考虑，因为一定不会有水。所以下标从 1 到 length - 2
+    for (int i = 1; i < height.length - 1; i++) { //i 表示当前列
+        int max_left = 0;
+        //找出左边最高
+        for (int j = i - 1; j >= 0; j--) {
+            if (height[j] > max_left) {
+                max_left = height[j];
+            }
+        }
+        int max_right = 0;
+        //找出右边最高
+        for (int j = i + 1; j < height.length; j++) {
+            if (height[j] > max_right) {
+                max_right = height[j];
+            }
+        }
+        //找出两端较小的
+        int min = Math.min(max_left, max_right);
+        //只有较小的一段大于当前列的高度才会有水，其他情况不会有水
+        if (min > height[i]) {
+            sum = sum + (min - height[i]);
+        }
+    }
+    return sum;
+}
+
+```
+
+- 解法二 动态规划
+
+  首先用两个数组，`max_left [i]` 代表第 i 列左边最高的墙的高度，``max_right[i] `代表第 i 列右边最高的墙的高度。（一定要注意下，第 i 列左（右）边最高的墙，是不包括自身的，和 leetcode 上边的讲的有些不同）
+
+  **对于 `max_left`我们其实可以这样求。**
+
+  `max_left [i] = Max(max_left [i-1],height[i-1])`。它前边的墙的左边的最高高度和它前边的墙的高度选一个较大的，就是当前列左边最高的墙了。
+
+  **对于 `max_right`我们可以这样求。**
+
+  `max_right[i] = Max(max_right[i+1],height[i+1]) `。它后边的墙的右边的最高高度和它后边的墙的高度选一个较大的，就是当前列右边最高的墙了。
+
+  时间复杂度：O(n)。
+
+  空间复杂度：O(n)，用来保存每一列左边最高的墙和右边最高的墙。
+
+```java
+public int trap(int[] height) {
+    int sum = 0;
+    int[] max_left = new int[height.length];
+    int[] max_right = new int[height.length];
+    
+    for (int i = 1; i < height.length - 1; i++) {
+        max_left[i] = Math.max(max_left[i - 1], height[i - 1]);
+    }
+    for (int i = height.length - 2; i >= 0; i--) {
+        max_right[i] = Math.max(max_right[i + 1], height[i + 1]);
+    }
+    for (int i = 1; i < height.length - 1; i++) {
+        int min = Math.min(max_left[i], max_right[i]);
+        if (min > height[i]) {
+            sum = sum + (min - height[i]);
+        }
+    }
+    return sum;
+}
+```
+
+- 解法三: 使用栈
+
+我们用栈保存每堵墙。
+
+当遍历墙的高度的时候，如果当前高度小于栈顶的墙高度，说明这里会有积水，我们将墙的高度的下标入栈。
+
+如果当前高度大于栈顶的墙的高度，说明之前的积水到这里停下，我们可以计算下有多少积水了。计算完，就把当前的墙继续入栈，作为新的积水的墙。
+
+-- 当前高度**小于等于栈顶高度**，**入栈**，指针后移。
+
+-- 当前高度**大于栈顶高度，出栈，**计算出当前墙和栈顶的墙之间水的多少，然后计算当前的高度和新栈的高度的关系，重复第 2 步。直到当前墙的高度不大于栈顶高度或者栈空，然后把当前墙入栈，指针后移。
+
+```java
+public int trap6(int[] height) {
+    int sum = 0;
+    Stack<Integer> stack = new Stack<>();
+    int current = 0;
+    while (current < height.length) {
+        //如果栈不空并且当前指向的高度大于栈顶高度就一直循环
+        while (!stack.empty() && height[current] > height[stack.peek()]) {
+            int h = height[stack.peek()]; //取出要出栈的元素
+            stack.pop(); //出栈
+            if (stack.empty()) { // 栈空就出去
+                break; 
+            }
+            int distance = current - stack.peek() - 1; //两堵墙之前的距离。
+            int min = Math.min(height[stack.peek()], height[current]);
+            sum = sum + distance * (min - h);
+        }
+        stack.push(current); //当前指向的墙入栈
+        current++; //指针后移
+    }
+    return sum;
+}
+不推荐
+```
+
+#### [114. 二叉树展开为链表](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
+
+>给你二叉树的根结点 root ，请你将它展开为一个单链表：
+>
+>展开后的单链表应该同样使用 TreeNode ，其中 right 子指针指向链表中下一个结点，而左子指针始终为 null 。
+>展开后的单链表应该与二叉树 先序遍历 顺序相同。
+>
+>![image-20211117104948636](4%20Queue%20&%20Stack.assets/image-20211117104948636.png)

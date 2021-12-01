@@ -335,7 +335,7 @@ public class Solution {
 >- { N1, N2, N3, …, N2k } → { N1, Nk+1, N2, Nk+2, N3, Nk+3, … , Nk, N2k }
 >- { N1, N2, N3, …, N2k+1 } → { N1, Nk+1, N2, Nk+2, N3, Nk+3, … , Nk, N2k, N2k+1 }
 >
->Try to do it in place.
+>Try to do it **<u>in place .</u>**
 >
 >**Assumptions**
 >
@@ -347,7 +347,7 @@ public class Solution {
 >- { 1, 2, 3, 4, 5, 6, 7, 8 } → { 1, 5, 2, 6, 3, 7, 4, 8 }
 >- { 1, 2, 3, 4, 5, 6, 7 } → { 1, 4, 2, 5, 3, 6, 7 }
 
-A B C D E F G 1 2 3 4 5 6 7 
+A B C *D E F G* 1 2 3 4 5 6 7 
 
 L         lm        m      rm    R 
 
@@ -378,7 +378,7 @@ public class Solution {
         return array;
     }
     private void reorder(int[] array, int left, int right) {
-        int length = right - left + 1; //需要重写计算长度,因为奇偶运算
+        int length = right - left + 1; //只有两个元素的时候返回
         if (length <= 2) {
             return;
         }
@@ -592,11 +592,85 @@ public class Solution {
 >
 >返回出现的排列字符串位置,字母的个数一样但是中间的顺序可以换（同构异形状）     
 
-搞一个长度一直等于4的弹簧，用hashtable
+搞一个长度一直等于4的弹簧，用hashtable, 没有具体看这道题
 
 ![image-20210707105557773](9 String II.assets/image-20210707105557773.png)
 
-
+```java
+public class Solution {
+  public List<Integer> allAnagrams(String sh, String lo) {
+    // Write your solution here
+            List<Integer> result = new ArrayList<Integer>();
+        if (lo.length() == 0) {
+            return result;
+        }
+        //when s is longer that l, there is no way any of the substring of l
+        //could be an anagram of s (s是同构异形)
+        if (sh.length() > lo.length()) {
+            return result;
+        }
+        //This map records for each of the distinct characters in s
+        //how many characters are needed
+        //eg. s = "abbc", map = {'a': 1, 'b':2,'c':1}
+        //when we get an instance of 'a' in l, we let count of 'a' decremented by 1
+        //and only when the count is from 1 to 0, we have 'a' totally matched
+        Map<Character, Integer> map = countMap(sh);
+        //record how many distinct characters have been matched
+        //only when all the distinct characters are matched,
+        //match == map.size(), we find an anagram
+        int match = 0;
+        // we have a sliding window of size s.length(), and since the size is fixed
+        //we only need to record the end index of the sliding window
+        //when move the sliding window by one step from left to right, what we need to change is
+        //1. remove the leftmost character at the previous sliding window
+        //2. add the rightmost character at the current sliding window
+        for (int i = 0; i < lo.length(); i++) {
+            //handle the new added character(rightmost) at the current sliding window
+            char tmp = lo.charAt(i);
+            Integer count = map.get(tmp);
+            if (count != null) {
+                //the number of needed count should be --
+                // and only when the count is from 1 to 0, we find an additional
+                //match of distinct character
+                map.put(tmp, count - 1);
+                if (count == 1) {
+                    match++;
+                }
+            }
+            //handle the leftmost character at the previous sliding window
+            if (i >= sh.length()) {
+                tmp = lo.charAt(i - sh.length());
+                count = map.get(tmp);
+                if (count != null) {
+                    // the number of needed count should be ++
+                    // and only when the count if from 0 to 1, we are short for one match of distinct character
+                    map.put(tmp, count + 1);
+                    if (count == 0) {
+                        match--;
+                    }
+                }
+            }
+            //for the current sliding window, if all the distinct characters are matched(the count are all zero)
+            if (match == map.size()) {
+                result.add(i - sh.length() + 1);
+            }
+        }
+        return result;
+  }
+   private Map<Character, Integer> countMap(String s) {
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        for (char ch : s.toCharArray()) {
+            Integer count = map.get(ch);
+            if (count == null) {
+                map.put(ch, 1);
+            } else {
+                map.put(ch, count + 1);
+            }
+        }
+        return map;
+    }
+}
+```
 
 
 
