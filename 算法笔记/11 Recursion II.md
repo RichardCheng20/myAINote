@@ -353,11 +353,11 @@ public class StringAbbreviationMatching {
 >
 >​     /   \
 >
->   4(1)   5(0)
+>   ​	4(1)   5(0)
 >
->  /    \    \
+>  ​	/    \    	\
 >
->6(0)   7(0)  8(0)
+>6(0)   7(0) 	 8(0)
 >
 >The numNodesLeft is shown in parentheses.
 
@@ -449,7 +449,7 @@ Time = O(n) space = O(height)
 public class Solution {
 	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode one, TreeNode two) {
         if (root == null) {
-            return null;
+            return null; //到底了也没找到
         }
         if (root == one || root == two) {
             return root; //直接隶属， 只要root等于其中的一个
@@ -474,11 +474,11 @@ public class Solution {
 >
 >**Examples**
 >
->  -1
+> ​		 -1
 >
-> /   \
+> ​		/   \
 >
->2    11
+>​	2    11
 >
 >   /   \
 >
@@ -518,7 +518,7 @@ public class MaximumPathSumBinaryTreeII {
         right = right < 0 ? 0 : right;
         max[0] = Math.max(root.key + left + right, max[0]);
         //step 3 返回给parent
-        return root.key + Math.max(left, right);
+        return root.key + Math.max(left, right); 
     }
 }
 
