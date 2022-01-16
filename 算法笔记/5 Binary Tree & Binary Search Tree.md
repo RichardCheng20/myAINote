@@ -284,26 +284,19 @@ Determine whether two given binary trees are identical assuming any number of �
 
 Examples
 
-     	   5
-    
+     	    5
       	/    \
-    
-    	3        8
+    	  3     8
       /   \
-    
-    1      4
+     1     4
 
 and
 
         5
-    
       /    \
-    
-    8        3
-    
-           /   \
-    
-          1     4
+     8      3
+          /   \
+         1     4
 
 the two binary trees are tweaked identical.
 
@@ -344,7 +337,7 @@ public class Solution {
     return isBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);//return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
   }
 
-  private boolean isBST(TreeNode root, int min, int max) {//private boolean validate(TreeNode root, long min, long max)
+  private boolean isBST(TreeNode root, int min, int max) {//private boolean validate(TreeNode root, long min, long max)i
     if (root == null) {
       return true;
     }
@@ -361,15 +354,13 @@ Get the list of keys in a given binary search tree in a given range[min, max] in
 
 Examples
 
-        5
+      	  5
+     	 	/    \
+    		3     8
+      /   \    \
+      1   4   11
     
-      /    \
     
-    3        8
-
-  /   \        \
-
- 1     4        11
 
 get the keys in [2, 5] in ascending order, result is  [3, 4, 5]
 
@@ -545,12 +536,6 @@ class Solution {
 }
 ```
 
-
-
-
-
-
-
 ## Delete In Binary Search Tree
 
 Delete the target key K in the given binary search tree if the binary search tree contains K. Return the root of the binary search tree.
@@ -650,10 +635,6 @@ public class Solution {
 }
 ```
 
-
-
-
-
 ## Pre-order Traversal Of Binary Tree (iterative)
 
 Implement an iterative, pre-order traversal of a given binary tree, return the list of keys of each node in the tree as it is pre-order traversed.
@@ -661,12 +642,9 @@ Implement an iterative, pre-order traversal of a given binary tree, return the l
 Examples
 
       		5
-    
      	 /    \
-    
     	3        8
       /   \        \
-    
     1      4        11
 
 Pre-order traversal is [5, 3, 1, 4, 8, 11]
@@ -1115,14 +1093,14 @@ if(cur.left == null && cur.right == null) {
 所以递归前要加上判断语句，下面要递归的节点是否为空，如下
 
 ```
- if (root.left != null) {
-            helper(root.left, paths, res);
-            paths.remove(paths.size() - 1); //返回上一层回溯
-        }
-        if (root.right != null) {
-            helper(root.right, paths, res);
-            paths.remove(paths.size() - 1);
-        }
+if (root.left != null) {
+	helper(root.left, paths, res);
+	paths.remove(paths.size() - 1); //返回上一层回溯
+}
+if (root.right != null) {
+	helper(root.right, paths, res);
+	paths.remove(paths.size() - 1);
+}
 ```
 
 **回溯要和递归永远在一起，世界上最遥远的距离是你在花括号里，而我在花括号外！**
@@ -1174,6 +1152,7 @@ class Solution {
     }
     private void helper(TreeNode root, StringBuilder sb, List<String> res) {
         if (root == null) { //防止NPE
+          return;3
         }
         if (root.left == null && root.right == null) { //控制空节点不入循环
             sb.append(root.val);
@@ -1280,12 +1259,6 @@ class Solution {
         }
         return res;
     }
-}
-```
-
-2. Recursion
-
-```java
 
 ```
 

@@ -2,7 +2,7 @@
 ## Sort With 2 Stacks
 Given an array that is initially stored in one stack, sort it with one additional stacks (total 2 stacks).
 
-After sorting the original stack should contain the sorted integers and from top to bottom the integers are sorted in ascending order.
+After sorting the original stack should contain the sorted integers and from top to bottom the integers are sorted in ascending order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 
 Assumptions:
 
@@ -16,7 +16,7 @@ No additional memory, time complexity = O(n ^ 2).
 - buffer用来左半边用来装sort好的,右半边倒回去给input继续找
 - 关键: 1.1 先将input里的元素倒到buffer里 然后找到里面的curmin,并且记录一个count
 		   1.2 将大于curmin的元素放回到input, 小于的就保存到buffer里
-		   2 将buffer
+		   2 将buffer 将buffer里的值统统放回input 确保升序
 
 注意我这里实现用得是Deque然后一直用得offerFirst所以是个左开右闭的stack
 
@@ -179,6 +179,8 @@ Implement a stack containing integers using queue(s). The stack should provide p
 In java: if the stack is empty, then top() and pop() will return null.
 
 使用两个Queue，q1用来一直遍历原始数据，因为要实现stack, 那么pop出来的元素就是最后加入的元素，所以q2临时帮忙存一下非最后元素的所有元素，然后再把q1, q2对调回来。
+
+
 
 ```java
 class Solution {
@@ -421,6 +423,8 @@ PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new C
 
 那么什么时候说明左括号和右括号全都匹配了呢，就是字符串遍历完之后，栈是空的，就说明全都匹配了。
 
+<img src="4%20Queue%20&%20Stack.assets/image-20220106035427243.png" alt="image-20220106035427243" style="zoom:50%;" />
+
 ```java
 class Solution {
     public boolean isValid(String s) {
@@ -504,6 +508,8 @@ class Solution {
 
 双指针
 
+
+
 ```java
 class Solution {
     public String removeDuplicates(String s) {
@@ -512,7 +518,7 @@ class Solution {
         int slow = 0;
         while(fast < s.length()){
             // 直接用fast指针覆盖slow指针的值
-            ch[slow] = ch[fast];
+            ch[ccchslow] = ch[fast];
             // 遇到前后相同值的，就跳过，即slow指针后退一步，下次循环就可以直接被覆盖掉了
             if(slow > 0 && ch[slow] == ch[slow - 1]){
                 slow--;
@@ -571,7 +577,7 @@ class Solution {
   Integer.valueOf(tokens[i])可以==将string转换为integer===， **string之间**的比较一定要==用.equals()!!!!!!==
 
 ```java
-    class Solution {
+    vclass Solution {
         public int evalRPN(String[] tokens) {
             Deque<Integer> stack = new ArrayDeque<>();
             for (int i = 0; i < tokens.length; i++) {
@@ -884,3 +890,30 @@ public int trap6(int[] height) {
 >展开后的单链表应该与二叉树 先序遍历 顺序相同。
 >
 >![image-20211117104948636](4%20Queue%20&%20Stack.assets/image-20211117104948636.png)
+
+#### [32. 最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
+
+![image-20220115093647755](4%20Queue%20&%20Stack.assets/image-20220115093647755.png)
+
+![image-20220115162943758](4%20Queue%20&%20Stack.assets/image-20220115162943758.png)
+
+```java
+class Solution {
+  //dp[i]表示以下标 i字符结尾的最长有效括号的长度。
+    public int longestValidParentheses(String s) {
+        int[] dp = new int[s.length()];
+        Arrays.fill(dp, 0);
+        int max = 0;
+        for (int i = 1; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == ')') {
+                if (i - dp[i - 1] - 1 >= 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
+                    dp[i] = 2 + dp[i - 1] + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0);
+                }
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+}
+```

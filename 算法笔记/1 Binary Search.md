@@ -650,5 +650,64 @@ class Solution {
 }
 ```
 
-#### 
+
+
+#### [31. 下一个排列](https://leetcode-cn.com/problems/next-permutation/)
+
+![image-20220115075608605](1%20Binary%20Search.assets/image-20220115075608605.png)
+
+![image-20220115090730966](1%20Binary%20Search.assets/image-20220115090730966.png)
+
+![image-20220115090905673](1%20Binary%20Search.assets/image-20220115090905673.png)
+
+```java
+class Solution {
+   public void nextPermutation(int[] nums) {
+        int len = nums.length;
+        for (int i = len - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                Arrays.sort(nums, i, len);
+                for (int j = i; j < len; j++) {
+                    if (nums[j] > nums[i - 1]) {
+                        int temp = nums[j];
+                        nums[j] = nums[i - 1];
+                        nums[i - 1] = temp;
+                        return;
+                    }
+                }
+            }
+        }
+        //如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+        Arrays.sort(nums);
+    }
+ }
+```
+
+#### [48. 旋转图像](https://leetcode-cn.com/problems/rotate-image/)
+
+![image-20220116164450983](1%20Binary%20Search.assets/image-20220116164450983.png)
+
+![image-20220116164821199](1%20Binary%20Search.assets/image-20220116164821199.png)
+
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = temp;
+            }
+        }
+    }
+}
+```
 

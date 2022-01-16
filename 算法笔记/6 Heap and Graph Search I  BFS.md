@@ -313,92 +313,44 @@ public class KthSmallestNumberInSortedMatrix {
 
 比如这个图中红色，蓝，绿色 三个岛屿，题目的意思就是只要是上下左右连着的1都看成是一个岛屿，然后这个岛屿需要被（0）包围
 
-1. 找到一个点（1）
-2. 把与这个点（1）相连的所有点（1），都标记
-3. 岛屿数加一
-4. 找到下一个点（1）， 标记过的不再寻找
-5. 直到没有未标记的点（1）
+1. 外层循环遍历所有节点, 如果该坐标为1即岛屿, 那就使用bfs打通所有该坐标的4连通区域
+2. Bfs写法: 
+
+借用一个队列 queue，判断队列首部节点 (i, j) 是否为 1：
+若是则**置零**（删除岛屿节点），并将此节点上下左右节点 (i+1,j),(i-1,j),(i,j+1),(i,j-1) 加入队列；
+若不是则跳过此节点；
+循环 pop 队列首节点，直到整个队列为空，此时已经遍历完此岛屿。
 
 ```java
- class Coordinate {
-        int x;
-        int y;
-        public Coordinate(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
 class Solution {
     public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0 || grid[0].length == 0) {
-            return 0;
-        }
-        int n = grid.length;
-        int m = grid[0].length;
-        int islands = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {//循环找到为1的grid，然后bfs会帮我统统标记（1）为（0）
-                if (grid[i][j] == '1') {
-                    markByBFS(grid, i, j); //bfs作用就是遍历所有邻居，并且把为（1）的统统标记为0
-                    islands++;
+        int count = 0;
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(grid[i][j] == '1'){
+                    bfs(grid, i, j);
+                    count++;
                 }
             }
         }
-        return islands;
+        return count;
     }
-    private void markByBFS(char[][] grid, int x, int y) {
-        int[] diX = {0, 0, 1, -1};
-        int[] diY = {1, -1, 0, 0};
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.offer(new Coordinate(x, y));
-        grid[x][y] = '0';//说明这个点已经取过了
-        while(!queue.isEmpty()) {
-            Coordinate coor = queue.poll();
-            //4个方向
-            for(int i = 0; i < 4; i++) {
-                Coordinate adj = new Coordinate(coor.x + diX[i], coor.y + diY[i]);
-                //adj是否在范围里面
-                if (!inBound(adj, grid)) continue;
-                if (grid[adj.x][adj.y] == '1') {
-                    grid[adj.x][adj.y] = '0';
-                    queue.offer(adj);
-                }
+    private void bfs(char[][] grid, int i, int j){
+        Queue<int[]> list = new LinkedList<>();
+        list.add(new int[] { i, j });
+        while(!list.isEmpty()){
+            int[] cur = list.remove();
+            i = cur[0]; j = cur[1];
+            if(0 <= i && i < grid.length && 0 <= j && j < grid[0].length && grid[i][j] == '1') {
+                grid[i][j] = '0';
+                list.add(new int[] { i + 1, j });
+                list.add(new int[] { i - 1, j });
+                list.add(new int[] { i, j + 1 });
+                list.add(new int[] { i, j - 1 });
             }
         }
-    }
-    private boolean inBound(Coordinate coor, char[][] grid) {
-        int n = grid.length;
-        int m = grid[0].length;
-        return coor.x >= 0 && coor.x < n && coor.y >= 0 && coor.y < m;
     }
 }
-```
-
-```python
-import collections
-from typing import List
-
-
-class Solution:
-    def numIslands(self, grid: List[List[str]]) -> int:
-        nr = len(grid)
-        nc = len(grid[0])
-        if nr == 0:
-            return 0
-        num_islands = 0
-        for r in range(nr):
-            for c in range(nc):
-                if grid[r][c] == "1":
-                    num_islands += 1
-                    grid[r][c] = "0"
-                    nei = collections.deque([(r, c)])
-                    while nei:
-                        row, col = nei.popleft()
-                        for x, y in [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]:
-                            if 0 <= x < nr and 0 <= y < nc and grid[x][y] == "1":
-                                nei.append((x, y))
-                                grid[x][y] = "0"
-        return num_islands
 ```
 
 #### [286. 墙与门](https://leetcode-cn.com/problems/walls-and-gates/)
@@ -654,3 +606,213 @@ class Solution {
 }
 ```
 
+#### [695. 岛屿的最大面积](https://leetcode-cn.com/problems/max-area-of-island/)
+
+![image-20211209225518465](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211209225518465.png)
+
+```java
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        int ans = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    ans = Math.max(ans, BFS(grid, i, j));
+                }
+            }
+        }
+        return ans;
+    }
+    public int BFS(int[][] grid, int i, int j) {
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[] {i, j});
+        int area = 0;
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            i = cur[0];
+            j = cur[1];
+            if (0 <= i && i < grid.length && 0 <= j && j < grid[0].length && grid[i][j] == 1) {
+                grid[i][j] = 0;
+                area++;
+                queue.add(new int[] { i + 1, j });
+                queue.add(new int[] { i - 1, j });
+                queue.add(new int[] { i, j + 1 });
+                queue.add(new int[] { i, j - 1 });
+            }
+        }
+        return area;
+    }
+}
+```
+
+#### [面试题 16.19. 水域大小](https://leetcode-cn.com/problems/pond-sizes-lcci/)
+
+![image-20211209235428905](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211209235428905.png)
+
+```java
+class Solution {
+    int[][] dirs = new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    int area = 0;
+    public int[] pondSizes(int[][] land) {
+        List<Integer> res = new ArrayList<>();
+        int m = land.length;
+        int n = land[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                area = 0;
+                dfs(land, i, j);
+                if (area > 0) {
+                    res.add(area);
+                }
+            }
+        }
+        int[] ans = new int[res.size()];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = res.get(i);
+        }
+        Arrays.sort(ans);
+        return ans;
+    }
+    private void dfs(int[][] land, int i, int j) {
+        if (land[i][j] != 0) {
+            return;
+        }
+        land[i][j] = -1; //标记已经访问过的水域为陆地
+        area++;
+        for(int[] dir : dirs) {
+            int nx = i + dir[0];
+            int ny = j + dir[1];
+            if (inArea(land, nx, ny) && land[nx][ny] == 0) {
+                dfs(land, nx, ny);
+            }
+        }
+    }
+    boolean inArea(int[][] land, int x, int y) {
+        return 0 <= x && x < land.length && 0 <= y && y < land[0].length;
+    }
+}
+```
+
+#### [130. 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
+
+![image-20211210124224244](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211210124224244.png)
+
+题目中解释说被包围的区间不会存在于边界上，所以我们会想到边界上的 O 要特殊处理，只要把边界上的 O 特殊处理了，那么剩下的 O 替换成 X 就可以了。问题转化为，如何寻找和**边界联通的 O**，我们需要考虑如下情况。
+
+X X X X
+X O O X
+X X O X
+X O O X
+这时候的 **O 是不做替换**的。因为和边界是连通的。为了记录这种状态，我们把这种情况下的 **O 换成 # 作为占位符**，待搜索结束之后，遇到 O 替换为 X（和边界不连通的 O）；遇到 **#，替换回 O**(和边界连通的 O)。
+
+- dfs 递归 dfs替换边界的o为# 然后for loop遍历将o替换为x, # 替换为o 
+
+```java
+class Solution {
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0) return;
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // 从边缘o开始搜索
+                boolean isEdge = i == 0 || j == 0 || i == m - 1 || j == n - 1;
+                if (isEdge && board[i][j] == 'O') {
+                    dfs(board, i, j);
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+                if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    public void dfs(char[][] board, int i, int j) {
+        if (i < 0 || j < 0 || i >= board.length  || j >= board[0].length || board[i][j] == 'X' || board[i][j] == '#') {
+            // board[i][j] == '#' 说明已经搜索过了. 
+            return;
+        }
+        board[i][j] = '#';
+        dfs(board, i - 1, j); // 上
+        dfs(board, i + 1, j); // 下
+        dfs(board, i, j - 1); // 左
+        dfs(board, i, j + 1); // 右
+    }
+}
+```
+
+#### [994. 腐烂的橘子](https://leetcode-cn.com/problems/rotting-oranges/)
+
+![image-20211211161054908](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211211161054908.png)
+
+实际上就是求**腐烂橘子到所有新鲜橘子的最短路径**。
+
+一开始，我们找出所有腐烂的橘子，将它们放入队列，作为第 0 层的结点。
+然后进行 BFS 遍历，每个结点的相邻结点可能是上、下、左、右四个方向的结点，注意判断结点位于网格边界的特殊情况。
+由于可能存在无法被污染的橘子，我们需要记录新鲜橘子的数量。在 BFS 中，每遍历到一个橘子（污染了一个橘子），就将新鲜橘子的数量减一。如果 BFS 结束后这个数量仍未减为零，说明存在无法被污染的橘子。
+
+这里用queue里面放入烂橘子,然后每一遍历记录queue的size, 一次遍历就是分钟数, queue条件就是count > 0 并且queue不为空才遍历
+
+```java
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int count = 0; //新鲜橘子数量
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    count++;
+                }
+                if (grid[i][j] == 2) {
+                    queue.add(new int[] {i, j}); //放烂橘子
+                }
+            }
+        }
+        int round = 0;
+        while (count > 0 && !queue.isEmpty()) {
+            round++;
+            int s = queue.size();
+            for (int i = 0; i < s; i++) {
+                int[] orange = queue.poll();
+                int r = orange[0];
+                int c = orange[1];
+                if (r - 1 >= 0 && grid[r - 1][c] == 1) {
+                    grid[r - 1][c] = 2;
+                    count--;
+                    queue.add(new int[] {r - 1, c});
+                }
+                if (r + 1 < m && grid[r + 1][c] == 1) {
+                    grid[r + 1][c] = 2;
+                    count--;
+                    queue.add(new int[] {r + 1, c});
+                }
+                if (c - 1 >= 0 && grid[r][c - 1] == 1) {
+                    grid[r][c - 1] = 2;
+                    count--;
+                    queue.add(new int[] {r, c - 1});
+                }
+                if (c + 1 < n && grid[r][c + 1] == 1) {
+                    grid[r][c + 1] = 2;
+                    count--;
+                    queue.add(new int[] {r, c + 1});
+                }
+            }
+        }
+        if (count > 0) {
+            return -1;
+        } else {
+            return round;
+        }
+    }
+}
+```

@@ -177,7 +177,59 @@ public class Solution {
   }
 }
 ```
+#### [23. 合并K个升序链表](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+
+```
+public ListNode mergeKLists(ListNode[] lists) {
+        ListNode res = null;
+        for(ListNode list : lists) {
+            res = mergeTwoList(res, list);
+        }
+        return res;
+    }
+    
+/////
+方法二 
+O(n∗log(k))，n 是所有链表中元素的总和，k 是链表个数。
+class Solution {
+   public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(lists.length, new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                if (o1.val < o2.val) return -1;
+                else if (o1.val == o2.val) return 0;
+                else return 1;
+            }
+        });
+        ListNode dummy = new ListNode(0);
+        ListNode p = dummy;
+        for (ListNode node : lists) {
+            if (node != null) queue.add(node);
+        }
+        while (!queue.isEmpty()) {
+            p.next = queue.poll();
+            p = p.next;
+            if (p.next != null) queue.add(p.next);
+        }
+        return dummy.next;
+    }
+}
+
+作者：powcai
+链接：https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/leetcode-23-he-bing-kge-pai-xu-lian-biao-by-powcai/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+
+
+
+
+
+
 ## 41. ReOrder Linked List
+
 Reorder the given singly-linked list N1 -> N2 -> N3 -> N4 -> … -> Nn -> null to be N1- > Nn -> N2 -> Nn-1 -> N3 -> Nn-2 -> … -> null
 
 Examples
@@ -526,9 +578,7 @@ class MyLinkedList {
         }
         ListNode currentNode = head;
         //包含一个虚拟头节点，所以查找第 index+1 个节点
-        for (int i = 0; i <= index; i++) {
-            currentNode = currentNode.next;
-        }
+         
         return currentNode.val;
     }
     

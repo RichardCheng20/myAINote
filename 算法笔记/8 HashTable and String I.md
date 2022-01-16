@@ -664,38 +664,51 @@ class Solution {
 }
 ```
 
-#### [454. 四数相加 II](https://leetcode-cn.com/problems/4sum-ii/)
+#### [454. 四数相加 II](https://leetcode-cn.com/problems/4sum-ii/) - kv分两半
 
->给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
->
->```
->输入:
->A = [ 1, 2]
->B = [-2,-1]
->C = [-1, 2]
->D = [ 0, 2]
->
->输出:
->2
->
->解释:
->两个元组如下:
->1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
->2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
->```
+![image-20211212153639339](8%20HashTable%20and%20String%20I.assets/image-20211212153639339.png)
 
-#### [383. 赎金信](https://leetcode-cn.com/problems/ransom-note/)
+- HashMap存两个数组之和，如AB。然后计算两个数组之和，如 CD。时间复杂度为：`O(n^2)+O(n^2)`，得到 `O(n^2)`
 
->给定一个赎金信 (ransom) 字符串和一个杂志(magazine)字符串，判断第一个字符串 ransom 能不能由第二个字符串 magazines 里面的字符构成。如果可以构成，返回 true ；否则返回 false。
+  我们以存 AB 两数组之和为例。首先求出 A 和 B 任意两数之和 sumAB，以 sumAB 为 key，sumAB 出现的次数为 value，存入 hashmap 中。
+
+  然后计算 C 和 D 中任意两数之和的相反数 sumCD，在 hashmap 中查找是否存在 key 为 sumCD。
+
+```java
+Class Solution {
+  public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    Map<Integer, Integer> map = new HashMap<>();
+    int temp;
+    int res = 0;
+    //统计两个数组中的元素之和,同时统计出现的次数, 放入map
+    for(int i : nums1) {
+      for(int j : nums2) {
+        temp = i + j;
+        if (map.containsKey(temp)) {
+          map.put(temp, map.get(temp) + 1);
+        } else {
+          map.put(temp, 1);
+        }
+      }
+    }
+    //统计剩余的两个元素和,在map中找是否存在相加为0情况,同时记录次数
+    for(int i : nums3) {
+      for (int j : nums4) {
+        tmep = i + j;
+        if (map.containsKey(0 - temp)) {
+          res+= map.get(0 - temp);
+        }
+      }
+    }
+    return res;
+  }
+}
+```
+
+#### [383. 赎金信](https://leetcode-cn.com/problems/ransom-note/) - 数组哈希
+
+>![image-20211212163950457](8%20HashTable%20and%20String%20I.assets/image-20211212163950457.png)
 >
->```
->输入：ransomNote = "aa", magazine = "ab"
->输出：false
->示例 3：
->
->输入：ransomNote = "aa", magazine = "aab"
->输出：true
->```
 
 ```java
 class Solution {
@@ -720,16 +733,20 @@ class Solution {
 }
 ```
 
-#### [15. 三数之和](https://leetcode-cn.com/problems/3sum/)
+#### [15. 三数之和](https://leetcode-cn.com/problems/3sum/)  - 双指针
 
->给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且不重复的三元组。
+>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且**不重复**的三元组。
 >
 >```
 >输入：nums = [-1,0,1,2,-1,-4]
 >输出：[[-1,-1,2],[-1,0,1]]
 >```
 
-**这道题目使用双指针法 要比哈希法高效一些**，首先将数组排序，然后有一层for循环，i从下表0的地方开始，同时定一个下表left 定义在i+1的位置上，定义下表right 在数组结尾的位置上。这里相当于  a = nums[i] b = nums[left]  c = nums[right]。如果nums[i] + nums[left] + nums[right] > 0  就说明 此时三数之和大了，因为数组是排序后了，所以right下表就应该向左移动，这样才能让三数之和小一些。如果 nums[i] + nums[left] + nums[right] < 0 说明 此时 三数之和小了，left 就向右移动，才能让三数之和大一些，直到left与right相遇为止。
+**这道题目使用双指针法 要比哈希法高效一些**，首先将数组排序，然后有一层for循环，i从下表0的地方开始，同时定一个下表left 定义在i+1的位置上，定义下表right 在数 组结尾的位置上。
+
+![image-20211212224312252](8%20HashTable%20and%20String%20I.assets/image-20211212224312252.png)
+
+这里相当于  a = nums[i] b = nums[left]  c = nums[right]。如果nums[i] + nums[left] + nums[right] > 0  就说明此时三数之和大了，因为数组是排序后了，所以right下表就应该向左移动，这样才能让三数之和小一些。如果 nums[i] + nums[left] + nums[right] < 0 说明 此时 三数之和小了，left 就向右移动，才能让三数之和大一些，直到left与right相遇为止。
 
 ```java
  class Solution {
@@ -778,6 +795,8 @@ class Solution {
 >```
 
 四数之和的双指针解法是两层for循环nums[k] + nums[i]为确定值，依然是循环内有left和right下表作为双指针，找出nums[k] + nums[i] + nums[left] + nums[right] == target的情况，三数之和的时间复杂度是O(n^2), 四数之和的时间复杂度是O(n^3). 
+
+<img src="8%20HashTable%20and%20String%20I.assets/image-20211215200837446.png" alt="image-20211215200837446" style="zoom:25%;" />
 
 ```java
 class Solution {
@@ -848,7 +867,7 @@ class Solution {
 }
 ```
 
-#### [541. 反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)
+#### [541. 反转字符串 II](https://leetcode-cn.com/problems/reverse-string-ii/)  k次累加
 
 >给定一个字符串 s 和一个整数 k，从字符串开头算起，每 2k 个字符反转前 k 个字符。
 >
@@ -911,7 +930,7 @@ public static String replaceSpace(StringBuffer str) {
             sb.append(str.charAt(i));
         }
     }
-    
+    return sb.toString();
 }
 ```
 
@@ -933,9 +952,8 @@ class Solution {
         s = removeSpace(s);
         char[] array = s.toCharArray();
         reverse(array, 0, array.length - 1);
-        int start = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != ' ' && (i == 0 || array[i - 1] == ' ' )) {
+        int start = 0; 
+            if (array[i] != ' ' && (i == 0 || array[i - 1] == ' ')) {
                 start = i;
             }
             if (array[i] != ' ' && (i == array.length - 1 || array[i + 1] == ' ')) {
@@ -965,7 +983,7 @@ class Solution {
         while (start <= end) {
             char c = s.charAt(start);
             if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {//c != ' '很明显不为空直接加入，然后就是sb.charAt(sb.length() - 1) != ' '确保sb中只添加一个空格
-                sb.append(c);
+                sb.append(c); //顶多添加一个空格re tre
             }
             start++;
         }
@@ -1015,3 +1033,48 @@ class Solution {
 
 #### KMP
 
+1. 电风扇  5 
+
+2.加湿器 15
+
+3.置物小推车 10
+
+4.宜家大整理箱 （3个都要）3 * 5 = 15 
+
+5.护眼台灯（2个都要）15 * 2 = 30 
+
+6.Cherry机械键盘 15 
+
+7.人体工学椅 15 * 10 暂定一个
+
+8.白色升降桌 60
+
+9.晾衣架（3个都要）10 + 10 + 8 自己拿黑色好
+
+10.脏衣篮 5 
+
+11. 吹风机 赠送
+
+11. instant pot高压锅 25 
+
+12. TidyLife空气炸锅 25 
+
+13. Aroma白色不粘锅款电饭煲 20 
+
+14. gotrax scooter+头盔+ 锁 = 285
+
+15. 厨房用纸(刚需全新未使用) 7卷  7刀打包
+
+16.  brother打印机刚加的新墨盒送纸 30刀
+
+17. 垃圾袋 2刀
+
+18. google home 5刀 
+
+    其中Scooter已经支付80元定金,  285刀
+
+    15.各种锅碗啥的厨房用品, 暂时保留来了看需要的
+
+1. 
+
+   
