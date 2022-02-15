@@ -153,7 +153,7 @@ public class Solution {
 		while (leftIndex < leftResult.length) {
 			result[resultIndex] = leftResult[leftIndex];
 			leftIndex++;
-			rightIndex++;
+			resultIndex++;
 		} 
 		while(rightIndex < rightResult.length) {
 			result[resultIndex] = rightResult[rightIndex];
@@ -233,7 +233,7 @@ public class Solution {
 ## 258. Move 0s To The End I
 Given an array of integers, move all the 0s to the right end of the array.
 
-The relative order of the elements in the original array does not need to be maintained.
+The relative order of the elements in the original array`does not need` `to be maintained.
 
 Assumptions:
 
@@ -272,7 +272,45 @@ public class Solution {
  	}
 }
 ```
+#### [283. 移动零](https://leetcode-cn.com/problems/move-zeroes/)
+
+![image-20220123234314245](2%20Recursion%20I%20and%20Sorting%20Algorithms.assets/image-20220123234314245.png)
+
+使用双指针，左指针指向当前已经处理好的序列的尾部，右指针指向待处理序列的头部。
+
+右指针不断向右移动，每次右指针指向非零数，则将左右指针对应的数交换，同时左指针右移。
+
+注意到以下性质：
+
+**左指针左边均为非零数；**
+
+**右指针左边直到左指针处均为零。**
+
+因此每次交换，都是将左指针的零与右指针的非零数交换，且非零数的相对顺序并未改变。
+
+```java
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int left = 0;
+        int right = 0;
+        while (right < nums.length) {
+            if (nums[right] != 0) {
+                swap(nums, right, left);
+                left++;
+            } 
+            right++;
+        }
+    }
+    private void swap(int[] nums, int right, int left) {
+        int temp = nums[left];
+        nums[left] = nums[right];
+        nums[right] = temp;
+    }
+}
+```
+
 ## 11. Rainbow Sort
+
 Given an array of balls, where the color of the balls can only be Red, Green or Blue, sort the balls such that all the Red balls are grouped on the left side, all the Green balls are grouped in the middle and all the Blue balls are grouped on the right side. (Red is denoted by -1, Green is denoted by 0, and Blue is denoted by 1).
 
 Examples
@@ -319,5 +357,24 @@ public class Solution {
 		array[left] = array[right];
 		array[right] = temp;
 	}
+}
+```
+
+#### [406. 根据身高重建队列](https://leetcode-cn.com/problems/queue-reconstruction-by-height/)
+
+![image-20220202194204965](2%20Recursion%20I%20and%20Sorting%20Algorithms.assets/image-20220202194204965.png)
+
+![image-20220202211706709](2%20Recursion%20I%20and%20Sorting%20Algorithms.assets/image-20220202211706709.png)
+
+```java
+class Solution {
+    public int[][] reconstructQueue(int[][] people) {
+        Arrays.sort(people, (o1, o2) -> o1[0] == o2[0] ? o1[1] - o2[1] : o2[0] - o1[0]);
+        List<int[]> queue = new ArrayList<>();
+        for (int[] p : people) {
+            queue.add(p[1], p);
+        }
+        return queue.toArray(new int[queue.size()][2]);
+    }
 }
 ```

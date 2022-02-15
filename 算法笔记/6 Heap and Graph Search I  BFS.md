@@ -47,7 +47,47 @@ public class Solution {
 }
 ```
 
+#### [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+![image-20220123093832249](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20220123093832249.png)
+
+创建minHeap, 头最小,比头大的加入
+
+```java
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i < k) {
+                minHeap.offer(nums[i]);
+            } else if (nums[i] > minHeap.peek()) {
+                minHeap.poll();
+                minHeap.offer(nums[i]);
+            }
+        }
+        return minHeap.poll();
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Get Keys In Binary Tree Layer By Layer
+
 Get the list of list of keys in a given binary tree layer by layer. Each layer is represented by a list of keys and the keys are traversed from left to right.
 
 Examples

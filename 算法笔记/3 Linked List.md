@@ -380,7 +380,7 @@ public class Solution {
 		}
 		ListNode slow = head;
 		ListNode fast = head;
-		while (fast != null && fast.next.next != null) {
+		while (fast.next != null && fast.next.next != null) {
 			slow = slow.next;
 			fast = fast.next;
 		}
@@ -491,7 +491,7 @@ public class Solution {
 		}
 		ListNode slow = head;
 		ListNode fast = head.next;
-		while (fast != null && fast.next != null) {
+		while (fast.next != null && fast.next.next != null) {
 			slow = slow.next;
 			fast = fast.next.next;
 		}
@@ -688,7 +688,7 @@ class Solution {
 
 ![image-20210821200915023](3 Linked List.assets/image-20210821200915023.png)
 
-相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：` x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针， （y+z）为 一圈内节点的个数A。
+相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：` x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针，（y+z）为 一圈内节点的个数A。
 
  fast指针走过的节点数 = slow指针走过的节点数 * 2：`(x + y) * 2 = x + y + n (y + z)`
 
@@ -724,3 +724,78 @@ public class Solution {
     }
 }
 ```
+
+#### [287. 寻找重复数](https://leetcode-cn.com/problems/find-the-duplicate-number/)
+
+![image-20220124154205581](3%20Linked%20List.assets/image-20220124154205581.png)
+
+![image-20220124154316535](3%20Linked%20List.assets/image-20220124154316535.png)
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = 0;
+        int fast = 0;
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        int pre1 = 0; 
+        int pre2 = slow;
+        while (pre1 != pre2) {
+            pre1 = nums[pre1];
+            pre2 = nums[pre2];
+        }
+        return pre1;
+    }
+}
+```
+
+
+
+#### [160. 相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
+
+![image-20220120093538670](3%20Linked%20List.assets/image-20220120093538670.png)
+
+![image-20220120093503297](3%20Linked%20List.assets/image-20220120093503297.png)
+
+```java
+//方法一 使用hashSet
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        Set<ListNode> visited = new HashSet<ListNode>(); //listNode前后节点不一样的时候是不一样的
+        ListNode dumA = headA;
+        while (dumA != null) {
+            visited.add(dumA);
+            dumA = dumA.next;
+        }
+        ListNode dumB = headB;
+        while(dumB != null) {
+            if (visited.contains(dumB)) {
+                return dumB;
+            }
+            dumB = dumB.next;
+        }
+        return null;
+    }
+}
+////// 方法二 //////////
+双指针
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode pA = headA;
+        ListNode pB = headB;
+        if (headA == null || headB == null) {
+            return null;
+        }
+        while (pA != pB) {
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
+        return pA;
+    }
+}
+```
+

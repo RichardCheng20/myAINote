@@ -1004,3 +1004,114 @@ if (result.size() == ticketNum + 1) {
 }
 ```
 
+#### [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
+
+![image-20220118090439050](7%20Graph%20Search%20II%20%20DFS.assets/image-20220118090439050.png)
+
+![image-20220118111135839](7%20Graph%20Search%20II%20%20DFS.assets/image-20220118111135839.png)
+
+```java
+public class Solution {
+
+    private static final int[][] DIRECTIONS = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
+    private int rows;
+    private int cols;
+    private int len;
+    private boolean[][] visited;
+    private char[] charArray;
+    private char[][] board;
+
+    public boolean exist(char[][] board, String word) {
+        rows = board.length;
+        if (rows == 0) {
+            return false;
+        }
+        cols = board[0].length;
+        visited = new boolean[rows][cols];
+
+        this.len = word.length();
+        this.charArray = word.toCharArray();
+        this.board = board;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (dfs(i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs(int x, int y, int begin) {
+        if (begin == len - 1) {
+            return board[x][y] == charArray[begin];
+        }
+        if (board[x][y] == charArray[begin]) {
+            visited[x][y] = true;
+            for (int[] direction : DIRECTIONS) {
+                int newX = x + direction[0];
+                int newY = y + direction[1];
+                if (inArea(newX, newY) && !visited[newX][newY]) {
+                    if (dfs(newX, newY, begin + 1)) {
+                        return true;
+                    }
+                }
+            }
+            visited[x][y] = false;
+        }
+        return false;
+    }
+
+    private boolean inArea(int x, int y) {
+        return x >= 0 && x < rows && y >= 0 && y < cols;
+    }
+}
+```
+
+#### [207. 课程表](https://leetcode-cn.com/problems/course-schedule/)
+
+![image-20220121090056613](7%20Graph%20Search%20II%20%20DFS.assets/image-20220121090056613.png)
+
+有环说明课程不能完成
+
+```java
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // 1存图
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        //[1, 0] 0是prerequisite    //2 放每条边
+        for (int i = 0; i < prerequisites.length; i++) {
+            graph.get(prerequisites[i][1]).add(prerequisites[i][0]);//坐标位置为pre, 值为添加下一门课程
+        }
+        //任一点出发
+        int[] visited = new int[numCourses];
+        for(int i = 0; i < numCourses; i++) {
+            if (findCircle(i, visited, graph)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    //出发node,
+    public boolean findCircle(int node, int[] visited, List<List<Integer>> graph) {
+        if (visited[node] == 1) {
+            return true; //说明有环
+        }
+        if (visited[node] == 2) {
+            return false;
+        }
+        visited[node] = 1; //当前要走的
+        for (Integer next : graph.get(node)) {
+            if (findCircle(next,visited, graph)) {
+                return true;
+            }
+        }
+        visited[node] = 2;//标记为2 表示不存在环路
+        return false;
+    }
+}
+```
+

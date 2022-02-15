@@ -359,8 +359,9 @@ Examples
     		3     8
       /   \    \
       1   4   11
-    
-    
+
+
+​    
 
 get the keys in [2, 5] in ascending order, result is  [3, 4, 5]
 
@@ -1389,6 +1390,34 @@ class Solution {
 
 ```
 
+#### [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
+
+![image-20220202223403393](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220202223403393.png)
+
+
+
+```java
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+        // 中左右 根节点 非根节点往下找
+        int res = pathSumStartWithRoot(root, targetSum) + pathSum(root.left, targetSum) + pathSum(root.right, targetSum);
+        return res;
+    }
+    private int pathSumStartWithRoot(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+        int res = 0;
+        if (root.val == targetSum) res++;
+        res += pathSumStartWithRoot(root.left, targetSum - root.val) + pathSumStartWithRoot(root.right, targetSum - root.val);
+        return res;
+    }
+}
+```
+
 #### [106. 从中序与后序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 > 根据一棵树的中序遍历与后序遍历构造二叉树。
@@ -1978,4 +2007,134 @@ class Solution {
     }
 }
 ```
+
+
+
+#### [114. 二叉树展开为链表](https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/)
+
+![image-20220118170739282](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220118170739282.png)
+
+先先序遍历 然后重新建立新链表
+
+
+
+当右子树不为空,  将右子树直接赋给左子树最右边节点, 然后root.left给
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+        List<TreeNode> list = new ArrayList<>();
+        dfs(root, list);
+        for (int i = 1; i < list.size(); i++) {
+            TreeNode prev = list.get(i - 1);
+            TreeNode cur = list.get(i);
+            prev.left = null;
+            prev.right = cur;
+        }
+    }
+    //通过递归实现的先序遍历
+    private void dfs(TreeNode root, List<TreeNode> list) {
+        if (root != null) {
+            list.add(root);
+            dfs(root.left, list);
+            dfs(root.right, list);
+        }
+    }
+}
+```
+
+方法二: 将root右边移动到左子树最右边,然后把 这整体左边移动回右边
+
+![image-20220118231705314](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220118231705314.png)
+
+```java
+class Solution {
+    public void flatten(TreeNode root) {
+       while (root != null) {
+           if (root.left == null) {
+               root = root.right;
+           } else {
+               //1 找左子树最右边节点
+               TreeNode pre = root.left;
+               while(pre.right != null) {
+                   pre = pre.right;
+               }
+               //2 右子树连接到pre右边
+               pre.right = root.right;
+               //3 将root左边大坨移动到右边
+               root.right = root.left;
+               root.left = null;
+               //4 下一个节点
+               root = root.right;
+           }
+       }
+    }
+}
+```
+
+#### [208. 实现 Trie (前缀树)](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+
+![image-20220122085642599](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220122085642599.png)
+
+
+
+![image-20220122085954535](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220122085954535.png)
+
+每个节点下面接26个节点
+
+```java
+class Trie {
+
+    private Trie[] children;
+    private boolean isEnd;
+
+    public Trie() {
+        //开辟26个字母的存储空间
+        children = new Trie[26];
+        isEnd = false;
+    }
+    
+    public void insert(String word) {
+        //node指针指向当前对象的头节点
+        Trie node = this;
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            int index = ch - 'a';
+            if (node.children[index] == null) {
+                node.children[index] = new Trie();
+            }
+            node = node.children[index];
+        }
+        node.isEnd = true;
+    }
+     
+    public boolean search(String word) {
+        //前缀树遍历方法返回的不是空说明前缀存在
+        Trie node = searchPrefix(word);
+        return node != null && node.isEnd; 
+
+    }
+    
+    public boolean startsWith(String prefix) {
+        return searchPrefix(prefix) != null;
+    }
+
+    public Trie searchPrefix(String prefix) {
+        Trie node = this;
+        for (int i = 0; i < prefix.length(); i++) {
+            char ch = prefix.charAt(i);
+            int index = ch - 'a';
+            if (node.children[index] == null) {
+                return null;
+            }
+            node = node.children[index];
+        }
+        return node;
+    }
+}
+```
+
+
+
+
 

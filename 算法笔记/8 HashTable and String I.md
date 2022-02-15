@@ -1033,48 +1033,333 @@ class Solution {
 
 #### KMP
 
-1. 电风扇  5 
+#### [49. 字母异位词分组](https://leetcode-cn.com/problems/group-anagrams/)
 
-2.加湿器 15
+![image-20220116214618765](8%20HashTable%20and%20String%20I.assets/image-20220116214618765.png)
 
-3.置物小推车 10
+```java
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> res = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        int count = 0; //从零开始记录每个位置存放的str
+        for(String str : strs) {
+            char[] array = str.toCharArray();
+            Arrays.sort(array);
+            String nStr = new String(array);
+            if (!map.containsKey(nStr)) {
+                res.add(new ArrayList<>());
+                map.put(nStr, count);
+                count++;
+            }
+            res.get(map.get(nStr)).add(str);//先找到存放的位置然后加入原来的字符串
+        }
+        return res;
+    }
+}
+```
 
-4.宜家大整理箱 （3个都要）3 * 5 = 15 
+#### [56. 合并区间](https://leetcode-cn.com/problems/merge-intervals/)
 
-5.护眼台灯（2个都要）15 * 2 = 30 
+![image-20220116222812714](8%20HashTable%20and%20String%20I.assets/image-20220116222812714.png)
 
-6.Cherry机械键盘 15 
+![image-20220116224238683](8%20HashTable%20and%20String%20I.assets/image-20220116224238683.png)
 
-7.人体工学椅 15 * 10 暂定一个
+```java
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        //1 按照区间左边排列
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if(o1[0] == o2[0]) {
+                    return 0;
+                }
+                return o1[0] > o2[0] ? 1 : -1;//o[2] 大是升序
+            }
+        });
+        ArrayList<int[]> outputs = new ArrayList<>();
+        for (int i = 0; i < intervals.length; i++) {
+            int[] curInterval = intervals[i];
+            if (outputs.isEmpty()) {
+                outputs.add(curInterval);
+            } else {
+                int[] outputLastInterval = outputs.get(outputs.size() - 1);
+                int outputLastIntervalRight = outputLastInterval[1]; //已存右边界
+                int currLeft = curInterval[0];
+                if (outputLastIntervalRight < currLeft) {
+                    outputs.add(curInterval);
+                } else {
+                    int currRight = curInterval[1];
+                    outputLastInterval[1] = Math.max(outputLastIntervalRight, currRight);
+                }
+            }
+        }
+        return outputs.toArray(new int[outputs.size()][]);
+    }
+}
+```
 
-8.白色升降桌 60
+#### [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
 
-9.晾衣架（3个都要）10 + 10 + 8 自己拿黑色好
+![image-20220118075958385](8%20HashTable%20and%20String%20I.assets/image-20220118075958385.png)
 
-10.脏衣篮 5 
+![image-20220118080140890](8%20HashTable%20and%20String%20I.assets/image-20220118080140890.png)
 
-11. 吹风机 赠送
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        // 使用哈希表进行判断是否包含
+        HashMap<Character, Integer> need = new HashMap<>();
+        HashMap<Character, Integer> window = new HashMap<>();
 
-11. instant pot高压锅 25 
+        // 将字符串t的元素存放在哈希表need中
+        for(int i = 0; i < t.length(); i++){
+            need.put(t.charAt(i), need.getOrDefault(t.charAt(i), 0) + 1);
+        }
 
-12. TidyLife空气炸锅 25 
+        int valid = 0, r = 0, l = 0;
+        int start = 0, len = Integer.MAX_VALUE;
+        // r为右指针、l为左指针
+        while(r < s.length()){
+            // 将字符串s的元素存放在哈希表window中
+            char addChar = s.charAt(r);
+            window.put(addChar, window.getOrDefault(addChar, 0) + 1);
+            r++;
 
-13. Aroma白色不粘锅款电饭煲 20 
+            // 如果need包含addChar并且个数也一致、表示已经满足一个字符了
+            if(need.containsKey(addChar) && window.get(addChar).equals(need.get(addChar))){
+                valid++;
+            }
+            // 直到valid等于need.size()表示此部分已经包含t、开始考虑进行缩窗口
+            while(valid == need.size()){
+                // 每次更新保留最小的字符串长度
+                if(r - l < len){
+                    len = r - l;
+                    start = l;
+                }
+                // 获取left侧的元素
+                char removeChar = s.charAt(l);
+                // 满足条件说明删错了、需要valid--
+                if(need.containsKey(removeChar) && window.get(removeChar).equals(need.get(removeChar))){
+                    valid--;
+                }
+                window.put(removeChar, window.get(removeChar) - 1);
+                l++;
+            }
+        }
+        // 判断len的值没有变说明根本涉及不到缩窗口的过程。
+        // 也就是s不包含t的所有字符串。典型案例 s: "a", t: "aa"
+        return len == Integer.MAX_VALUE ? "" : s.substring(start, start + len);
+    }
+}
+```
 
-14. gotrax scooter+头盔+ 锁 = 285
+#### [169. 多数元素](https://leetcode-cn.com/problems/majority-element/)
 
-15. 厨房用纸(刚需全新未使用) 7卷  7刀打包
+![image-20220120115145718](8%20HashTable%20and%20String%20I.assets/image-20220120115145718.png)
 
-16.  brother打印机刚加的新墨盒送纸 30刀
+方法一 使用hashset记录个数打擂台
 
-17. 垃圾袋 2刀
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = countMap(nums);
+        Map.Entry<Integer, Integer> major = null;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (major == null || entry.getValue() > major.getValue()) {
+                major = entry;
+            }
+        }
+        return major.getKey();
+    }
+    private Map<Integer, Integer> countMap(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int num : nums) {
+            Integer a = map.get(num);
+            if (a == null) {
+                map.put(num, 1);
+            } else {
+                map.put(num, a + 1);
+            }
+        }
+        return map;
+    }
+}
+```
 
-18. google home 5刀 
+如果将数组 nums 中的所有元素按照单调递增或单调递减的顺序排序，那么下标为n/2的元素（下标从 0 开始）一定是众数。
 
-    其中Scooter已经支付80元定金,  285刀
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+    }
+}
+```
 
-    15.各种锅碗啥的厨房用品, 暂时保留来了看需要的
+#### [448. 找到所有数组中消失的数字](https://leetcode-cn.com/problems/find-all-numbers-disappeared-in-an-array/)
 
-1. 
+![image-20220202231632633](8%20HashTable%20and%20String%20I.assets/image-20220202231632633.png)
 
-   
+```java
+class Solution {
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        for (int i : nums) {
+            set.add(i);
+        }
+        for (int i = 1; i <= nums.length; i++) {
+            if (!set.contains(i)) {
+                list.add(i);
+            }
+        }
+        return list;
+    }
+}
+```
+
+## 滑动窗口
+
+![image-20220203223637498](8%20HashTable%20and%20String%20I.assets/image-20220203223637498.png)
+
+
+
+https://www.bilibili.com/video/BV1PU4y147tP?from=search&seid=4277159951594723532&spm_id_from=333.337.0.0
+
+![image-20220203224646089](8%20HashTable%20and%20String%20I.assets/image-20220203224646089.png)
+![image-20220203225024953](8%20HashTable%20and%20String%20I.assets/image-20220203225024953.png)
+
+#### [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
+
+![image-20220203230115235](8%20HashTable%20and%20String%20I.assets/image-20220203230115235.png)
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0, res = 0;
+        for (int i = 0; i < s.length(); i++) {// i 是右指针
+            char c = s.charAt(i);
+            while (!set.add(c)) { // 1 进：当前遍历的字符进入窗口
+                set.remove(s.charAt(left++)); // 2 出 不符合条件时left持续出窗口
+            }
+            res = Math.max(res, i - left + 1); // 3 计算
+        } 
+        return res;
+    }
+}
+```
+
+方法二 使用hashmap
+
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int left = 0;
+        int res = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                // left = first valid position without cur
+                left = Math.max(map.get(c), left); //将左端点直接移到某个出问题节点的下一个位置
+            }
+            map.put(c, i + 1);//记录当前位置的下一个位置 
+            res = Math.max(res, i - left + 1);
+        }
+        return res;
+    }
+}
+```
+
+#### [159. 至多包含两个不同字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-most-two-distinct-characters/)
+
+#### [340. 至多包含 K 个不同字符的最长子串](https://leetcode-cn.com/problems/longest-substring-with-at-most-k-distinct-characters/)
+
+![image-20220205083258172](8%20HashTable%20and%20String%20I.assets/image-20220205083258172.png) 
+
+```java
+class Solution {
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int left = 0, res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            // 1 遍历当前cur
+            char cur = s.charAt(i);
+            map.put(cur, map.getOrDefault(cur, 0) + 1); //2 记录出现的频率
+            while (map.size() > 2) { // 说明出现了三个distinct character
+                char c = s.charAt(left);
+                map.put(c, map.get(c) - 1); // 开始减少左边的元素频率 然后left++其实可以确保left后面有这个元素的
+                if (map.get(c) == 0) { //通过上一行代码减一 说明这个元素只出现了一次可以移除
+                    map.remove(c);
+                }
+                left++;
+            }
+            res = Math.max(res, i - left + 1);
+        }
+        return res;
+    }
+}
+```
+
+#### [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
+
+![image-20220207092529937](8%20HashTable%20and%20String%20I.assets/image-20220207092529937.png)
+
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> map = new HashMap<>();
+        for(char c : t.toCharArray()) { //存放target的string
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        int left = 0, minStart = 0, minLen = Integer.MAX_VALUE, count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c)) { // 如果有这个character 先更新count
+                if (map.get(c) > 0) { //窗口内有绝对是小于零的 如果map中取元素大于零 说明这个元素还没有被窗口遍历到
+                    count++;
+                }
+                map.put(c, map.get(c) - 1); //窗口里已经有了 就从map里面删除一个
+            }
+            while(count == t.length()) {
+                if (i - left + 1 < minLen) {
+                    minLen = i - left + 1;
+                    minStart = left;
+                }
+                char leftChar = s.charAt(left);
+                if (map.containsKey(leftChar)) {
+                    map.put(leftChar, map.get(leftChar) + 1); // left要从滑动窗口删除 需要恢复map
+                    if (map.get(leftChar) > 0) { //如果左边窗口元素是目标元素 那么目标就要减少
+                        count--;
+                    }
+                }
+                left++;
+            }
+        }
+        if (minLen == Integer.MAX_VALUE) {
+            return "";
+        }
+        return s.substring(minStart, minStart + minLen);
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+
+![image-20220203220642281](8%20HashTable%20and%20String%20I.assets/image-20220203220642281.png)

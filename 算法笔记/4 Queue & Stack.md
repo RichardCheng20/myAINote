@@ -15,6 +15,7 @@ No additional memory, time complexity = O(n ^ 2).
 - 初始input stack 用来存没有sort好的元素
 - buffer用来左半边用来装sort好的,右半边倒回去给input继续找
 - 关键: 1.1 先将input里的元素倒到buffer里 然后找到里面的curmin,并且记录一个count
+
 		   1.2 将大于curmin的元素放回到input, 小于的就保存到buffer里
 		   2 将buffer 将buffer里的值统统放回input 确保升序
 
@@ -915,5 +916,49 @@ class Solution {
         }
         return max;
     }
+}
+```
+
+
+
+#### [394. 字符串解码](https://leetcode-cn.com/problems/decode-string/)
+
+![image-20220128211043382](4%20Queue%20&%20Stack.assets/image-20220128211043382.png)
+
+
+
+https://leetcode-cn.com/problems/decode-string/solution/decode-string-fu-zhu-zhan-fa-di-gui-fa-by-jyd/
+
+![image-20220201222650687](4%20Queue%20&%20Stack.assets/image-20220201222650687.png)
+
+```java
+class Solution {
+        public String decodeString(String s) {
+            StringBuilder res = new StringBuilder();
+            int multi = 0;
+            LinkedList<Integer> stack_multi = new LinkedList<>();
+            LinkedList<String> stack_res = new LinkedList<>();
+            for (Character c : s.toCharArray()) {
+                if (c == '[') {
+                    stack_multi.addLast(multi);
+                    stack_res.addLast(res.toString());
+                    multi = 0;
+                    res = new StringBuilder();
+                }
+                else if (c == ']') {
+                    StringBuilder tmp = new StringBuilder();
+                    int cur_multi = stack_multi.removeLast();
+                    for (int i = 0; i < cur_multi; i++) {
+                        tmp.append(res);
+                    }
+                    res = new StringBuilder(stack_res.removeLast() + tmp);
+                } else if (c >= '0' && c <= '9') {
+                    multi = multi * 10 + Integer.parseInt(c + "");
+                } else {
+                    res.append(c);
+                }
+            }
+            return res.toString();
+        }
 }
 ```
