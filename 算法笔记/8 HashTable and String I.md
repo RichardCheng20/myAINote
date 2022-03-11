@@ -1363,3 +1363,80 @@ class Solution {
 #### [438. 找到字符串中所有字母异位词](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ![image-20220203220642281](8%20HashTable%20and%20String%20I.assets/image-20220203220642281.png)
+
+```java
+public class Solution {
+  public List<Integer> allAnagrams(String sh, String lo) {
+    // Write your solution here  sh用于匹配
+        List<Integer> result = new ArrayList<Integer>();
+        if (lo.length() == 0) {
+            return result;
+        }
+        //when s is longer that l, there is no way any of the substring of l
+        //could be an anagram of s (s是同构异形)
+        if (sh.length() > lo.length()) {
+            return result;
+        }
+        //This map records for each of the distinct characters in s
+        //how many characters are needed
+        //eg. s = "abbc", map = {'a': 1, 'b':2,'c':1}
+        //when we get an instance of 'a' in l, we let count of 'a' decremented by 1
+        //and only when the count is from 1 to 0, we have 'a' totally matched
+        Map<Character, Integer> map = countMap(sh);
+        //record how many distinct characters have been matched
+        //only when all the distinct characters are matched,
+        //match == map.size(), we find an anagram
+        int match = 0;
+        // we have a sliding window of size s.length(), and since the size is fixed
+        //we only need to record the end index of the sliding window
+        //when move the sliding window by one step from left to right, what we need to change is
+        //1. remove the leftmost character at the previous sliding window
+        //2. add the rightmost character at the current sliding window
+        for (int i = 0; i < lo.length(); i++) {
+            //handle the new added character(rightmost) at the current sliding window
+            char tmp = lo.charAt(i);
+            Integer count = map.get(tmp);
+            if (count != null) {
+                //the number of needed count should be --
+                // and only when the count is from 1 to 0, we find an additional
+                //match of distinct character
+                map.put(tmp, count - 1);
+                if (count == 1) {
+                    match++;
+                }
+            }
+            //handle the leftmost character at the previous sliding window
+            if (i >= sh.length()) {
+                tmp = lo.charAt(i - sh.length());
+                count = map.get(tmp);
+                if (count != null) {
+                    // the number of needed count should be ++
+                    // and only when the count if from 0 to 1, we are short for one match of distinct character
+                    map.put(tmp, count + 1);
+                    if (count == 0) {
+                        match--;
+                    }
+                }
+            }
+            //for the current sliding window, if all the distinct characters are matched(the count are all zero)
+            if (match == map.size()) {
+                result.add(i - sh.length() + 1);
+            }
+        }
+        return result;
+  }
+   private Map<Character, Integer> countMap(String s) {
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        for (char ch : s.toCharArray()) {
+            Integer count = map.get(ch);
+            if (count == null) {
+                map.put(ch, 1);
+            } else {
+                map.put(ch, count + 1);
+            }
+        }
+        return map;
+    }
+}
+```
+

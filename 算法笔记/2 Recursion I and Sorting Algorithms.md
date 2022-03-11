@@ -136,6 +136,7 @@ public class Solution {
 	}
 	//谁小移谁
 	private int[] merge(int[] leftResult, int[] rightResult) {
+    int[] result = new int[leftResult.length + rightResult.length];
 		int leftIndex = 0;
 		int rightIndex = 0;
 		int resultIndex = 0;
@@ -169,7 +170,7 @@ Given an array of integers, sort the elements in the array in ascending order. T
 
 Examples
 
-{1} is sorted to {1}
+{1} is sorted to {1}                  
 {1, 2, 3} is sorted to {1, 2, 3}
 {3, 2, 1} is sorted to {1, 2, 3}
 {4, 2, -3, 6, 1} is sorted to {-3, 1, 2, 4, 6}
@@ -182,6 +183,8 @@ What if the given array is of length zero? In this case, we do not need to do an
 (j, n - 1] >= pivot
 `time` = o(nlogn) space  = O(n)
 
+
+
 ```java
 public class Solution {
 	public int[] quickSort(int[] array) {
@@ -190,14 +193,14 @@ public class Solution {
 		}
 		quickSort(array, 0, array.length - 1);
 		return array;
-	}
+	}                   
 	public void quickSort(int[] array, int left, int right) {
 		if (left > right) {
 			return; //和上题目不同的退出条件
 		}
-		int pivotPos = partition(array, left, right); //左右两半边分开的index
+		int pivotPos = partition(array, left, right); //左右两半边分开的index pivot放到了应该放的位置fvx
 		quickSort(array, left, pivotPos - 1);
-		quickSort(array, pivotPos + 1, right);  //两半分别去sort好 ⚠注意少了一个元素
+		quickSort(array, pivotPos + 1, right);  //两半分别去sort好 ⚠注意少了一个元素 
 	}
 	
 	private int partition(int[] array, int left, int right) {

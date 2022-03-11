@@ -1,4 +1,4 @@
-
+00
 
 # 7 Graph Search II : DFS
 
@@ -408,6 +408,8 @@ class Solution {
 ![image-20210713114701121](7 Graph Search II  DFS.assets/image-20210713114701121.png)
 
 ```java
+这个index是记录遍历第几个数字了，就是用来遍历digits的（题目中给出数字字符串），同时index也表示树的深度。
+
 class Solution {
         public List<String> letterCombinations(String digits) {
             List<String> result = new ArrayList<>();
@@ -478,7 +480,7 @@ class Solution {
         for (int i = startIndex; i < candidates.length && sum + candidates[i] <= target; i++) { //如果 sum + candidates[i] > target 就终止遍历
             cur.add(candidates[i]);
             sum += candidates[i];
-            helper(cur, result, candidates, i, sum, target); //i就是下一层开始遍历的位置
+            helper(cur, result, candidates, i, sum, target); //i就是下一层开始遍历的位置 关键点:不用i+1了，表示可以重复读取当前的数
             sum -= candidates[i];
             cur.remove(cur.size() - 1);
         }
@@ -648,9 +650,9 @@ class Solution {
             if(isValid(s, startIndex, i)) {
                 s = s.substring(0, i + 1) + "." + s.substring(i + 1); // 在s的中插⼊⼀个逗点
                 pointNum++;
-                helper(s, result, pointNum, i + 2);
+                helper(s, result, pointNum, i + 2);// 插入逗点之后下一个子串的起始位置为i+2
                 pointNum--;
-                s = s.substring(0, i + 1) + s.substring(i + 2);
+                s = s.substring(0, i + 1) + s.substring(i + 2);// 回溯删掉逗点
             } else {
                 break;
             }
@@ -714,33 +716,35 @@ class Solution { //按照我以前的写法
 
 **子集是收集树形结构中树的所有节点的结果**。**而组合问题、分割问题是收集树形结构中叶子节点的结果**。
 
+![image-20220222160221010](7%20Graph%20Search%20II%20%20DFS.assets/image-20220222160221010.png)
+
 ![image-20210715205008131](7 Graph Search II  DFS.assets/image-20210715205008131.png)
 
 ```java
-        class Solution {
-            public List<List<Integer>> subsets(int[] nums) {
-                List<List<Integer>> result = new ArrayList<>();
-                List<Integer> cur = new ArrayList<>();
-                if (nums.length == 0) {
-                    result.add(new ArrayList<>(cur));
-                    return result;
-                }
-                helper(cur, result, nums, 0);
-                return result;
-            }
-            private void helper(List<Integer> cur, List<List<Integer>> result, int[] nums, int index) {
-                result.add(new ArrayList<>(cur)); //一进入函数就开始加入空集
-                //「遍历这个树的时候，把所有节点都记录下来，就是要求的子集集合」。
-                if (index >= nums.length) {//终止条件可不加
-                    return;
-                }
-                for (int i = index; i < nums.length; i++) {
-                    cur.add(nums[i]);
-                    helper(cur, result, nums, i + 1);// i + 1 加入下一个不重复元素
-                    cur.remove(cur.size() - 1);
-                }
-            }
-        }
+class Solution {
+  public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    List<Integer> cur = new ArrayList<>();
+    if (nums.length == 0) {
+      result.add(new ArrayList<>(cur));
+      return result;
+    }
+    helper(cur, result, nums, 0);
+    return result;
+  }
+  private void helper(List<Integer> cur, List<List<Integer>> result, int[] nums, int index) {
+    result.add(new ArrayList<>(cur)); //一进入函数就开始加入空集
+    //「遍历这个树的时候，把所有节点都记录下来，就是要求的子集集合」。
+    if (index >= nums.length) {//终止条件可不加
+      return;
+    }
+    for (int i = index; i < nums.length; i++) {
+      cur.add(nums[i]);
+      helper(cur, result, nums, i + 1);// i + 1 加入下一个不重复元素
+      cur.remove(cur.size() - 1);
+    }
+  }
+}
 ```
 
 如果是一个集合来求组合的话，就需要startIndex，例如：[回溯算法：求组合问题！](https://mp.weixin.qq.com/s/OnBjbLzuipWz_u4QfmgcqQ)，[回溯算法：求组合总和！](https://mp.weixin.qq.com/s/HX7WW6ixbFZJASkRnCTC3w)。
@@ -800,7 +804,9 @@ class Solution {
 >输入：[4, 6, 7, 7]
 >输出：[[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
 
-注意不能排序再找！！！ 
+注意不能排序再找！！！ 而本题求自增子序列，是不能对原数组经行排序的，排完序的数组都是自增子序列了。
+
+**所以不能使用之前的去重逻辑！**
 
 类似求子集问题，也是要遍历树形结构找每一个节点，所以和[回溯算法：求子集问题！](https://mp.weixin.qq.com/s/NNRzX-vJ_pjK4qxohd_LtA)一样，可以不加终止条件，startIndex每次都会加1，并不会无限递归。
 
@@ -880,7 +886,7 @@ class Solution {
 
 当收集元素的数组path的大小达到和nums数组一样大的时候，说明找到了一个全排列，也表示到达了叶子节点。
 
-**而used数组，其实就是记录此时path里都有哪些元素使用了，一个排列里一个元素只能使用一次**。
+**而used数组，其实就是记录此时path里都有哪些元素使用了，一个排列里一个元素只能使用一次**。这里是同一树枝上去重
 
 ![image-20210717203546469](7 Graph Search II  DFS.assets/image-20210717203546469.png)
 
@@ -918,7 +924,7 @@ class Solution {
 
 #### [47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
 
->给定一个可包含重复数字的序列 `nums` ，**按任意顺序** 返回所有不重复的全排列。
+>给定一个可包含重复数字的序列 `nums` ，**按任意顺序** 返回所有不重复的全排列。 
 >
 >```
 >输入：nums = [1,1,2]
@@ -1016,7 +1022,7 @@ public class Solution {
     private static final int[][] DIRECTIONS = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
     private int rows;
     private int cols;
-    private int len;
+    private int len;// 单词长度
     private boolean[][] visited;
     private char[] charArray;
     private char[][] board;
@@ -1044,7 +1050,7 @@ public class Solution {
 
     private boolean dfs(int x, int y, int begin) {
         if (begin == len - 1) {
-            return board[x][y] == charArray[begin];
+            return board[x][y] == charArray[begin];//如果相等 说明匹配上了
         }
         if (board[x][y] == charArray[begin]) {
             visited[x][y] = true;

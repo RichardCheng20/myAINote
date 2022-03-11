@@ -751,7 +751,7 @@ public class Solution {
             } else if (count < k) {
                 count++;
                 longest = Math.max(longest, ++fast - slow);
-            } else if (nums[slow++] == 0) {
+            } else if (nums[slow++] == 0) { //为0说明这个时候需要取消count
                 count--;
             }
         }

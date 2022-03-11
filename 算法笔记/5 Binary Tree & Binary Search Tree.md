@@ -702,7 +702,6 @@ public class Solution {
 				inorder.add(cur.key);
 				cur = cur.right; //然后就把cur的右边遍历
 			}
-            
 		}
 		return inorder;
 	}
@@ -2136,5 +2135,50 @@ class Trie {
 
 
 
+#### [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
 
+![image-20220223211635698](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220223211635698.png)
+
+![image-20220223230120607](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220223230120607.png)
+
+```java
+class Solution {
+    int ans;
+    public int diameterOfBinaryTree(TreeNode root) {
+        ans = 1; //全局更新这个变量
+        depth(root);
+        return ans - 1;
+    }
+    public int depth(TreeNode node) {
+        if (node == null) {
+            return 0; 
+        }
+        int L = depth(node.left);
+        int R = depth(node.right);
+        ans = Math.max(ans, L + R + 1);
+        return Math.max(L, R) + 1;
+    }
+}
+```
+
+#### [230. 二叉搜索树中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+
+![image-20220305231053732](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220305231053732.png)
+
+```java
+class Solution {
+    int k, ans;
+    public int kthSmallest(TreeNode root, int _k) {
+        k = _k;
+        dfs(root);
+        return ans;
+    }
+    void dfs(TreeNode root) {
+        if (root == null || k <= 0) return ;
+        dfs(root.left);
+        if (--k == 0) ans = root.val;
+        dfs(root.right);
+    }
+}
+```
 

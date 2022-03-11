@@ -962,3 +962,33 @@ class Solution {
         }
 }
 ```
+
+#### [739. 每日温度](https://leetcode-cn.com/problems/daily-temperatures/)
+
+![image-20220302165956573](4%20Queue%20&%20Stack.assets/image-20220302165956573.png)
+
+![image-20220305230822500](4%20Queue%20&%20Stack.assets/image-20220305230822500.png)
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        /*
+        stack存储温度数值中的下标
+        遍历温度数组，当前遍历下标对应温度大于栈顶元素对应下标温度时，说明栈顶元素作为下标对应温度的下一个比他大的温度
+        就是当前元素，满足条件就让栈顶元素弹出，其就是对应要存储位置的下标，然后对应下标的结果
+        dis[preIndex] = cuIndex - preIndex, 利用下标差来当作下一次升温的天数
+         */
+        int n = temperatures.length;
+        int[] dist = new int[n];
+        Stack<Integer> indexs = new Stack<>();
+        for (int curIndex = 0; curIndex < n; curIndex++) {
+            while (!indexs.isEmpty() && temperatures[curIndex] > temperatures[indexs.peek()]) { //如果当前比栈顶元素大的时候 弹出栈顶对应位置index，记录距离
+                int preIndex = indexs.pop();
+                dist[preIndex] = curIndex - preIndex;
+            }
+            indexs.add(curIndex); // 为空时候加入stack，每一个元素都要进入stack 因为要用来和后面的比较 stack用来记录之前的温度
+        }
+        return dist;
+    }
+}
+```

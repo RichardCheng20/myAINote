@@ -23,8 +23,8 @@ public class Solution {
 		while (curr != null) {
 			ListNode next = curr.next; //即是定义又是往后遍历
 			curr.next = prev; //从头这里破解
-			prev = curr;
-			curr = next;
+			prev = curr; //先指向cur指向的内容
+			curr = next; //然后再移动cur 
 		}
 		return prev;
 	}
