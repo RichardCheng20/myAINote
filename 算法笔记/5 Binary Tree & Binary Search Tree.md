@@ -908,7 +908,7 @@ class Solution {
             for (int i = 0; i < size; i++) { //横向遍历各个节点
                 Node cur = queue.poll();
                 if (cur.children != null) {
-                    queue.addAll(cur.children);
+                     .addAll(cur.children);
                 }
             }
         }
@@ -952,13 +952,12 @@ class Solution {
         }
         int leftDepth = minDepth(root.left);
         int rightDepth = minDepth(root.right);
-        if (root.left == null) {
+        if (root.left == null && root.right != null) {
             return rightDepth + 1;
         }
-        if (root.right == null) {
+        if (root.right == null && root.left != null) {
             return leftDepth + 1;
         }
-        // 左右结点都不为null
         return Math.min(leftDepth, rightDepth) + 1;
     }
 }
@@ -1068,7 +1067,7 @@ class Solution {
 解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
 ```
 
-需要前序遍历，这样才方便让父节点指向孩子节点，找到对应的路径。
+需要**前序遍历**，这样才方便让父节点指向孩子节点，找到对应的路径。
 
 1. base case:
 
@@ -1152,7 +1151,7 @@ class Solution {
     }
     private void helper(TreeNode root, StringBuilder sb, List<String> res) {
         if (root == null) { //防止NPE
-          return;3
+          return;
         }
         if (root.left == null && root.right == null) { //控制空节点不入循环
             sb.append(root.val);
@@ -1173,26 +1172,20 @@ class Solution {
 
 ```java
 class Solution {
-        public int sumOfLeftLeaves(TreeNode root) {
-            int sum = 0;
-            helper(root, sum);
-            return sum;
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
         }
-        private void helper(TreeNode root, int sum) {
-            if (root == null) {
-                return;
-            }
-            if (root.left == null && root.right == null) {
-                return;
-            }
-            if (root.left.left == null && root.left.right == null) {
-                sum += root.left.val;
-                //return;
-            }
-            helper(root.left, sum);
-            helper(root.right, sum);
+        int leftValue = sumOfLeftLeaves(root.left);
+        int rightValue = sumOfLeftLeaves(root.right);
+        int midValue = 0;
+        if (root.left != null && root.left.left == null && root.left.right == null) {
+            midValue = root.left.val;
         }
+        int sum = midValue + leftValue + rightValue;
+        return sum;
     }
+} 
 ```
 
 2. 递归
@@ -1357,36 +1350,56 @@ class Solution {
 ![image-20210813185321498](5 Binary Tree & Binary Search Tree.assets/image-20210813185321498.png)
 
 ```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> res = new ArrayList<>();
         if (root == null) {
             return res;
         }
-        List<Integer> path = new LinkedList<>();
-        helper(root, targetSum, res, path);
+        List<Integer> path = new ArrayList<>();
+        path.add(root.val);
+        helper(root, targetSum - root.val, path, res);
         return res;
     }
-    private void helper(TreeNode root, int targetSum, List<List<Integer>> res,  List<Integer> path) {
-        path.add(root.val);
-        //base case: 碰到了叶子节点
+    private void helper(TreeNode root, int count, List<Integer> path, List<List<Integer>> res) {
         if (root.left == null && root.right == null) {
-            if (targetSum - root.val == 0) {
+            if (count == 0) {
                 res.add(new ArrayList<>(path));
             }
             return;
         }
         if (root.left != null) {
-            helper(root.left, targetSum - root.val, res, path);
+            path.add(root.left.val);
+            count -= root.left.val;
+            helper(root.left, count, path, res);
+            count += root.left.val;
             path.remove(path.size() - 1);
         }
         if (root.right != null) {
-            helper(root.right, targetSum - root.val, res, path);
+            path.add(root.right.val);
+            count -= root.right.val;
+            helper(root.right, count, path, res);
+            count += root.right.val;
             path.remove(path.size() - 1);
         }
+
     }
 }
-
 ```
 
 #### [437. 路径总和 III](https://leetcode-cn.com/problems/path-sum-iii/)
@@ -2090,6 +2103,7 @@ class Trie {
     public Trie() {
         //开辟26个字母的存储空间
         children = new Trie[26];
+      //初始化单词结尾false
         isEnd = false;
     }
     
@@ -2104,13 +2118,13 @@ class Trie {
             }
             node = node.children[index];
         }
-        node.isEnd = true;
+        node.isEnd = true;//插入了一个完整的单词
     }
      
     public boolean search(String word) {
         //前缀树遍历方法返回的不是空说明前缀存在
         Trie node = searchPrefix(word);
-        return node != null && node.isEnd; 
+        return node != null && node.isEnd; //说明是个单词
 
     }
     

@@ -571,15 +571,13 @@ class Solution {
 
 > 编写一个算法来判断一个数 `n` 是不是快乐数。
 >
-> 编写一个算法来判断一个数 n 是不是快乐数。
->
 > 「快乐数」定义为：
 >
 > 对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和。
-> 然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。
+>然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。
 > 如果 **可以变为  1，那么这个数就是快乐数。**
 > 如果 n 是快乐数就返回 true ；不是，则返回 false 。
->
+> 
 > ![image-20210822070530246](8 HashTable and String I.assets/image-20210822070530246.png)
 
 判断链表有没有环
@@ -675,33 +673,32 @@ class Solution {
   然后计算 C 和 D 中任意两数之和的相反数 sumCD，在 hashmap 中查找是否存在 key 为 sumCD。
 
 ```java
-Class Solution {
-  public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
-    Map<Integer, Integer> map = new HashMap<>();
-    int temp;
-    int res = 0;
-    //统计两个数组中的元素之和,同时统计出现的次数, 放入map
-    for(int i : nums1) {
-      for(int j : nums2) {
-        temp = i + j;
-        if (map.containsKey(temp)) {
-          map.put(temp, map.get(temp) + 1);
-        } else {
-          map.put(temp, 1);
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        Map<Integer, Integer> map = new HashMap<>(); // sum freq 
+        int res = 0;
+        for (int i : nums1) {//统计两个数组中的元素之和,同时统计出现的次数, 放入map
+            for (int j : nums2) {
+                int sum = i + j;
+                Integer freq = map.get(sum);
+                if (freq == null) {
+                    map.put(sum, 1);
+                } else {
+                    map.put(sum, freq + 1);
+                }
+            }
         }
-      }
-    }
-    //统计剩余的两个元素和,在map中找是否存在相加为0情况,同时记录次数
-    for(int i : nums3) {
-      for (int j : nums4) {
-        tmep = i + j;
-        if (map.containsKey(0 - temp)) {
-          res+= map.get(0 - temp);
+
+        for (int i : nums3) { //统计剩余的两个元素和,在map中找是否存在相加为0情况,同时记录次数
+            for (int j : nums4) {
+                int sum = i + j;
+                if (map.containsKey(0 - sum)) {
+                    res += map.get(0 - sum);
+                }
+            }
         }
-      }
+        return res;
     }
-    return res;
-  }
 }
 ```
 
@@ -750,38 +747,36 @@ class Solution {
 
 ```java
  class Solution {
-        public List<List<Integer>> threeSum(int[] nums) {
-            List<List<Integer>> result = new ArrayList<>();
-            if (nums.length == 0) {
-                return result;
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums.length == 0) {
+            return res;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i - 1] == nums[i]) {
+                continue;
             }
-            Arrays.sort(nums);
-            for (int i = 0; i < nums.length; i++) {
-                if (i > 0 && nums[i] == nums[i - 1]) continue; // 最左边i的去重
-                int target = - nums[i];
-                int j = i + 1; //left pointer
-                int k = nums.length - 1;//right pointer
-                //使用two sum
-                while (j < k) {
-                    if (nums[j] + nums[k] == target) {
-                        List<Integer> cur = new ArrayList<>();
-                        cur.add(nums[i]);
-                        cur.add(nums[j]);
-                        cur.add(nums[k]);
-                        result.add(cur);
-                        j++; k--;
-                        while (j < nums.length && nums[j] == nums[j - 1]) j++; //左指针去重
-                        while (k > j && nums[k] == nums[k + 1]) k--;//右指针去重
-                    } else if (nums[j] + nums[k] > target) {
-                        k--;
-                    } else {
-                        j++;
-                    }
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum > 0) {
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    while(right > left && nums[right] == nums[right - 1]) right--;
+                    while (right > left && nums[left] == nums[left + 1]) left++;
+                    left++;
+                    right--;
                 }
             }
-            return result;
         }
+        return res;
     }
+}
 ```
 
 #### [18. 四数之和](https://leetcode-cn.com/problems/4sum/)
@@ -1075,7 +1070,7 @@ class Solution {
                 if(o1[0] == o2[0]) {
                     return 0;
                 }
-                return o1[0] > o2[0] ? 1 : -1;//o[2] 大是升序
+                return o1[0] > o2[0] ? 1 : -1;//升序排列
             }
         });
         ArrayList<int[]> outputs = new ArrayList<>();

@@ -179,7 +179,7 @@ public class Solution {
 ```
 #### [23. 合并K个升序链表](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
-```
+```java
 public ListNode mergeKLists(ListNode[] lists) {
         ListNode res = null;
         for(ListNode list : lists) {
@@ -187,7 +187,45 @@ public ListNode mergeKLists(ListNode[] lists) {
         }
         return res;
     }
-    
+class Solution {
+   public ListNode mergeKLists(ListNode[] lists) {
+        ListNode res = null;
+        for(ListNode list : lists) {
+            res = mergeTwoList(res, list);
+        }
+        return res;
+    }
+    private ListNode mergeTwoList(ListNode one, ListNode two) {
+        if (one == null) {
+            return two;
+        }
+        if (two == null) {
+            return one;
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        ListNode cur1 = one;
+        ListNode cur2 = two;
+        while (cur1 != null && cur2 != null) {
+            if (cur1.val < cur2.val) {
+                cur.next = cur1;
+                cur = cur.next;
+                cur1 = cur1.next;
+            } else {
+                cur.next = cur2;
+                cur = cur.next;
+                cur2 = cur2.next;
+            }
+        }
+        if (cur1 != null) {
+            cur.next = cur1;
+        }
+        if (cur2 != null) {
+            cur.next = cur2;
+        }
+        return dummy.next;
+    }
+}    
 /////
 方法二 
 O(n∗log(k))，n 是所有链表中元素的总和，k 是链表个数。
@@ -578,7 +616,9 @@ class MyLinkedList {
         }
         ListNode currentNode = head;
         //包含一个虚拟头节点，所以查找第 index+1 个节点
-         
+        for (int i = 0; i <= index; i++) {
+            currentNode = currentNode.next;
+        }
         return currentNode.val;
     }
     

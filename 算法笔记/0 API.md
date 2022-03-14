@@ -253,6 +253,28 @@ set有以上方法
 
   'A','E', 'I', 'O', 'U'));
 
+
+
+```java
+ Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                if(o1[0] == o2[0]) {
+                    return 0;
+                }
+                return o1[0] > o2[0] ? 1 : -1;//小的优先 降序排列
+            }
+        });
+
+将array list 转换为array 
+  ArrayList<int[]> outputs = new ArrayList<>();
+return outputs.toArray(new int[outputs.size()][]);//需要给定大小
+
+
+```
+
+
+
 ##  矩阵数学
 
  int large = (int)Math.`sqrt(c);`
