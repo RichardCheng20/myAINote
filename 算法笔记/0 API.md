@@ -113,7 +113,7 @@ PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
 ```java
 PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
            @Override
-           public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) { //Map.Entry<String, Integer>类型 e1 - e2这种按顺序是从小到大, minheap
+           public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) { 		 //Map.Entry<String, Integer>类型 e1 - e2这种按顺序是从小到大, minheap
                return e1.getValue().compareTo(e2.getValue());
            }
         });
