@@ -466,7 +466,7 @@ class Solution {
 >例如，在 "abbaca" 中，我们可以删除 "bb" 由于两字母相邻且相同，这是此时唯一可以执行删除操作的重复项。之后我们得到字符串 "aaca"，其中又只有 "aa" 可以执行重复项删除操作，所以最后的字符串为 "ca"。
 >```
 
-```
+```java
 class Solution {
     public String removeDuplicates(String s) {
         Deque<Character> stack = new ArrayDeque<>();
@@ -509,8 +509,6 @@ class Solution {
 
 双指针
 
-
-
 ```java
 class Solution {
     public String removeDuplicates(String s) {
@@ -519,7 +517,7 @@ class Solution {
         int slow = 0;
         while(fast < s.length()){
             // 直接用fast指针覆盖slow指针的值
-            ch[ccchslow] = ch[fast];
+            ch[cccslow] = ch[fast];
             // 遇到前后相同值的，就跳过，即slow指针后退一步，下次循环就可以直接被覆盖掉了
             if(slow > 0 && ch[slow] == ch[slow - 1]){
                 slow--;

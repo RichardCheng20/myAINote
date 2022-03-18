@@ -1,7 +1,7 @@
 # 03 MyBatis入门
 
 •	核心组件
-`SqlSessionFactory`：用于创建SqlSession的工厂类。
+`SqlSessionFactory`：用于创建SqlSession的工厂类。 
 `SqlSession`：MyBatis的核心组件，用于向数据库执行SQL。
 `主配置文件`：XML配置文件，可以对MyBatis的底层行为做出详细的配置。
 `Mapper接口`：就是DAO接口，在MyBatis中习惯性的称之为**Mapper**。
