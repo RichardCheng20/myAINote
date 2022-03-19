@@ -365,9 +365,9 @@ public class KthSmallestNumberInSortedMatrix {
 class Solution {
     public int numIslands(char[][] grid) {
         int count = 0;
-        for(int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid[0].length; j++) {
-                if(grid[i][j] == '1'){
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1') { //当它为1 说明遍历到了岛屿, 使用bfs干掉
                     bfs(grid, i, j);
                     count++;
                 }
@@ -375,18 +375,19 @@ class Solution {
         }
         return count;
     }
-    private void bfs(char[][] grid, int i, int j){
-        Queue<int[]> list = new LinkedList<>();
-        list.add(new int[] { i, j });
-        while(!list.isEmpty()){
-            int[] cur = list.remove();
-            i = cur[0]; j = cur[1];
-            if(0 <= i && i < grid.length && 0 <= j && j < grid[0].length && grid[i][j] == '1') {
-                grid[i][j] = '0';
-                list.add(new int[] { i + 1, j });
-                list.add(new int[] { i - 1, j });
-                list.add(new int[] { i, j + 1 });
-                list.add(new int[] { i, j - 1 });
+    private void bfs(char[][] grid, int x, int y) {
+        Queue<int[]> list = new ArrayDeque<>();
+        list.add(new int[] {x, y});
+        while (!list.isEmpty()) {
+            int[] cur = list.poll();
+            x = cur[0];
+            y = cur[1];
+            if (x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && grid[x][y] == '1') { 
+                grid[x][y] = '0'; //将当前node变为0 
+                list.offer(new int[] {x + 1, y}); //将所有邻居统统加入队列
+                list.offer(new int[] {x - 1, y});
+                list.offer(new int[] {x, y + 1});
+                list.offer(new int[] {x, y - 1});
             }
         }
     }
@@ -447,7 +448,7 @@ public class WallsandGates {
                 if (r < 0 || c < 0 || r >= m || c >= n || rooms[r][c] == WALL || distance[r][c] != 0) {
                     continue;
                 }
-                distance[r][c] = distance[row][col] + 1; 
+                distance[r][c] = distance[row][col] + 1;  //通过while不断迭代,距离也会增加
                 if (rooms[r][c] == GATE) {
                     return distance[r][c];
                 }
@@ -501,7 +502,7 @@ class Solution:
 >
 >现在，骑士需要前去征服坐标为 `[x, y]` 的部落，请你为他规划路线。
 >
->最后返回所需的最小移动次数即可。本题确保答案是一定存在的。
+>最后**返回所需的最小移动次数**即可。本题确保答案是一定存在的。
 >
 >```
 >示例 1：
@@ -552,8 +553,6 @@ class Solution:
 
 
 ```
-
-![image-20210906184323138](6 Heap and Graph Search I  BFS.assets/image-20210906184323138.png)
 
 ![image-20210910115036193](6 Heap and Graph Search I  BFS.assets/image-20210910115036193.png)
 
@@ -746,6 +745,7 @@ X O O X
 这时候的 **O 是不做替换**的。因为和边界是连通的。为了记录这种状态，我们把这种情况下的 **O 换成 # 作为占位符**，待搜索结束之后，遇到 O 替换为 X（和边界不连通的 O）；遇到 **#，替换回 O**(和边界连通的 O)。
 
 - dfs 递归 dfs替换边界的o为# 然后for loop遍历将o替换为x, # 替换为o 
+- ![image-20220318235744553](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20220318235744553.png)
 
 ```java
 class Solution {
@@ -856,3 +856,78 @@ class Solution {
     }
 }
 ```
+
+#### [剑指 Offer 13. 机器人的运动范围](https://leetcode-cn.com/problems/ji-qi-ren-de-yun-dong-fan-wei-lcof/)
+
+![image-20220318215009339](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20220318215009339.png)
+
+```java
+class Solution {
+  //dfs 推荐使用
+    public int movingCount(int m, int n, int k) {
+        boolean[][] visited = new boolean[m][n];
+        return dfs(0, 0, m, n, k, visited);
+    }
+    public int dfs(int i, int j, int m, int n, int k, boolean[][] visited) {
+        if(i >= m || j >= n || k < getSum(i) + getSum(j) || visited[i][j]) {
+            return 0; //base case !! 
+        }
+        visited[i][j] = true; 
+      //右边和下面走
+        return 1 + dfs(i + 1, j, m, n, k, visited) + dfs(i, j + 1, m, n, k, visited);
+    }
+
+    private int getSum(int a) {
+        int sum = a % 10;
+        int tmp = a / 10;
+        while(tmp > 0) {
+            sum += tmp % 10;
+            tmp /= 10;
+        }
+        return sum;
+    }
+}
+```
+
+方法二 bfs
+
+```java
+class Solution {
+    public int movingCount(int m, int n, int k) {
+        if (k == 0) { //基本上所有的坐标之和都会比0大
+            return 1;
+        }
+        Queue<int[]> queue = new ArrayDeque<>();
+        int[] dx = {0, 1};
+        int[] dy = {1, 0};
+        boolean[][] visited = new boolean[m][n];
+        queue.offer(new int[] {0, 0});
+        visited[0][0] = true;
+        int ans = 1;
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int x = cell[0], y = cell[1];
+            for (int i = 0;i < 2; i++) {
+                int newX = dx[i] + x;
+                int newY = dy[i] + y;
+                if (newX < 0 || newx >= m || newY < 0 || newY >= n || visited[newX][newY]||get(newX) + get(newY) > k) {
+                    continue;
+                }
+                queue.offer(new int[] {newX, newY});
+                visited[newX][newY] = true;
+                ans++;
+            }
+        }
+        return ans;
+    }
+    private int get(int x) {
+        int sum = 0;
+        while (x != 0) {
+            sum += x % 10;
+            x /= 10;
+        }
+        return sum;
+    }
+}
+```
+

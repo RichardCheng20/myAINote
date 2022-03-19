@@ -576,7 +576,7 @@ class Solution {
   Integer.valueOf(tokens[i])可以==将string转换为integer===， **string之间**的比较一定要==用.equals()!!!!!!==
 
 ```java
-    vclass Solution {
+class Solution {
         public int evalRPN(String[] tokens) {
             Deque<Integer> stack = new ArrayDeque<>();
             for (int i = 0; i < tokens.length; i++) {

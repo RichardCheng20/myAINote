@@ -2248,3 +2248,40 @@ class Solution {
 ![image-20220316151325106](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220316151325106.png)
 
 https://github.com/afatcoder/LeetcodeTop/blob/master/shopee/backend.md
+
+
+
+#### [662. 二叉树最大宽度](https://leetcode-cn.com/problems/maximum-width-of-binary-tree/)
+
+![image-20220318204748439](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220318204748439.png)
+
+ 对树中的所有元素进行编号
+
+![image-20220318205352985](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220318205352985.png)
+
+每一层的最小值都会变成0, 这里左边一定是parent * 2, right = parent * 2 + 1, 当前层offset最左边值, 是自己的值减去自己为0, 最右边值减去最左边  
+
+![image-20220318210525200](5%20Binary%20Tree%20&%20Binary%20Search%20Tree.assets/image-20220318210525200.png)
+
+
+
+```java
+class Solution {
+    //Time = O(n) Space = O(h)
+    private List<Integer> ids; //动态数组记录每一层最小值
+    public int widthOfBinaryTree(TreeNode root) {
+        this.ids = new ArrayList<Integer>();
+        return dfs(root, 0, 0);
+    }
+    // d 表示深度 id当前节点id
+    private int dfs(TreeNode root, int d, int id) {
+        if (root == null) {
+            return 0;
+        }
+        if (ids.size() == d) ids.add(id); //递归到d层时,ids中添加了刚好这个深度大小
+        int rootId = id - ids.get(d);
+        return Math.max(rootId + 1, Math.max(dfs(root.left, d + 1, rootId * 2), dfs(root.right, d + 1, rootId * 2 + 1)));//rootId + 1只有在这一层的最右边的时候才有效果
+    }
+}
+```
+

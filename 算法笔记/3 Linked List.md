@@ -855,7 +855,7 @@ class Solution {
         ListNode cur = dummy;
         while (cur.next != null && cur.next.next != null) {
             if (cur.next.val == cur.next.next.val) {
-                int x = cur.next.val;
+                int x = cur.next.val;//关键 记录下下一个元素的值
                 while (cur.next != null && cur.next.val == x) {
                     cur.next = cur.next.next;
                 }
@@ -865,6 +865,34 @@ class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+#### [86. 分隔链表](https://leetcode-cn.com/problems/partition-list/)
+
+![image-20220318122859493](3%20Linked%20List.assets/image-20220318122859493.png)
+
+```java
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        ListNode small = new ListNode(0);
+        ListNode smallHead = small;
+        ListNode large = new ListNode(0);
+        ListNode largeHead = large;
+        while (head != null) {
+            if (head.val < x) {
+                small.next = head;
+                small = small.next;
+            } else {
+                large.next = head;
+                large = large.next;
+            }
+            head = head.next;
+        }
+        large.next = null;
+        small.next = largeHead.next;
+        return smallHead.next;
     }
 }
 ```
