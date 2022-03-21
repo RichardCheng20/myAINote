@@ -233,7 +233,127 @@ public class Solution {
 }
 
 ```
+## 冒泡
+
+比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+
+对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数。
+
+针对所有的元素重复以上的步骤，除了最后一个。
+
+持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+双重for loop 
+
+```JAVA
+public class TestSort {
+    public static void main(String[] args) {
+        TestSort sol = new TestSort();
+        int[] arr = new int[] {5, 7, 1, 3, 4};
+        System.out.println(Arrays.toString(sol.bubble_sort(arr)));
+    }
+    public int[] bubble_sort(int arr[]) {
+        int len = arr.length;
+        for (int i = 0; i < len - 1; i++) {
+            for (int j = 0; j < len - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) { //j和j+1去比较 然后把小的元素移动到上面来 注意j从0开始
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+        return arr;
+    }
+}
+```
+
+## 插入排序
+
+将第一待排序序列第一个元素看做一个有序序列，把第二个元素到最后一个元素当成是未排序序列。
+
+从头到尾依次扫描未排序序列，将扫描到的每个元素插入有序序列的适当位置。（如果待插入的元素与有序序列中的某个元素相等，则将待插入元素插入到相等元素的后面。）
+
+两层for-loop
+
+第一个i记录当前需要被插入的元素，j = i - 1是i前面的一个元素，如果j比我这个temp元素大，说明我需要将元素插入到j前面去，那么在array中需要把后面的元素慢慢复制迭代到前面来，一直找到j位置指的元素比我的temp小，这个时候j+1处的元素就可以被我temp替换掉。
+
+```java
+public class TestSort {
+    public static void main(String[] args) {
+        TestSort sol = new TestSort();
+        int[] arr = new int[] {5, 7, 1, 3, 4};
+        System.out.println(Arrays.toString(sol.insert_sort(arr)));
+    }
+    public int[] insert_sort(int arr[]) {
+        int len = arr.length;
+        for (int i = 0; i < len; i++) {
+            int temp = arr[i];
+            int j = i - 1;
+            while (j >= 0 && arr[j] > temp) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = temp;
+        }
+        return arr;
+    }
+}
+```
+
+## 堆排序
+
+既然如此，每次构建大顶堆时，在 父节点、左子节点、右子节点取三者中最大者作为父节点就行。我们追寻的只是最终排序后的结果，所以可以简化其中的步骤。
+
+```java
+public class TestSort {
+    public static void main(String[] args) {
+        TestSort sol = new TestSort();
+        int[] arr = new int[] {5, 7, 1, 3, 4};
+        System.out.println(Arrays.toString(sol.sort(arr)));
+    }
+    public int[] sort(int a[]) {
+        int len = a.length - 1;
+        for (int i = len; i > 0; i--) {
+            maxHeap(a, i);
+            //交换 跟节点root 与 最后一个子节点i 的位置
+            swap(a, 0, i);
+            //i--无序数组尺寸减少了
+        }
+        return a;
+    }
+
+    /**构建一个大顶堆（完全二叉树 ）
+     * 从  最后一个非叶子节点  开始，若父节点小于子节点，则互换他们两的位置。然后依次从右至左，从下到上进行！
+     * 最后一个非叶子节点，它的叶子节点 必定包括了最后一个（叶子）节点，所以 最后一个非叶子节点是 a[（n+1）/2-1]
+
+     * @param a
+     * @param lastIndex 这个数组的最后一个元素
+     */
+    public void maxHeap(int a[], int lastIndex) {
+        for (int i = (lastIndex + 1) / 2 - 1; i >= 0; i--) { //i分配到中间偏左位置
+            //反正 堆排序不稳定，先比较父与左子，大则交换；与右子同理。（不care 左子与右子位置是否变了！）
+            if (i * 2 + 1 <= lastIndex && a[i] < a[i * 2 + 1]) {
+                swap(a, i, i * 2 + 1);
+            }
+            if (i * 2 + 2 <= lastIndex && a[i] < a[i * 2 + 2]) {
+                swap(a, i, i * 2 + 2);
+            }
+        }
+    }
+
+    private void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+```
+
+
+
 ## 258. Move 0s To The End I
+
 Given an array of integers, move all the 0s to the right end of the array.
 
 The relative order of the elements in the original array`does not need` `to be maintained.
