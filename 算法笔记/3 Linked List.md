@@ -897,3 +897,34 @@ class Solution {
 }
 ```
 
+#### [25. K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
+
+![image-20220330170559606](3 Linked List.assets/image-20220330170559606.png)
+
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        int count = 0;
+        ListNode cur = head;
+        while (cur != null && count != k) {
+            cur = cur.next;
+            count++;
+        }
+        if (count == k) {
+            cur = reverseKGroup(cur, k);
+            while (count-- > 0) {
+                ListNode temp = head.next;
+                head.next = cur;
+                cur = head;
+                head = temp;
+            }
+            head = cur;
+        }
+        return head;
+    }
+}
+```
+

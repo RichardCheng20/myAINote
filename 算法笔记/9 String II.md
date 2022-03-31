@@ -760,3 +760,60 @@ public class Solution {
 }
 ```
 
+#### [43. 字符串相乘](https://leetcode-cn.com/problems/multiply-strings/)
+
+![image-20220328194112362](9 String II.assets/image-20220328194112362.png)
+
+套用之前的两个数相加的方法，通过补零的方式求和得出
+
+![image-20220328234843796](9 String II.assets/image-20220328234843796.png)
+
+```java
+class Solution {
+    public String multiply(String num1, String num2) {
+        if (num1.equals("0") || num2.equals("0")) {
+            return "0";
+        }
+        String ans = "0";
+        int m = num1.length();
+        int n = num2.length();
+        for (int i = n - 1; i >= 0; i--) {
+            StringBuilder curr = new StringBuilder();
+            int add = 0;
+            for (int k = n - 1; k > i; k--) {
+                curr.append(0);
+            }
+            int y = num2.charAt(i) - '0';
+            for (int j = m - 1; j >= 0; j--) {
+                int x = num1.charAt(j) - '0';
+                int product = x * y + add;
+                curr.append(product % 10);
+                add = product / 10;
+            }
+            if (add != 0) {
+                curr.append(add % 10);
+            }
+            ans = addString(ans, curr.reverse().toString());
+        }
+        return ans;
+    }
+
+    public String addString(String nums1, String nums2) {
+        int i = nums1.length() - 1;
+        int j = nums2.length() - 1;
+        int add = 0;
+        StringBuilder sb = new StringBuilder();
+        while (i >= 0 || j >= 0 || add != 0) {
+            int x = i >= 0 ? nums1.charAt(i) - '0' : 0;
+            int y = j >= 0 ? nums2.charAt(j) - '0' : 0;
+            int res = x + y + add;
+            sb.append(res % 10);
+            add = res / 10;
+            i--;
+            j--;
+        }
+        sb.reverse();
+        return sb.toString();
+    }
+}
+```

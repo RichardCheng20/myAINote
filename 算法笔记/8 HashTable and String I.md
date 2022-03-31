@@ -88,12 +88,6 @@ public class TopKFrequentWords {
 }
 ```
 
-
-
-
-
-
-
 ## [Missing Number I](https://app.laicode.io/app/problem/68?plan=3)
 
 >Given an integer array of size N - 1, containing all the numbers from 1 to N except one, find the missing number.
@@ -1435,3 +1429,75 @@ public class Solution {
 }
 ```
 
+#### [554. 砖墙](https://leetcode-cn.com/problems/brick-wall/)
+
+![image-20220330111410667](8 HashTable and String I.assets/image-20220330111410667.png) 使用hashmap,记录0到前长度作为key, 然后value是这个key出现的次数，如果出现次数最大，那就是要穿过的地方，那么就是要穿过的地方就越小。
+
+```java
+class Solution {
+    public int leastBricks(List<List<Integer>> wall) {
+        //position = sum to i; value = count
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int sum = 0;
+        for (int i = 0; i < wall.size(); i++) {
+            int pos = 0;
+            for (int j = 0; j < wall.get(i).size(); j++) {
+                pos += wall.get(i).get(j);
+                map.put(pos, map.getOrDefault(pos, 0) + 1);
+                if (i == 0) { //如果只有一列的情况
+                    sum += wall.get(i).get(j);
+                }
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for (Integer pos : map.keySet()) {
+            if (sum == pos) // 这里判断如果只有一列，那么求得的pos 一定就是sum直接返回wall.size()
+                continue;
+            res = Math.min(res, wall.size() - map.get(pos));
+            //只有map.get(pos)能够取到最大值（即我避免了切割相同砖块最多的那一组），那么res就是最小值，
+        }
+        return res == Integer.MAX_VALUE ? wall.size() : res; //如果只有一列那就返回墙的大小
+    }
+}
+```
+
+#### [36. 有效的数独](https://leetcode-cn.com/problems/valid-sudoku/)
+
+![image-20220330181516080](8 HashTable and String I.assets/image-20220330181516080.png)
+
+```java
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (board[x][y] != '.') {
+                    for (int j = 0; j < 9; j++) {
+                        if (j != y) {
+                            if (board[x][j] == board[x][y]) {
+                                return false;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < 9; i++) {
+                        if (i != x) {
+                            if (board[i][y] == board[x][y]) {
+                                return false;
+                            }
+                        }
+                    }
+                    int sx = x / 3 * 3;
+                    int sy = y / 3 * 3;
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            if (sx + i != x && sy + j != y && board[sx + i][sy + j] == board[x][y]) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```

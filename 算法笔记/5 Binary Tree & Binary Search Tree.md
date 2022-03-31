@@ -2094,6 +2094,10 @@ class Solution {
 
 每个节点下面接26个节点
 
+![image-20220329112442947](5 Binary Tree & Binary Search Tree.assets/image-20220329112442947.png)
+
+![image-20220330093533702](5 Binary Tree & Binary Search Tree.assets/image-20220330093533702.png)
+
 ```java
 class Trie {
 

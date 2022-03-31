@@ -990,3 +990,40 @@ class Solution {
     }
 }
 ```
+
+#### [1190. 反转每对括号间的子串](https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/)
+
+![image-20220328184223926](4 Queue & Stack.assets/image-20220328184223926.png)
+
+![image-20220328185601068](4 Queue & Stack.assets/image-20220328185601068.png)
+
+![image-20220328194009557](4 Queue & Stack.assets/image-20220328194009557.png)
+
+```
+class Solution {
+public:
+    string reverseParentheses(string s) {
+        stack<string> stk;
+        string str;
+        for (auto &ch : s) {
+            if (ch == '(') {
+                stk.push(str);
+                str = "";
+            } else if (ch == ')') {
+                reverse(str.begin(), str.end());
+                str = stk.top() + str;
+                stk.pop();
+            } else {
+                str.push_back(ch);
+            }
+        }
+        return str;
+    }
+};
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/solution/fan-zhuan-mei-dui-gua-hao-jian-de-zi-chu-gwpv/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+

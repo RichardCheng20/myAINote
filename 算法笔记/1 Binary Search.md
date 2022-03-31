@@ -783,3 +783,50 @@ class Solution {
 } //时间o(n) 空间o(1)
 ```
 
+#### [475. 供暖器](https://leetcode-cn.com/problems/heaters/)
+
+![image-20220330153659366](1 Binary Search.assets/image-20220330153659366.png)
+
+![image-20220330161101389](1 Binary Search.assets/image-20220330161101389.png)
+
+![image-20220330165852601](1 Binary Search.assets/image-20220330165852601.png)
+
+```java
+class Solution {
+    public int findRadius(int[] houses, int[] heaters) {
+        int ans = 0;
+        Arrays.sort(heaters);
+        for (int house : houses) {
+            int i = binarySearch(heaters, house);
+            int j = i + 1;
+            int leftDistance = i < 0 ? Integer.MAX_VALUE : house - heaters[i];
+            int rightDistance = j >= heaters.length ? Integer.MAX_VALUE : heaters[j] - house;
+            int curDistance = Math.min(leftDistance, rightDistance);
+            ans = Math.max(ans, curDistance);
+        }
+        return ans;
+    }
+
+    public int binarySearch(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        if (nums[left] > target) {
+            return -1;
+        }
+        while (left < right) {
+            int mid = (right - left + 1) / 2 + left;
+            if (nums[mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid;
+            }
+        }
+        return left;
+    }
+}
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/heaters/solution/gong-nuan-qi-by-leetcode-solution-rwui/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+

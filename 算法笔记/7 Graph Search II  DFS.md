@@ -1,5 +1,3 @@
-00
-
 # 7 Graph Search II : DFS
 
 https://juejin.cn/post/6844904088618942478
@@ -38,7 +36,7 @@ https://juejin.cn/post/6844904088618942478
 ```java
 public class Solution {
   public List<String> subSets(String set) {
-    List<String> result = new ArrayList<>();
+    List<String> result = new ArrayList<>(); //只是list<String>用StringBuilder
     if (set == null) {
       return result;
     }
