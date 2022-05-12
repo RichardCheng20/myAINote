@@ -353,6 +353,8 @@ for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) // i为本次搜�
 #### [216. 组合总和 III](https://leetcode-cn.com/problems/combination-sum-iii/)
 
 > 找出所有相加之和为 ***n*** 的 k个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+>
+> ![image-20220401001435502](7 Graph Search II  DFS.assets/image-20220401001435502.png)
 
 ![image-20210713103622963](7 Graph Search II  DFS.assets/image-20210713103622963.png)
 

@@ -768,6 +768,8 @@ public class Solution {
 
 ![image-20220328234843796](9 String II.assets/image-20220328234843796.png)
 
+
+
 ```java
 class Solution {
     public String multiply(String num1, String num2) {
@@ -816,4 +818,53 @@ class Solution {
         return sb.toString();
     }
 }
+
 ```
+
+#### [38. 外观数列](https://leetcode-cn.com/problems/count-and-say/)
+
+![image-20220413094534406](9 String II.assets/image-20220413094534406.png)
+
+![image-20220413100300164](9 String II.assets/image-20220413100300164.png)
+
+```java
+class Solution {
+    public String countAndSay(int n) {
+        if (n == 0) {
+            return null;
+        }
+        if (n == 1) {
+            return "1";
+        }
+        String[] dp = new String[n];
+        dp[0] = "1";
+        dp[1] = "11";
+        for (int i = 2; i < n; i++) {
+            String prev = dp[i - 1];
+            char[] prevChars = prev.toCharArray();
+            StringBuilder sb = new StringBuilder();
+            int count = 1;
+            char curr = prevChars[0];
+            for (int j = 1; j < prev.length(); j++) {
+                if (prevChars[j] != curr) {
+                    sb.append(count);
+                    sb.append(curr);
+                    curr = prev.charAt(j);
+                    count = 1;
+                } else {
+                    count++;
+                }
+            }
+            sb.append(count);
+            sb.append(curr);
+            dp[i] = sb.toString();
+        }
+        return dp[n - 1];
+    }
+}
+```
+
+
+
+
+

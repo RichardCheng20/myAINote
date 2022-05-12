@@ -180,13 +180,6 @@ public class Solution {
 #### [23. 合并K个升序链表](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```java
-public ListNode mergeKLists(ListNode[] lists) {
-        ListNode res = null;
-        for(ListNode list : lists) {
-            res = mergeTwoList(res, list);
-        }
-        return res;
-    }
 class Solution {
    public ListNode mergeKLists(ListNode[] lists) {
         ListNode res = null;
@@ -582,8 +575,6 @@ public class Solution {
 	}
 }
 ```
-
-
 
 #### [707. 设计链表](https://leetcode-cn.com/problems/design-linked-list/)
 

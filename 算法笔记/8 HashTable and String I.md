@@ -503,6 +503,8 @@ public class Solution {
 #### [242. 有效的字母异位词](https://leetcode-cn.com/problems/valid-anagram/)
 
 > 给定两个字符串 `*s*` 和 `*t*` ，编写一个函数来判断 `*t*` 是否是 `*s*` 的字母异位词。
+>
+> ![image-20220407150954592](8 HashTable and String I.assets/image-20220407150954592.png)
 
 ```java
 class Solution {
@@ -620,6 +622,34 @@ class Solution {
     }
 }
 ```
+
+#### [剑指 Offer 49. 丑数](https://leetcode-cn.com/problems/chou-shu-lcof/)
+
+![image-20220407151553997](8 HashTable and String I.assets/image-20220407151553997.png)
+
+![image-20220407155849158](8 HashTable and String I.assets/image-20220407155849158.png)
+
+```java
+//设动态规划列表  ，dp[i] 代表第 i + 1i+1 个丑数；
+        public int nthUglyNumber(int n) { 
+            int a = 0, b = 0, c = 0; //a b c 表示维护的num2 num3 num5的index位置
+            int[] dp = new int[n];
+            dp[0] = 1;
+            for(int i = 1; i < n; i++) {
+                int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5; //维护三个array
+                dp[i] = Math.min(Math.min(n2, n3), n5); //这里取最小值
+                if(dp[i] == n2) a++;
+                if(dp[i] == n3) b++; //如果最小值重复了 那就都要往后走一步
+                if(dp[i] == n5) c++; 
+            }
+            return dp[n - 1];
+        }
+
+```
+
+
+
+
 
 #### [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
 
@@ -746,7 +776,7 @@ class Solution {
         if (nums.length == 0) {
             return res;
         }
-        Arrays.sort(nums);
+        Arrays.sort(nums); //一定要排序
         for (int i = 0; i < nums.length; i++) {
             if (i > 0 && nums[i - 1] == nums[i]) {
                 continue;
@@ -935,16 +965,17 @@ public static String replaceSpace(StringBuffer str) {
 ```java
 class Solution {
     public String reverseWords(String s) {
-       if (s == null || s.length() <= 1) {
-           return s;
-       }
+        if(s == null || s.length() == 0) {
+            return s;
+        }
         s = removeSpace(s);
         char[] array = s.toCharArray();
         reverse(array, 0, array.length - 1);
-        int start = 0; 
+        int start = 0;
+        for (int i = 0; i < array.length; i++) {
             if (array[i] != ' ' && (i == 0 || array[i - 1] == ' ')) {
                 start = i;
-            }
+            } 
             if (array[i] != ' ' && (i == array.length - 1 || array[i + 1] == ' ')) {
                 reverse(array, start, i);
             }
@@ -954,29 +985,26 @@ class Solution {
 
     private void reverse(char[] array, int left, int right) {
         while (left <= right) {
-            char temp = array[left];
+            char c = array[left];
             array[left] = array[right];
-            array[right] = temp;
+            array[right] = c;
             left++;
             right--;
         }
     }
-
     private String removeSpace(String s) {
-        // System.out.println("ReverseWords.removeSpace() called with: s = [" + s + "]");
         int start = 0;
         int end = s.length() - 1;
         while (s.charAt(start) == ' ') start++;
-        while (s.charAt(end) == ' ') end--;
+        while(s.charAt(end) == ' ') end--;
         StringBuilder sb = new StringBuilder();
         while (start <= end) {
             char c = s.charAt(start);
-            if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {//c != ' '很明显不为空直接加入，然后就是sb.charAt(sb.length() - 1) != ' '确保sb中只添加一个空格
-                sb.append(c); //顶多添加一个空格re tre
-            }
+            if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {
+                sb.append(c);
+            } 
             start++;
         }
-        // System.out.println("ReverseWords.removeSpace returned: sb = [" + sb + "]");
         return sb.toString();
     }
 }

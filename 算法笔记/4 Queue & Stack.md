@@ -991,7 +991,7 @@ class Solution {
 }
 ```
 
-#### [1190. 反转每对括号间的子串](https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/)
+#### [1190. 反转每对括号间的子串](https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/)（u(love)i）
 
 ![image-20220328184223926](4 Queue & Stack.assets/image-20220328184223926.png)
 
@@ -999,27 +999,26 @@ class Solution {
 
 ![image-20220328194009557](4 Queue & Stack.assets/image-20220328194009557.png)
 
-```
+```java
 class Solution {
-public:
-    string reverseParentheses(string s) {
-        stack<string> stk;
-        string str;
-        for (auto &ch : s) {
+    public String reverseParentheses(String s) {
+        Deque<String> stack = new LinkedList<String>();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
             if (ch == '(') {
-                stk.push(str);
-                str = "";
+                stack.push(sb.toString());
+                sb.setLength(0);
             } else if (ch == ')') {
-                reverse(str.begin(), str.end());
-                str = stk.top() + str;
-                stk.pop();
+                sb.reverse();
+                sb.insert(0, stack.pop());
             } else {
-                str.push_back(ch);
+                sb.append(ch);
             }
         }
-        return str;
+        return sb.toString();
     }
-};
+}
 
 作者：LeetCode-Solution
 链接：https://leetcode-cn.com/problems/reverse-substrings-between-each-pair-of-parentheses/solution/fan-zhuan-mei-dui-gua-hao-jian-de-zi-chu-gwpv/

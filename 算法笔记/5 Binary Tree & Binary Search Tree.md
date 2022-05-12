@@ -685,7 +685,7 @@ public class Solution {
 ## In-order Traversal Of Binary Tree (iterative)
 
 ```java
-  		5
+  	  5
      / \
     3   8 
 public class Solution {
@@ -1168,6 +1168,10 @@ class Solution {
 
 计算给定二叉树的所有左叶子之和。
 
+![image-20220401204151181](5 Binary Tree & Binary Search Tree.assets/image-20220401204151181.png)
+
+![image-20220401204319187](5 Binary Tree & Binary Search Tree.assets/image-20220401204319187.png)
+
 1. recursion 
 
 ```java
@@ -1188,7 +1192,7 @@ class Solution {
 } 
 ```
 
-2. 递归
+2. iterative
 
 ```java
  class Solution {
@@ -1541,6 +1545,10 @@ class Solution {
 
 #### [654. 最大二叉树](https://leetcode-cn.com/problems/maximum-binary-tree/)
 
+![image-20220402132915272](5 Binary Tree & Binary Search Tree.assets/image-20220402132915272.png)
+
+
+
 **base case:** 那么当递归遍历的时候，如果传入的数组大小为1，说明遍历到了==叶子节点了==。
 
 那么应该定义一个新的节点，并把这个数组的数值赋给新的节点，然后返回这个节点。 这表示一个数组大小是1的时候，构造了一个新的节点，并返回。
@@ -1798,34 +1806,35 @@ class Solution {
 if (root == q || root == p || root == NULL) return root;
 ```
 
+![image-20220404152838950](5 Binary Tree & Binary Search Tree.assets/image-20220404152838950.png)
+
 **在递归函数有返回值的情况下：如果要搜索一条边，递归函数返回值不为空的时候，立刻返回，如果搜索整个树，直接用一个变量left、right接住返回值，这个left、right后序还有逻辑处理的需要，也就是后序遍历中处理中间节点的逻辑（也是回溯）**。
 
 ![image-20210817114115724](5 Binary Tree & Binary Search Tree.assets/image-20210817114115724.png)
 
 ```java
-   class Solution {
-        public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-            return helper(root, q, p);
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return helper(root, p, q);
+    }
+    private TreeNode helper(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == p || root == q || root == null) {
+            return root;
         }
-        private TreeNode helper(TreeNode root, TreeNode p, TreeNode q) {
-            if (root == null || root == p || root == q) {
-                return root;
-            }
-            TreeNode left = helper(root.left, p, q); //左
-            TreeNode right = helper(root.right, p, q); //右
-            //如果想利用left和right做逻辑处理， 不能立刻返回，而是要等left与right逻辑处理完之后才能返回。
-            //中
-            if (left != null && right != null) {// 如果left 和 right都不为空，说明此时root就是最近公共节点。这个比较好理解
-                return root;
-            }
-            if (left == null && right != null) {//如果left为空，right不为空，就返回right，说明目标节点是通过right返回的
-                return right;
-            } else if (left != null && right == null) {
-                return left;
-            }
-            return null; //那么如果left和right都为空，则返回left或者right都是可以的，也就是返回空。
+        TreeNode left = helper(root.left, p, q);
+        TreeNode right = helper(root.right, p, q);
+        //如果想利用left和right做逻辑处理， 不能立刻返回，而是要等left与right逻辑处理完之后才能返回。
+        if (left == null && right != null) {
+            return right;
+        } else if (left != null && right == null) {
+            return left;
+        } else if (left != null && right != null){
+            return root;
+        } else {
+            return null;
         }
     }
+}
 ```
 
 #### [235. 二叉搜索树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
@@ -1895,7 +1904,7 @@ class Solution {
 ```java
 class Solution {
     public TreeNode trimBST(TreeNode root, int low, int high) {
-        if (root == null) {
+        if (root == null) {//修剪的操作并不是在终止条件上进行的，所以就是遇到空节点返回就可以了。
             return null;
         }
         //右边 
@@ -1918,11 +1927,7 @@ class Solution {
 
 #### [108. 将有序数组转换为二叉搜索树](https://leetcode-cn.com/problems/convert-sorted-array-to-binary-search-tree/)
 
->给你一个整数数组 nums ，其中元素已经按 升序 排列，请你将其转换为一棵 高度平衡 二叉搜索树。
->
->高度平衡 二叉树是一棵满足「每个节点的左右两个子树的高度差的绝对值不超过 1 」的二叉树。
->
->![image-20210818122650447](5 Binary Tree & Binary Search Tree.assets/image-20210818122650447.png)
+>![image-20220402162756194](5 Binary Tree & Binary Search Tree.assets/image-20220402162756194.png)
 
 **本质就是寻找分割点，分割点作为当前节点，然后递归左区间和右区间**。
 
@@ -2289,3 +2294,40 @@ class Solution {
 }
 ```
 
+方法二 使用BFS需要定义一个类表示深度和位置
+
+<img src="5 Binary Tree & Binary Search Tree.assets/image-20220404235112288.png" alt="image-20220404235112288" style="zoom:50%;" />
+
+```java
+class Solution {
+
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<AnnotatedNode> queue = new LinkedList();
+        queue.add(new AnnotatedNode(root, 0, 0));
+        int curDepth = 0, left = 0, ans = 0;
+        while (!queue.isEmpty()) {
+            AnnotatedNode a = queue.poll();
+            if (a.node != null) {
+                queue.add(new AnnotatedNode(a.node.left, a.depth + 1, a.pos * 2));
+                queue.add(new AnnotatedNode(a.node.right, a.depth + 1, a.pos * 2 + 1));
+                if (curDepth != a.depth) {
+                    curDepth = a.depth;
+                    left = a.pos;
+                }
+                ans = Math.max(ans, a.pos - left + 1);
+            }
+        }
+        return ans;
+    }
+}
+
+class AnnotatedNode {
+    TreeNode node;
+    int depth, pos;
+    AnnotatedNode(TreeNode n, int d, int p) {
+        node = n;
+        depth = d;
+        pos = p;
+    }
+}
+```

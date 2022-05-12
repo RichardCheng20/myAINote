@@ -686,7 +686,7 @@ class Solution {
 
 #### [面试题 16.19. 水域大小](https://leetcode-cn.com/problems/pond-sizes-lcci/)
 
-![image-20211209235428905](6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211209235428905.png)
+<img src="6%20Heap%20and%20Graph%20Search%20I%20%20BFS.assets/image-20211209235428905.png" alt="image-20211209235428905" style="zoom: 200%;" />
 
 ```java
 class Solution {
@@ -877,7 +877,7 @@ class Solution {
         return 1 + dfs(i + 1, j, m, n, k, visited) + dfs(i, j + 1, m, n, k, visited);
     }
 
-    private int getSum(int a) {
+    private int getSum(int a) { 
         int sum = a % 10;
         int tmp = a / 10;
         while(tmp > 0) {
