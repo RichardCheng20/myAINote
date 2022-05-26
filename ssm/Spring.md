@@ -1476,9 +1476,7 @@ Spring集成web环境步骤
 #### 2.1 SpringMVC概述  
 
 SpringMVC 是一种基于 Java 的实现 MVC 设计模型的请求驱动类型的轻量级 Web 框架，属于SpringFrameWork 的后续产品，已经融合在 Spring Web Flow 中。
-SpringMVC 已经成为目前最主流的MVC框架之一，并且随着Spring3.0 的发布，全面超越 Struts2，成为最优
-秀的 MVC 框架。它通过一套注解，让一个简单的 Java 类成为处理请求的控制器，而无须实现任何接口。同时
-它还支持 RESTful 编程风格的请求。  
+SpringMVC 已经成为目前最主流的MVC框架之一，并且随着Spring3.0 的发布，全面超越 Struts2，成为最优秀的 MVC 框架。它通过一套注解，让一个简单的 Java 类成为处理请求的控制器，而无须实现任何接口。同时它还支持 **RESTful** 编程风格的请求。  
 
 #### 2.2 SpringMVC快速入门  
 
@@ -1486,20 +1484,32 @@ SpringMVC 已经成为目前最主流的MVC框架之一，并且随着Spring3.0 
 
 ```xml
 <!--Spring坐标-->
-<dependency>
-<groupId>org.springframework</groupId>
-<artifactId>spring-context</artifactId>
-<version>5.0.5.RELEASE</version>
-</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
 <!--SpringMVC坐标-->
-<dependency>
-<groupId>org.springframework</groupId>
-<artifactId>spring-webmvc</artifactId>
-<version>5.0.5.RELEASE</version>
-</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
 ```
 
 ① 导入Servlet和Jsp的坐标  
+
+```jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Success</title>
+</head>
+<body>
+<h1>success</h1>
+</body>
+</html>
+```
 
 ```xml
 <!--Servlet坐标-->
@@ -1519,19 +1529,20 @@ SpringMVC 已经成为目前最主流的MVC框架之一，并且随着Spring3.0 
 ② 在web.xml配置SpringMVC的核心控制器  
 
 ```xml
-<servlet>
-<servlet-name>DispatcherServlet</servlet-name>
-<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-<init-param>
-<param-name>contextConfigLocation</param-name>
-<param-value>classpath:spring-mvc.xml</param-value>
-</init-param>
-<load-on-startup>1</load-on-startup>
-</servlet>
-<servlet-mapping>
-<servlet-name>DispatcherServlet</servlet-name>
-<url-pattern>/</url-pattern>
-</servlet-mapping>
+<!--  配置SpringMVC的前端控制器-->
+  <servlet>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
 ```
 
 ③ 创建Controller和业务方法  
@@ -1557,38 +1568,34 @@ return "index";
 
 ④ 配置注解  
 
-```
+```java
 @Controller
-public class QuickController {
-@RequestMapping("/quick")
-public String quickMethod(){
-System.out.println("quickMethod running.....");
-return "index";
-}
+public class UserController {
+    @RequestMapping("/quick")
+    public String save() {
+        System.out.println("controller running");
+        return "success.jsp";
+    }
 }
 ```
 
 ⑤ 创建spring-mvc.xml  
 
-```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-xmlns:mvc="http://www.springframework.org/schema/mvc"
-xmlns:context="http://www.springframework.org/schema/context"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans.xsd
-http://www.springframework.org/schema/mvc
-http://www.springframework.org/schema/mvc/spring-mvc.xsd
-http://www.springframework.org/schema/context
-http://www.springframework.org/schema/context/spring-context.xsd">
-<!--配置注解扫描-->
-<context:component-scan base-package="com.itheima"/>
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.itheima.controller"></context:component-scan>
 </beans>
 ```
 
 ⑥ 访问测试地址  
 
-http://localhost:8080/itheima_springmvc1/quick  
+http://localhost:8080/itheima_springmvc1/quick    
 
 控制台打印  
 
@@ -1613,7 +1620,7 @@ http://localhost:8080/itheima_springmvc1/quick
 
 #### 2.4 知识要点 
 
- SpringMVC的开发步骤
+ **SpringMVC的开发步骤**
 ① 导入SpringMVC相关坐标
 ② 配置SpringMVC核心控制器DispathcerServlet
 ③ 创建Controller类和视图页面
@@ -1621,7 +1628,7 @@ http://localhost:8080/itheima_springmvc1/quick
 ⑤ 配置SpringMVC核心文件 spring-mvc.xml
 ⑥ 客户端发起请求测试  
 
-
+ 
 
 ### 3 SpringMVC的组件解析  
 
@@ -1667,20 +1674,22 @@ SpringMVC 框架提供了很多的 View 视图类型的支持，包括： jstlVi
 
 #### 3.3 SpringMVC注解解析  
 
-@RequestMapping
+**@RequestMapping**
 作用：用于建立请求 URL 和处理请求方法之间的对应关系
 位置：
- 类上，请求URL 的第一级访问目录。此处不写的话，就相当于应用的根目录
- 方法上，请求 URL 的第二级访问目录，与类上的使用@ReqquestMapping标注的一级目录一起组成访问虚拟路径
-属性：
- value：用于指定请求的URL。它和path属性的作用是一样的
- method：用于指定请求的方式
- params：用于指定限制请求参数的条件。它支持简单的表达式。要求请求参数的key和value必须和配置的一模一样
-例如：
- params = {"accountName"}， 表示请求参数必须有accountName
- params = {"moeny!100"}， 表示请求参数中money  
 
-\1. mvc命名空间引入
+- 类上，请求URL 的**第一级**访问目录。此处不写的话，就相当于应用的根目录
+- 方法上，请求 URL 的第二级访问目录，与类上的使用@ReqquestMapping标注的一级目录一起组成访问虚拟路径
+  属性：
+  - **value**：用于指定请求的URL。它和path属性的作用是一样的 value = "/quick"
+  - **method**：用于指定请求的方式 method = RequestMethod.GET
+  - **params**：用于指定限制请求参数的条件。它支持简单的表达式。要求请求参数的key和value必须和配置的一模一样
+    例如：
+    - params = {"accountName"}， 表示请求参数必须有accountName
+    - params = {"moeny!100"}， 表示请求参数中money  
+
+1. **mvc命名空间引入**
+
 命名空间： xmlns:context="http://www.springframework.org/schema/context"
 xmlns:mvc="http://www.springframework.org/schema/mvc"
 约束地址： http://www.springframework.org/schema/context
@@ -1688,9 +1697,11 @@ http://www.springframework.org/schema/context/spring-context.xsd
 http://www.springframework.org/schema/mvc
 http://www.springframework.org/schema/mvc/spring  
 
-\2. 组件扫描
-SpringMVC基于Spring容器，所以在进行SpringMVC操作时，需要将Controller存储到Spring容器中，如果使
-用@Controller注解标注的话，就需要使用<context:component-scan basepackage=“com.itheima.controller"/>进行组件扫描。  
+2.  **组件扫描**
+   SpringMVC基于Spring容器，所以在进行SpringMVC操作时，需要将Controller存储到Spring容器中，如果使
+   用@Controller注解标注的话，就需要使用<context:component-scan basepackage=“com.itheima.controller"/>进行组件扫描。  
+
+![image-20220518101729608](Spring.assets/image-20220518101729608.png)
 
 #### 3.4 SpringMVC的XML配置解析  
 
@@ -1698,14 +1709,14 @@ SpringMVC基于Spring容器，所以在进行SpringMVC操作时，需要将Contr
 SpringMVC有默认组件配置，默认组件都是DispatcherServlet.properties配置文件中配置的，该配置文件地址
 org/springframework/web/servlet/DispatcherServlet.properties，该文件中配置了默认的视图解析器，如下：  
 
-```
+```properties
 org.springframework.web.servlet.ViewResolver=org.springframework.web.servlet.view.I
 nternalResourceViewResolver
 ```
 
 翻看该解析器源码，可以看到该解析器的默认设置，如下：  
 
-```
+```java
 REDIRECT_URL_PREFIX = "redirect:" --重定向前缀
 FORWARD_URL_PREFIX = "forward:" --转发前缀（默认值）
 prefix = ""; --视图名称前缀
@@ -1714,13 +1725,12 @@ suffix = ""; --视图名称后缀
 
 我们可以通过属性注入的方式修改视图的的前后缀  
 
-```
+```xml
 <!--配置内部资源视图解析器-->
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 <property name="prefix" value="/WEB-INF/views/"></property>
 <property name="suffix" value=".jsp"></property>
 </bean>
-
 ```
 
 #### 3.5 知识要点  
