@@ -1,0 +1,78 @@
+### Excel POI
+
+![image-20220601095551588](读写Excel.assets/image-20220601095551588.png)
+
+#### 1 导包
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>3.14</version>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>3.14</version>
+  </dependency>
+</dependencies>
+```
+
+#### 2 读取 编写代码
+
+```java
+public class Demo1 {
+    public static void main(String[] args) throws IOException {
+        //1 获取工作薄
+        XSSFWorkbook sheets = new XSSFWorkbook("E:\\hello.xlsx");
+        //2 获取工作表
+        XSSFSheet sheet = sheets.getSheetAt(0);
+        //3 遍历获取行
+        for (Row row: sheet) {
+            //4 获取单元格
+            for (Cell cell : row) {
+                //获取单元格内容
+                String value = cell.getStringCellValue();
+                System.out.println(value);
+            }
+        }
+
+        //释放资源
+        sheets.close();
+    }
+}
+```
+#### 3 写入 编写代码
+
+```java
+public class Demo2 {
+    public static void main(String[] args) throws IOException {
+        //1 创建工作薄
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //2 创建工作表
+        XSSFSheet sheet = workbook.createSheet("工作表1");
+        //3 创建行
+        XSSFRow row = sheet.createRow(0);
+        //4 创建单元格
+        row.createCell(0).setCellValue("你好");
+        row.createCell(1).setCellValue("黑马");
+
+        //3 创建行
+        XSSFRow row2 = sheet.createRow(1);
+        //4 创建单元格
+        row2.createCell(0).setCellValue("厉害");
+        row2.createCell(1).setCellValue("黑马");
+
+        //输出流
+        FileOutputStream out = new FileOutputStream("E:\\heima.xlsx");
+        workbook.write(out);
+        out.flush();
+
+        out.close();
+        workbook.close();
+        System.out.println("写入成功");
+    }
+}
+```
+
