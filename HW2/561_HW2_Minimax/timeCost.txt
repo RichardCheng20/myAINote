@@ -1,0 +1,24 @@
+Move count 1  Move: (2, 2)   
+Move count 2  Move: (1, 2)   
+Move count 3  Move: (3, 2)   
+Move count 4  Move: (2, 1)   
+Move count 5Move: (4, 3)    time cost is 3.002579927444458
+Move count 6Move: (3, 4)    time cost is 5.527532577514648
+Move count 7Move: (2, 3)    time cost is 1.86289381980896
+Move count 8Move: (4, 1)    time cost is 4.599607944488525
+Move count 9Move: (2, 0)    time cost is 0.7767970561981201
+Move count 10Move: (4, 0)    time cost is 0.17608308792114258
+Move count 11Move: (1, 1)    time cost is 0.03845095634460449
+Move count 12Move: (3, 1)    time cost is 0.04635500907897949
+Move count 1  Move: (2, 2)   
+Move count 2  Move: (1, 2)   
+Move count 3  Move: (3, 2)   
+Move count 4  Move: (2, 1)   
+Move count 5Move: (0, 1)    time cost is 3.025191068649292
+Move count 6Move: (3, 4)    time cost is 2.8503990173339844
+Move count 7Move: (3, 0)    time cost is 2.1547601222991943
+Move count 8Move: (4, 3)    time cost is 7.719666957855225
+Move count 9Move: (3, 1)    time cost is 6.436542987823486
+Move count 10Move: (4, 1)    time cost is 1.245370864868164
+Move count 11Move: (0, 0)    time cost is 0.10097098350524902
+Move count 12Move: (1, 0)    time cost is 0.02791309356689453

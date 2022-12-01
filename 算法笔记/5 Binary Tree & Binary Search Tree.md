@@ -483,7 +483,7 @@ public class Solution {
 			return new TreeNode(key);
 		}
 		TreeNode cur = root;
-		while (cur.key != key) {
+		while (cur.key != key) {	
 			if (key < cur.key) {
 				if (cur.left == null) {
 					cur.left = new TreeNode(key);
